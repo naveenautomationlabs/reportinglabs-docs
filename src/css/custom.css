@@ -1,0 +1,24 @@
+:root {
+  --ifm-color-primary: #1A56DB;
+  --ifm-color-primary-dark: #164ec8;
+  --ifm-color-primary-darker: #144abd;
+  --ifm-color-primary-darkest: #113d9c;
+  --ifm-color-primary-light: #2d64df;
+  --ifm-color-primary-lighter: #3a6ce1;
+  --ifm-color-primary-lightest: #5d84e7;
+  --ifm-font-family-base: 'IBM Plex Sans', -apple-system, 'Segoe UI', Inter, system-ui, sans-serif;
+  --ifm-heading-font-family: 'IBM Plex Sans', -apple-system, 'Segoe UI', Inter, system-ui, sans-serif;
+  --ifm-code-font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --docusaurus-highlighted-code-line-bg: rgba(26, 86, 219, 0.1);
+}
+[data-theme='dark'] {
+  --ifm-color-primary: #6faaff;
+  --ifm-color-primary-dark: #4d94ff;
+  --ifm-color-primary-darker: #3c8aff;
+  --ifm-color-primary-darkest: #086bff;
+  --ifm-color-primary-light: #91c0ff;
+  --ifm-color-primary-lighter: #a2caff;
+  --ifm-color-primary-lightest: #d5e6ff;
+  --docusaurus-highlighted-code-line-bg: rgba(111, 170, 255, 0.15);
+}
+.navbar__title { font-weight: 600; letter-spacing: -0.01em; }
