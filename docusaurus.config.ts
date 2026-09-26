@@ -41,6 +41,7 @@ const config: Config = {
       title: 'reportingLabs',
       logo: { alt: 'reportingLabs logo', src: 'img/logo.svg' },
       items: [
+        { to: '/features/report-tour', label: 'Report tour', position: 'left' },
         { type: 'docSidebar', sidebarId: 'nodejs', label: 'Node.js', position: 'left' },
         { type: 'docSidebar', sidebarId: 'java', label: 'Java', position: 'left' },
         { type: 'docSidebar', sidebarId: 'python', label: 'Python', position: 'left' },
@@ -54,8 +55,8 @@ const config: Config = {
           title: 'Docs',
           items: [
             { label: 'Node.js (JS & TS)', to: '/get-started/nodejs' },
-            { label: 'Java + JUnit 5', to: '/get-started/java-junit5' },
-            { label: 'Java + TestNG', to: '/get-started/java-testng' },
+            { label: 'Java (JUnit 5 & TestNG)', to: '/get-started/java' },
+            { label: 'Python (coming)', to: '/get-started/python' },
           ],
         },
         {

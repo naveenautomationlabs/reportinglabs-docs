@@ -61,7 +61,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Get started',
       collapsed: false,
-      items: ['get-started/java-junit5', 'get-started/java-testng'],
+      items: ['get-started/java'],
     },
     ...commonAfterGetStarted,
   ],
