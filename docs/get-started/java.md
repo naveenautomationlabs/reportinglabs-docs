@@ -309,6 +309,7 @@ reporting-labs.palette=lab             # lab | ocean | ember | mono
 reporting-labs.embedFonts=true         # embed IBM Plex woff2 (offline-safe)
 reporting-labs.editorLinks=false       # show "Open in IDE" links per test
 reporting-labs.bdd=false               # style Given/When/Then as Gherkin
+reporting-labs.open=never              # never | on-failure | always (auto-skipped in CI / headless)
 
 # ─── Header ──────────────────────────────────────────────────────────────────
 reporting-labs.project.name=ShopLite Web
@@ -377,7 +378,8 @@ reporting-labs.projects=chromium,firefox
 | Key | Default | What it does |
 |---|---|---|
 | `title` | `Test report` | Header title |
-| `outputFolder` | `reporting-labs` | Where the HTML file lands |
+| `outputFolder` | `target/reporting-labs` (falls back to `reporting-labs` when there is no `target/`) | Where the HTML file lands |
+| `open` | `never` | `never` \| `on-failure` \| `always` — auto-open the report in the default browser; auto-skipped in CI / headless |
 | `outputFile` | `index.html` | Report file name |
 | `theme` | `auto` | `auto` \| `light` \| `dark` |
 | `palette` | `lab` | `lab` \| `ocean` \| `ember` \| `mono` |
