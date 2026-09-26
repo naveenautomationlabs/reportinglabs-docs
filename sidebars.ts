@@ -20,11 +20,13 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
       items: [
         'features/overview',
+        'features/report-tour',
         'features/meta',
         'features/failure-clusters',
         'features/bug-report',
         'features/history-trend',
         'features/sharding',
+        'features/graphs',
         'features/plain-language-errors',
       ],
     },
