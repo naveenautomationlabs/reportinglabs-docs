@@ -259,6 +259,150 @@ All annotations live in `dev.reportinglabs.core.annotations`. Method-level wins 
 | `@Team` | `@Team("qa-platform")` | Free-form chip |
 | `@Meta` | `@Meta(key="region", value="apac")` | Any custom key. Repeatable. |
 
+## Data-driven tests
+
+TestNG's `@DataProvider` works out of the box — every row becomes its own report row and the parameters are captured automatically as a **Parameters** block (no `Rl.testData()` call needed). Sensitive keys like `password`, `token`, `cvv` are masked as `****`.
+
+For parameter **names** to show (`firstName`, `lastName`, …) instead of `arg0`, `arg1`, …, turn on `-parameters` for the test compiler:
+
+```xml title="pom.xml"
+<plugin>
+  <artifactId>maven-compiler-plugin</artifactId>
+  <configuration>
+    <parameters>true</parameters>
+  </configuration>
+</plugin>
+```
+
+All the usual sources work:
+
+<Tabs groupId="data-source">
+<TabItem value="array" label="2D array" default>
+
+```java
+@DataProvider
+public Object[][] users() {
+    return new Object[][] {
+        { "gaurav", "sharma",     "9878987678", "gaurav@123", "yes" },
+        { "anurag", "automation", "9878987687", "anurag@123", "no"  },
+        { "priya",  "automation", "2378987678", "priya@123",  "yes" },
+    };
+}
+
+@Test(dataProvider = "users")
+public void register(String firstName, String lastName, String phone, String password, String subscribe) {
+    Rl.log("filling form for " + firstName);
+    // 3 test rows in the report, each with its own Parameters block
+}
+```
+
+</TabItem>
+<TabItem value="csv" label="CSV">
+
+```xml title="pom.xml"
+<dependency>
+  <groupId>com.opencsv</groupId>
+  <artifactId>opencsv</artifactId>
+  <version>5.9</version>
+  <scope>test</scope>
+</dependency>
+```
+
+```csv title="src/test/resources/users.csv"
+firstName,lastName,phone,password,subscribe
+gaurav,sharma,9878987678,gaurav@123,yes
+anurag,automation,9878987687,anurag@123,no
+priya,automation,2378987678,priya@123,yes
+```
+
+```java
+@DataProvider
+public Object[][] users() throws Exception {
+    try (CSVReader r = new CSVReader(new InputStreamReader(
+            getClass().getClassLoader().getResourceAsStream("users.csv")))) {
+        List<String[]> rows = r.readAll();
+        rows.remove(0);                       // drop header row
+        return rows.toArray(new Object[0][]);
+    }
+}
+
+@Test(dataProvider = "users")
+public void register(String firstName, String lastName, String phone, String password, String subscribe) { /* ... */ }
+```
+
+</TabItem>
+<TabItem value="json" label="JSON">
+
+```xml title="pom.xml"
+<dependency>
+  <groupId>com.fasterxml.jackson.core</groupId>
+  <artifactId>jackson-databind</artifactId>
+  <version>2.17.2</version>
+  <scope>test</scope>
+</dependency>
+```
+
+```json title="src/test/resources/users.json"
+[
+  { "firstName": "gaurav", "lastName": "sharma",     "phone": "9878987678", "password": "gaurav@123", "subscribe": "yes" },
+  { "firstName": "anurag", "lastName": "automation", "phone": "9878987687", "password": "anurag@123", "subscribe": "no"  }
+]
+```
+
+```java
+@DataProvider
+public Object[][] users() throws Exception {
+    ObjectMapper om = new ObjectMapper();
+    List<Map<String, Object>> rows = om.readValue(
+        getClass().getClassLoader().getResourceAsStream("users.json"),
+        om.getTypeFactory().constructCollectionType(List.class, Map.class));
+    Object[][] out = new Object[rows.size()][5];
+    for (int i = 0; i < rows.size(); i++) {
+        Map<String, Object> r = rows.get(i);
+        out[i] = new Object[] { r.get("firstName"), r.get("lastName"), r.get("phone"), r.get("password"), r.get("subscribe") };
+    }
+    return out;
+}
+```
+
+</TabItem>
+<TabItem value="excel" label="Excel (.xlsx)">
+
+```xml title="pom.xml"
+<dependency>
+  <groupId>org.apache.poi</groupId>
+  <artifactId>poi-ooxml</artifactId>
+  <version>5.2.5</version>
+  <scope>test</scope>
+</dependency>
+```
+
+```java
+@DataProvider
+public Object[][] users() throws Exception {
+    try (InputStream in = getClass().getClassLoader().getResourceAsStream("users.xlsx");
+         Workbook wb = new XSSFWorkbook(in)) {
+        Sheet sh = wb.getSheetAt(0);
+        List<Object[]> rows = new ArrayList<>();
+        for (int i = 1; i <= sh.getLastRowNum(); i++) {     // skip header
+            Row r = sh.getRow(i);
+            Object[] row = new Object[5];
+            for (int c = 0; c < 5; c++) {
+                Cell cell = r.getCell(c);
+                row[c] = cell == null ? "" : cell.toString();
+            }
+            rows.add(row);
+        }
+        return rows.toArray(new Object[0][]);
+    }
+}
+```
+
+</TabItem>
+</Tabs>
+
+Verified end-to-end with a mixed 13-row suite (Array 3 + CSV 4 + JSON 3 + Excel 3) — every row lands as its own report entry with the right parameters, and `password` is masked automatically.
+
 ## Runtime helpers (`Rl.*`)
 
 Same signatures across every framework binding.
@@ -284,6 +428,51 @@ Sensitive keys (`password`, `token`, `authorization`, `cookie`, `apiKey`, `secre
 - **REST Assured** — `Rl.api("POST", "/v1/orders", resp.statusCode())`
 - **Karate**, **Cucumber JVM** — run under JUnit 5 or TestNG; annotations and `Rl.*` work the same
 - **Plain code**, `HttpClient`, JDBC, whatever
+
+## Where the report lands
+
+The report is one HTML file. Path is auto-picked so it works out of the box for both Maven and Gradle:
+
+| Build tool | Default output | Wiped by |
+|---|---|---|
+| **Maven** | `target/reporting-labs/index.html` | `mvn clean` |
+| **Gradle** | `build/reporting-labs/index.html` | `gradle clean` |
+| Neither | `reporting-labs/index.html` (in the working directory) | — |
+
+Both `target/` and `build/` are gitignored by default in the standard Maven/Gradle `.gitignore`, so nothing extra to configure.
+
+Override with `reporting-labs.outputFolder`:
+
+<Tabs groupId="build-tool">
+<TabItem value="maven" label="Maven" default>
+
+```bash
+mvn test -Dreporting-labs.outputFolder=target/reports/qa
+```
+
+Or in `reporting-labs.properties`:
+```properties
+reporting-labs.outputFolder=target/reports/qa
+```
+
+</TabItem>
+<TabItem value="gradle" label="Gradle">
+
+```bash
+./gradlew test -Dreporting-labs.outputFolder=build/reports/qa
+```
+
+Or in `build.gradle` set it as a system property on the `test` task:
+```gradle
+test {
+  useTestNG()
+  systemProperty 'reporting-labs.outputFolder', "$buildDir/reports/qa"
+  systemProperty 'reporting-labs.title', 'Nightly'
+}
+```
+
+</TabItem>
+</Tabs>
 
 ## Configuration
 
@@ -378,7 +567,7 @@ reporting-labs.projects=chromium,firefox
 | Key | Default | What it does |
 |---|---|---|
 | `title` | `Test report` | Header title |
-| `outputFolder` | `target/reporting-labs` (falls back to `reporting-labs` when there is no `target/`) | Where the HTML file lands |
+| `outputFolder` | Maven → `target/reporting-labs`, Gradle → `build/reporting-labs`, else `reporting-labs` (auto-detected) | Where the HTML file lands |
 | `open` | `never` | `never` \| `on-failure` \| `always` — auto-open the report in the default browser; auto-skipped in CI / headless |
 | `outputFile` | `index.html` | Report file name |
 | `theme` | `auto` | `auto` \| `light` \| `dark` |
