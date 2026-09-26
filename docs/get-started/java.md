@@ -170,7 +170,7 @@ Same six tabs as the Node.js reporter — Overview, Tests, Failures, API, Graphs
 
 ![Java-generated report — Overview tab](/img/screenshots/08-java-overview-light.png)
 
-*Screenshot above is a real run of the JUnit 5 example that ships with the [reporting-labs-java repo](https://github.com/naveenanimation20/reporting-labs-java/tree/main/examples/example-junit5), not a mock-up.*
+*Screenshot above is a real run of the JUnit 5 example that ships with the [reporting-labs-java repo](https://github.com/naveenautomationlabs/reporting-labs-java/tree/main/examples/example-junit5), not a mock-up.*
 
 For a full walkthrough of every tab, see the [Report tour](/features/report-tour).
 
@@ -324,6 +324,6 @@ Full list at [All options](/reference/options).
 
 ## Source + release notes
 
-- Source: [github.com/naveenanimation20/reporting-labs-java](https://github.com/naveenanimation20/reporting-labs-java)
-- Runnable examples: [`examples/`](https://github.com/naveenanimation20/reporting-labs-java/tree/main/examples)
+- Source: [github.com/naveenautomationlabs/reporting-labs-java](https://github.com/naveenautomationlabs/reporting-labs-java)
+- Runnable examples: [`examples/`](https://github.com/naveenautomationlabs/reporting-labs-java/tree/main/examples)
 - Maven Central: [central.sonatype.com/namespace/dev.reportinglabs](https://central.sonatype.com/namespace/dev.reportinglabs)
