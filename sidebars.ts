@@ -35,11 +35,19 @@ const commonAfterGetStarted = [
     label: 'Compare',
     items: ['compare/allure-playwright'],
   },
+  {
+    type: 'category' as const,
+    label: 'About',
+    items: ['intro'],
+  },
 ];
 
+// Each language sidebar starts with its OWN Get started page so the navbar's
+// docSidebar entries resolve to distinct URLs and switching between tabs
+// actually navigates. intro is shared under 'About' at the bottom of every
+// sidebar so it's still reachable, and the homepage links to it too.
 const sidebars: SidebarsConfig = {
   nodejs: [
-    'intro',
     {
       type: 'category',
       label: 'Get started',
@@ -49,7 +57,6 @@ const sidebars: SidebarsConfig = {
     ...commonAfterGetStarted,
   ],
   java: [
-    'intro',
     {
       type: 'category',
       label: 'Get started',
@@ -59,7 +66,6 @@ const sidebars: SidebarsConfig = {
     ...commonAfterGetStarted,
   ],
   python: [
-    'intro',
     {
       type: 'category',
       label: 'Get started',
