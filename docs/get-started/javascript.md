@@ -1,11 +1,16 @@
 ---
-title: JavaScript / Playwright
+title: JavaScript & TypeScript
 sidebar_position: 1
 ---
 
-# Get started: JavaScript / Playwright
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
-Two commands to install, one line in your Playwright config, done. This page walks the whole flow with real screenshots.
+# Get started: JavaScript & TypeScript
+
+reportingLabs is one npm package that works with **both plain JavaScript and TypeScript Playwright projects**. Same install, same reporter entry, same helpers. Every code snippet on this page shows the TypeScript form and the JavaScript form side by side — pick the tab that matches your project.
+
+Two commands to install, one line in your Playwright config, done.
 
 ## Install
 
@@ -14,13 +19,16 @@ npm i -D reporting-labs
 npx reporting-labs init
 ```
 
-`init` writes `reporting-labs.config.ts` with every option commented out.
+`init` writes a `reporting-labs.config.ts` (or `reporting-labs.config.js` if your project is plain JS) with every option commented out.
 
 ## Wire it up
 
-Open `playwright.config.ts` and add the reporter:
+Open your Playwright config and add the reporter.
 
-```ts
+<Tabs groupId="js-ts">
+<TabItem value="ts" label="TypeScript" default>
+
+```ts title="playwright.config.ts"
 import { defineConfig } from '@playwright/test';
 import reportingLabs from './reporting-labs.config';
 
@@ -31,6 +39,24 @@ export default defineConfig({
   ],
 });
 ```
+
+</TabItem>
+<TabItem value="js" label="JavaScript">
+
+```js title="playwright.config.js"
+const { defineConfig } = require('@playwright/test');
+const reportingLabs = require('./reporting-labs.config');
+
+module.exports = defineConfig({
+  reporter: [
+    ['list'],
+    ['reporting-labs', reportingLabs],
+  ],
+});
+```
+
+</TabItem>
+</Tabs>
 
 That is the whole setup. Run your tests and open the report:
 
@@ -49,7 +75,10 @@ The report is one self-contained HTML file. No server, no login, no expiry. You 
 
 Three tiny helpers add the details the report needs. Import them from `reporting-labs`.
 
-```ts
+<Tabs groupId="js-ts">
+<TabItem value="ts" label="TypeScript" default>
+
+```ts title="tests/checkout.spec.ts"
 import { test, expect } from '@playwright/test';
 import { meta, log, testData } from 'reporting-labs';
 
@@ -70,6 +99,33 @@ test('places an order with a saved card', async ({ page }) => {
 });
 ```
 
+</TabItem>
+<TabItem value="js" label="JavaScript">
+
+```js title="tests/checkout.spec.js"
+const { test, expect } = require('@playwright/test');
+const { meta, log, testData } = require('reporting-labs');
+
+test('places an order with a saved card', async ({ page }) => {
+  meta({
+    priority: 'P0',
+    owner: 'naveen',
+    feature: 'checkout',
+    story: 'SHOP-231',
+  });
+
+  await testData({ user: 'demo@shop.io', card: '4242…', total: 99 }, 'Cart');
+  await log('opening checkout');
+
+  await page.goto('/checkout');
+  await page.getByRole('button', { name: 'Place order' }).click();
+  await expect(page.getByText('Thank you')).toBeVisible();
+});
+```
+
+</TabItem>
+</Tabs>
+
 - **`meta({ ... })`** — sets priority, owner, feature and any custom keys. The report uses these for filters, the Owner leaderboard and the Failure by owner chart.
 - **`log('opening checkout')`** — a step message shown inline in the test detail view.
 - **`testData({ user, card, total }, 'Cart')`** — pinned JSON block, sensitive values masked automatically.
@@ -78,15 +134,46 @@ All three are optional. A test with no `meta()` still shows up — the report ju
 
 ## Auto-capture API calls
 
-Add one import to the top of your Playwright config:
+Add one import (or `require`) to the top of your Playwright config:
 
-```ts
+<Tabs groupId="js-ts">
+<TabItem value="ts" label="TypeScript" default>
+
+```ts title="playwright.config.ts"
 import 'reporting-labs/auto';
 ```
+
+</TabItem>
+<TabItem value="js" label="JavaScript">
+
+```js title="playwright.config.js"
+require('reporting-labs/auto');
+```
+
+</TabItem>
+</Tabs>
 
 Every `request.get / post / put / delete / ...` call your tests make is recorded automatically — method, URL, status, response body, timing. Nothing else to change.
 
 ![API tab with captured requests](/img/screenshots/05-api-light.png)
+
+## JavaScript vs TypeScript — anything different?
+
+Nothing that changes what you write against the reporter.
+
+|  | TypeScript | JavaScript |
+|---|---|---|
+| Install command | `npm i -D reporting-labs` | `npm i -D reporting-labs` |
+| Config filename | `playwright.config.ts` | `playwright.config.js` |
+| Reporter config | `reporting-labs.config.ts` | `reporting-labs.config.js` |
+| Import style | `import { meta } from 'reporting-labs'` | `const { meta } = require('reporting-labs')` |
+| Auto-capture | `import 'reporting-labs/auto'` | `require('reporting-labs/auto')` |
+| Type hints for options | ✅ shipped as `.d.ts` | – (still works, just no autocomplete) |
+| ESM projects (`"type": "module"`) | ✅ | ✅ (use `import` in `.mjs` too) |
+| Runtime helpers (`meta`, `log`, `testData`, `api`) | Same signature | Same signature |
+| Report output | Identical HTML | Identical HTML |
+
+The package ships both compiled JavaScript (`dist/*.js`, CommonJS) and TypeScript declarations (`dist/*.d.ts`). Node picks the JavaScript at runtime; your editor uses the declarations when writing TypeScript.
 
 ## What you get out of the box
 

@@ -9,7 +9,7 @@ reportingLabs turns a test run into **one HTML file** you can share. No server, 
 
 Today it ships for three environments:
 
-- **JavaScript / Playwright** — a Playwright reporter, on npm as [`reporting-labs`](https://www.npmjs.com/package/reporting-labs).
+- **Playwright — JavaScript & TypeScript** — one Playwright reporter that works with both plain JS and TS projects, on npm as [`reporting-labs`](https://www.npmjs.com/package/reporting-labs). Same install, same reporter entry, same helpers whichever you use.
 - **Java / JUnit 5** — a JUnit 5 Extension, on Maven Central as `io.github.reportinglabs:reporting-labs-junit5` (coming with the first tagged release).
 - **Java / TestNG** — a TestNG listener, on Maven Central as `io.github.reportinglabs:reporting-labs-testng` (coming with the first tagged release).
 
