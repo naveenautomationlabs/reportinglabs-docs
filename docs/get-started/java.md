@@ -287,32 +287,140 @@ Sensitive keys (`password`, `token`, `authorization`, `cookie`, `apiKey`, `secre
 
 ## Configuration
 
-Pass options as system properties:
+Everything is optional. Set values in **three** interchangeable ways — the highest wins:
+
+1. **System property** on the command line: `-Dreporting-labs.title="Nightly"`
+2. **`src/test/resources/reporting-labs.properties`** file
+3. **Environment variable**: `REPORTING_LABS_TITLE=Nightly` (dots → underscores, uppercased)
+
+### Full reference — `reporting-labs.properties`
+
+Copy this template as-is; every line is optional. Uncomment or tweak what you need.
+
+```properties
+# ─── Look & feel ─────────────────────────────────────────────────────────────
+reporting-labs.title=Nightly regression
+reporting-labs.outputFolder=target/reporting-labs
+reporting-labs.outputFile=index.html
+reporting-labs.theme=auto              # auto | light | dark
+reporting-labs.palette=lab             # lab | ocean | ember | mono
+# reporting-labs.accent=#7C3AED        # override palette accent with your brand color
+# reporting-labs.customCss=.hdr .title{letter-spacing:.02em}
+reporting-labs.embedFonts=true         # embed IBM Plex woff2 (offline-safe)
+reporting-labs.editorLinks=false       # show "Open in IDE" links per test
+reporting-labs.bdd=false               # style Given/When/Then as Gherkin
+
+# ─── Header ──────────────────────────────────────────────────────────────────
+reporting-labs.project.name=ShopLite Web
+reporting-labs.project.version=2.4.0
+reporting-labs.project.team=QA Platform
+reporting-labs.project.url=https://shoplite.example.com
+reporting-labs.project.description=Frontend regression suite
+
+# metadata.<name> becomes a chip. metadata.build labels the trend x-axis.
+reporting-labs.metadata.build=ci-4287
+reporting-labs.metadata.env=staging
+reporting-labs.metadata.branch=release/2.4.0
+reporting-labs.metadata.commit=abc123f
+reporting-labs.metadata.region=apac
+
+# Turn @Story("SHOP-231") etc. into clickable chips. {id} = annotation value.
+reporting-labs.links.story=https://shoplite.atlassian.net/browse/{id}
+reporting-labs.links.epic=https://shoplite.atlassian.net/browse/{id}
+reporting-labs.links.issue=https://shoplite.atlassian.net/browse/{id}
+
+# ─── Extra rows for the Environment card ────────────────────────────────────
+# URLs become links automatically.
+reporting-labs.env.App version=2.4.0
+reporting-labs.env.Test data=staging-seed-12
+reporting-labs.env.Docs=https://reportinglabs.dev
+
+# ─── History + trend ────────────────────────────────────────────────────────
+reporting-labs.history.enabled=true
+reporting-labs.history.file=reporting-labs.history.json
+reporting-labs.history.keep=30
+
+# ─── Data masking ───────────────────────────────────────────────────────────
+# Extra case-insensitive substrings to mask in testData / API headers, on
+# top of the built-in defaults (password, token, authorization, cvv, ...).
+# reporting-labs.maskKeys=internalCustomerId,phone
+
+# ─── Charts / dimensions ────────────────────────────────────────────────────
+reporting-labs.dimensions=priority,severity,owner,feature
+reporting-labs.dimensionOrder.severity=blocker,critical,major,minor,trivial
+reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
+
+# ─── Widget toggles (all default to true) ───────────────────────────────────
+# Uncomment any of these and set to false to hide the card.
+# reporting-labs.widgets.trend=false
+# reporting-labs.widgets.timeline=false
+# reporting-labs.widgets.flaky=false
+# reporting-labs.widgets.skipped=false
+# reporting-labs.widgets.environment=false
+# reporting-labs.widgets.needsAttention=false
+# reporting-labs.widgets.failureClusters=false
+
+# ─── Extra HTML sections rendered below the summary ─────────────────────────
+# Any number of named sections. `title` and `html` are both required.
+# reporting-labs.sections.release.title=Release notes
+# reporting-labs.sections.release.html=<p>See <a href="https://example.com/changelog">changelog</a>.</p>
+# reporting-labs.sections.oncall.title=On-call
+# reporting-labs.sections.oncall.html=<p>QA: @naveen · SRE: @amit</p>
+
+# ─── Parallel / project (informational) ─────────────────────────────────────
+reporting-labs.workers=4
+reporting-labs.projects=chromium,firefox
+```
+
+### Option cheat sheet
+
+| Key | Default | What it does |
+|---|---|---|
+| `title` | `Test report` | Header title |
+| `outputFolder` | `reporting-labs` | Where the HTML file lands |
+| `outputFile` | `index.html` | Report file name |
+| `theme` | `auto` | `auto` \| `light` \| `dark` |
+| `palette` | `lab` | `lab` \| `ocean` \| `ember` \| `mono` |
+| `accent` | palette's own | Brand accent hex (e.g. `#7C3AED`) |
+| `customCss` | – | Extra CSS appended to the report |
+| `embedFonts` | `true` | Inline IBM Plex woff2 (~140 KB) |
+| `editorLinks` | `false` | "Open in IDE" link per test |
+| `bdd` | `false` | Gherkin-style Given/When/Then |
+| `project.*` | – | `name`, `version`, `team`, `url`, `description` |
+| `metadata.<key>` | – | Header chip (`build` labels the trend x-axis) |
+| `links.<key>` | – | Turn a meta value into a link, `{id}` template |
+| `env.<label>` | – | Extra row in the Environment card (URLs auto-link) |
+| `history.enabled` | `true` | Write/read `reporting-labs.history.json` |
+| `history.file` | `reporting-labs.history.json` | Path (relative to CWD) |
+| `history.keep` | `30` | Max runs kept in history |
+| `maskKeys` | – | Extra sensitive-key substrings to mask (comma-separated) |
+| `dimensions` | `priority,severity,owner,feature` | Meta keys used in charts + filters |
+| `dimensionOrder.<key>` | – | Custom sort order for that dimension's values |
+| `widgets.<name>` | `true` | Toggle a card off (12 widgets) |
+| `sections.<name>.title` + `.html` | – | Custom HTML block below the summary |
+| `workers` | `1` | Shown in the header |
+| `projects` | `java` | Shown in header + used by heatmap |
+
+### CLI overrides (per-run)
 
 ```bash
 mvn test \
   -Dreporting-labs.title="Nightly regression" \
-  -Dreporting-labs.outputFolder=target/reporting-labs \
-  -Dreporting-labs.project.name="ShopLite Web" \
-  -Dreporting-labs.project.version=2.4.0 \
-  -Dreporting-labs.metadata.env=staging \
   -Dreporting-labs.metadata.build=ci-4287 \
-  -Dreporting-labs.links.story=https://shoplite.atlassian.net/browse/{id}
+  -Dreporting-labs.metadata.env=staging \
+  -Dreporting-labs.outputFolder=target/reporting-labs
 ```
 
-Or once, in `src/test/resources/reporting-labs.properties`:
+### Environment variables (great for CI)
 
-```properties
-reporting-labs.title=Nightly regression
-reporting-labs.outputFolder=target/reporting-labs
-reporting-labs.project.name=ShopLite Web
-reporting-labs.project.version=2.4.0
-reporting-labs.metadata.env=staging
-reporting-labs.metadata.build=ci-4287
-reporting-labs.links.story=https://shoplite.atlassian.net/browse/{id}
+Rule: replace `.` with `_`, uppercase everything, prefix with `REPORTING_LABS_`.
+
+```bash
+export REPORTING_LABS_TITLE="Nightly"
+export REPORTING_LABS_METADATA_BUILD="$CI_BUILD_ID"
+export REPORTING_LABS_METADATA_ENV="staging"
+mvn test
 ```
-
-Full list at [All options](/reference/options).
 
 ## Requirements
 
