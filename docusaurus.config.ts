@@ -41,11 +41,9 @@ const config: Config = {
       title: 'reportingLabs',
       logo: { alt: 'reportingLabs logo', src: 'img/logo.svg' },
       items: [
-        { to: '/get-started/javascript', label: 'JavaScript', position: 'left' },
-        { to: '/get-started/java-junit5', label: 'Java', position: 'left' },
-        { to: '/features/overview', label: 'Features', position: 'left' },
-        { to: '/reference/options', label: 'Reference', position: 'left' },
-        { to: '/compare/allure-playwright', label: 'Compare', position: 'left' },
+        { type: 'docSidebar', sidebarId: 'nodejs', label: 'Node.js', position: 'left' },
+        { type: 'docSidebar', sidebarId: 'java', label: 'Java', position: 'left' },
+        { type: 'docSidebar', sidebarId: 'python', label: 'Python', position: 'left' },
         { href: 'https://github.com/naveenautomationlabs/reporting-labs', label: 'GitHub', position: 'right' },
       ],
     },
@@ -55,9 +53,9 @@ const config: Config = {
         {
           title: 'Docs',
           items: [
-            { label: 'Get started (JavaScript)', to: '/get-started/javascript' },
-            { label: 'Get started (Java + JUnit 5)', to: '/get-started/java-junit5' },
-            { label: 'Get started (Java + TestNG)', to: '/get-started/java-testng' },
+            { label: 'Node.js (JS & TS)', to: '/get-started/nodejs' },
+            { label: 'Java + JUnit 5', to: '/get-started/java-junit5' },
+            { label: 'Java + TestNG', to: '/get-started/java-testng' },
           ],
         },
         {

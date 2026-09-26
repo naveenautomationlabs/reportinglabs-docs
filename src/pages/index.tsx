@@ -13,10 +13,10 @@ function Hero() {
         <Heading as="h1" className={styles.title}>{siteConfig.title}</Heading>
         <p className={styles.tagline}>{siteConfig.tagline}</p>
         <div className={styles.buttons}>
-          <Link className={`button button--primary button--lg ${styles.cta}`} to="/get-started/javascript">Get started</Link>
+          <Link className={`button button--primary button--lg ${styles.cta}`} to="/get-started/nodejs">Get started</Link>
           <Link className={`button button--secondary button--lg ${styles.cta}`} to="/features/overview">See features</Link>
         </div>
-        <p className={styles.langs}>Available for <b>JavaScript / Playwright</b> · <b>Java / JUnit 5</b> · <b>Java / TestNG</b> · <em>Python coming</em></p>
+        <p className={styles.langs}>Available for <b>Node.js — JavaScript & TypeScript</b> · <b>Java / JUnit 5</b> · <b>Java / TestNG</b> · <em>Python coming</em></p>
       </div>
     </header>
   );

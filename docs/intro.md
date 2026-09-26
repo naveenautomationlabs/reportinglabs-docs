@@ -9,7 +9,7 @@ reportingLabs turns a test run into **one HTML file** you can share. No server, 
 
 Today it ships for three environments:
 
-- **Playwright — JavaScript & TypeScript** — one Playwright reporter that works with both plain JS and TS projects, on npm as [`reporting-labs`](https://www.npmjs.com/package/reporting-labs). Same install, same reporter entry, same helpers whichever you use.
+- **Node.js — JavaScript & TypeScript** — one Playwright reporter that works with both plain JS and TS projects, on npm as [`reporting-labs`](https://www.npmjs.com/package/reporting-labs). Same install, same reporter entry, same helpers whichever you use.
 - **Java / JUnit 5** — a JUnit 5 Extension, on Maven Central as `io.github.reportinglabs:reporting-labs-junit5` (coming with the first tagged release).
 - **Java / TestNG** — a TestNG listener, on Maven Central as `io.github.reportinglabs:reporting-labs-testng` (coming with the first tagged release).
 
@@ -27,4 +27,4 @@ The default HTML report from most test frameworks tells you what passed and what
 - **Bug report button.** One click copies a ready-to-paste ticket in Jira, Markdown or plain text.
 - **Sharding + merge.** Split your run across N shards for speed, then `npx reporting-labs merge` joins them into one report.
 
-Head to [Get started](/get-started/javascript) to try it in five minutes.
+Head to [Get started](/get-started/nodejs) to try it in five minutes.

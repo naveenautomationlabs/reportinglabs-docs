@@ -1,14 +1,15 @@
 ---
-title: JavaScript & TypeScript
+title: Node.js — JavaScript & TypeScript
+sidebar_label: Node.js (JS & TS)
 sidebar_position: 1
 ---
 
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-# Get started: JavaScript & TypeScript
+# Get started: Node.js — JavaScript & TypeScript
 
-reportingLabs is one npm package that works with **both plain JavaScript and TypeScript Playwright projects**. Same install, same reporter entry, same helpers. Every code snippet on this page shows the TypeScript form and the JavaScript form side by side — pick the tab that matches your project.
+reportingLabs ships one npm package that works with **both plain JavaScript and TypeScript Playwright projects** on Node.js. Same install, same reporter entry, same helpers. Every code snippet on this page shows the TypeScript form and the JavaScript form side by side — pick the tab that matches your project.
 
 Two commands to install, one line in your Playwright config, done.
 
