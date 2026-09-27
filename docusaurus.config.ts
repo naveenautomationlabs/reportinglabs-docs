@@ -55,7 +55,7 @@ const config: Config = {
           title: 'Docs',
           items: [
             { label: 'Node.js (JS & TS)', to: '/get-started/nodejs' },
-            { label: 'Java (JUnit 5 & TestNG)', to: '/get-started/java' },
+            { label: 'Java (Playwright, Selenium, REST Assured)', to: '/get-started/java' },
             { label: 'Python (coming)', to: '/get-started/python' },
           ],
         },
