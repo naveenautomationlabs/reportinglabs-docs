@@ -32,13 +32,13 @@ All artifacts live under the `dev.reportinglabs` groupId on Maven Central.
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.8</version>
+    <version>0.1.9</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.8'
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.9'
 ```
 
 **Nothing else to wire.** TestNG finds the listener through `ServiceLoader`.
@@ -58,13 +58,13 @@ explicitly — both ways work:
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.8</version>
+    <version>0.1.9</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.8'
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.9'
 ```
 
 Then turn on JUnit's extension auto-detection — one file, one line:

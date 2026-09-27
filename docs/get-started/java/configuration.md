@@ -56,26 +56,46 @@ Want it to pop open after the run? `reporting-labs.open=on-failure` (or
 
 Copy this as-is; every line is optional.
 
+:::caution Comments go on their own line
+`java.util.Properties` has no inline comments — in
+`reporting-labs.screenshot=always   # only on pass` the value becomes
+`always   # only on pass` and silently matches nothing. From 0.1.9 the
+option-style keys tolerate a trailing `# …`, but keep comments on separate
+lines anyway; older versions and free-text keys (`title`, `accent`,
+`customCss`, `links.*`, …) read the `#` literally.
+:::
+
 ```properties title="src/test/resources/reporting-labs.properties"
 # ─── Look & feel ─────────────────────────────────────────────────────────────
 reporting-labs.title=Nightly regression
-# reporting-labs.outputFolder=target/reporting-labs   # auto: target/ (Maven) or build/ (Gradle)
+# auto: target/ (Maven) or build/ (Gradle)
+# reporting-labs.outputFolder=target/reporting-labs
 # reporting-labs.outputFile=index.html
-reporting-labs.theme=auto              # auto | light | dark
-reporting-labs.palette=lab             # lab | ocean | ember | mono
-# reporting-labs.accent=#7C3AED        # brand color, overrides the palette accent
+# auto | light | dark
+reporting-labs.theme=auto
+# lab | ocean | ember | mono
+reporting-labs.palette=lab
+# brand color, overrides the palette accent
+# reporting-labs.accent=#7C3AED
 # reporting-labs.customCss=.hdr .title{letter-spacing:.02em}
-reporting-labs.embedFonts=true         # inline IBM Plex woff2 (offline-safe)
-reporting-labs.editorLinks=false       # "Open in IDE" link per test
-reporting-labs.bdd=false               # style Given/When/Then as Gherkin
-reporting-labs.open=never              # never | on-failure | always
+# inline IBM Plex woff2 (offline-safe)
+reporting-labs.embedFonts=true
+# "Open in IDE" link per test
+reporting-labs.editorLinks=false
+# style Given/When/Then as Gherkin
+reporting-labs.bdd=false
+# never | on-failure | always
+reporting-labs.open=never
 
 # ─── Capture policy ─────────────────────────────────────────────────────────
 # Playwright add-on honours these automatically. Selenium / Appium base tests
 # honour them via Rl.shouldCaptureScreenshot() — see the Selenium guide.
-reporting-labs.screenshot=on-failure   # never | on-failure | always | only-on-pass
-reporting-labs.trace=on-failure        # never | on-failure | always | only-on-pass
-reporting-labs.video=never             # never | on-failure | always | only-on-pass
+# never | on-failure | always | only-on-pass
+reporting-labs.screenshot=on-failure
+# never | on-failure | always | only-on-pass
+reporting-labs.trace=on-failure
+# never | on-failure | always | only-on-pass
+reporting-labs.video=never
 
 # ─── Header ─────────────────────────────────────────────────────────────────
 reporting-labs.project.name=ShopLite Web

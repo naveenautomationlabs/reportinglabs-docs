@@ -19,13 +19,13 @@ TestNG or JUnit 5 artifact). Then add the Playwright add-on:
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.8</version>
+    <version>0.1.9</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.8'
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.9'
 ```
 
 ## The one line
@@ -177,8 +177,10 @@ Playwright auto-capture reads the capture policy from
 `reporting-labs.properties`. No code change to flip it.
 
 ```properties title="src/test/resources/reporting-labs.properties"
-reporting-labs.screenshot=on-failure   # never | on-failure | always | only-on-pass
-reporting-labs.trace=on-failure        # never | on-failure | always | only-on-pass
+# never | on-failure | always | only-on-pass
+reporting-labs.screenshot=on-failure
+# never | on-failure | always | only-on-pass
+reporting-labs.trace=on-failure
 ```
 
 | Value | Screenshot / trace is attached… |
