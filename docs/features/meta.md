@@ -45,12 +45,31 @@ Now `story: 'SHOP-231'` in the test becomes a link to `https://acme.atlassian.ne
 
 ### Links that need more than one value
 
-Some tools put more than the id in the URL. An ALM Octane / ValueEdge test case looks like
-`https://oss.valueedge.com/ui/?p=4001/14014#/entity-navigation?entityType=test&id=58966`, where `p` is the
-workspace and `id` the test case. You want the report to show only **58966**, clickable.
+Some tools put more than the id in the URL: a workspace, a project, an organisation. For those, give the link an
+object instead of a string. It works for any tool and any URL shape:
 
-Give the link an object. Placeholders name the fields you pass from the test; `display` is what the report shows,
-the other fields only build the URL:
+```ts title="reporting-labs.config.ts"
+links: {
+  <yourKey>: {
+    url: 'https://…/{anyField}/…/{id}',   // placeholders = the fields you send from the test
+    display: '{id}',                        // what the report shows (default '{id}')
+  },
+},
+```
+
+```ts
+meta({ <yourKey>: { id: '…', anyField: '…' } });   // same field names as the placeholders
+```
+
+Three rules:
+
+- The key (`<yourKey>`) is yours: `octaneTestCase`, `testCase`, `workItem`, `tms`, anything.
+- Every `{placeholder}` in `url` is filled from the object you pass to `meta()`. Names are up to you; only `{id}` is special because it is the default `display`.
+- Fields that are not in `display` never show in the report. They only build the URL, and they can differ per test.
+
+Two examples with different tools.
+
+**ALM Octane / ValueEdge**: the URL carries the workspace `p` and the test case `id`; the report should show only the id.
 
 ```ts title="reporting-labs.config.ts"
 links: {
@@ -78,9 +97,30 @@ test('TC003 - manual trigger with all notifications disabled', async ({ page }) 
 });
 ```
 
-The test shows a chip **octaneTestCase 58966**. Clicking it opens the full URL with both values filled in.
-`p` never appears in the report and can differ from test to test. `display` can combine fields too, for example
-`display: '{project}-{id}'`.
+Chip on the test: **octaneTestCase 58966**, linking to `https://oss.valueedge.com/ui/?p=4001/14014#/entity-navigation?entityType=test&id=58966`.
+
+**Azure DevOps work items**: organisation and project are in the path; show the item as `AB#1234`.
+
+```ts title="reporting-labs.config.ts"
+links: {
+  workItem: {
+    url: 'https://dev.azure.com/{org}/{project}/_workitems/edit/{id}',
+    display: 'AB#{id}',
+  },
+},
+```
+
+```ts
+test('login with expired password', async ({ page }) => {
+  meta({ priority: 'P0', workItem: { id: '1234', org: 'acme', project: 'shop-web' } });
+  // ...
+});
+```
+
+Chip on the test: **workItem AB#1234**, linking to `https://dev.azure.com/acme/shop-web/_workitems/edit/1234`.
+
+Tools whose URL needs only the id (Jira, TestRail, Xray, Zephyr) do not need any of this: the plain string form
+with `{id}` is enough.
 
 ## `log(msg)`
 
