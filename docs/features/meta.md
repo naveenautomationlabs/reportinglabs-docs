@@ -16,7 +16,22 @@ meta({ priority: 'P0', severity: 'blocker', owner: 'naveen', feature: 'checkout'
 - Known keys: `priority`, `severity`, `owner`, `feature`, `epic`, `story`, `issue`, `component`, `team`.
 - Any other key is allowed and shows as a chip on the test.
 - Multiple ids for one key? Pass an array or a comma-separated string: `story: ['SHOP-1', 'SHOP-2']`. Each id gets its own chip and link.
-- To make story / epic keys clickable, set `links` in the config: `links: { story: 'https://acme.atlassian.net/browse/{id}' }`.
+- To make story / epic keys clickable, set `links` in the config: `links: { story: 'https://acme.atlassian.net/browse/{id}' }`. Several ids (`story: ['SHOP-1', 'SHOP-2']`) become one link each.
+- A link that needs more than the shown value takes an object. Placeholders name the fields of the object you pass to `meta()`; `display` is what the report shows, the other fields only build the URL:
+
+  ```ts
+  // playwright.config.ts
+  links: {
+    octaneTestCase: {
+      url: 'https://oss.valueedge.com/ui/?p={p}#/entity-navigation?entityType=test&id={id}',
+      display: '{id}',
+    },
+  }
+  // in the test
+  meta({ octaneTestCase: { id: '58966', p: '4001/14014' } });
+  ```
+
+  The report shows **octaneTestCase 58966**; clicking it opens the full URL. `p` is never shown and can differ per test.
 
 ## `log(msg)`
 

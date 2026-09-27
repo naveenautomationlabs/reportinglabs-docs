@@ -16,6 +16,7 @@ Attach report metadata to the current test. Call it first thing inside the test 
 ```ts
 meta({ priority: 'P0', owner: 'naveen', story: 'SHOP-231' });
 meta({ story: ['SHOP-1', 'SHOP-2'] });        // multiple ids → chips + links each
+meta({ octaneTestCase: { id: '58966', p: '4001/14014' } });  // fields for a multi-parameter link, see links in options
 meta({ team: 'web', component: 'checkout' }); // free-form keys are fine
 ```
 
