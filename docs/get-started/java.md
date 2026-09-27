@@ -500,6 +500,14 @@ reporting-labs.editorLinks=false       # show "Open in IDE" links per test
 reporting-labs.bdd=false               # style Given/When/Then as Gherkin
 reporting-labs.open=never              # never | on-failure | always (auto-skipped in CI / headless)
 
+# ─── Capture policy ─────────────────────────────────────────────────────────
+# reporting-labs-playwright honours these automatically (screenshot on failure,
+# trace zip on failure, etc). Selenium / plain-Java tests can honour the same
+# setting via Rl.shouldCaptureScreenshot(failed) inside an @AfterMethod hook.
+reporting-labs.screenshot=on-failure   # never | on-failure | always | only-on-pass
+reporting-labs.trace=on-failure        # same values (Playwright trace zip)
+reporting-labs.video=never             # informational for Selenium/Playwright users
+
 # ─── Header ──────────────────────────────────────────────────────────────────
 reporting-labs.project.name=ShopLite Web
 reporting-labs.project.version=2.4.0
@@ -589,8 +597,53 @@ reporting-labs.projects=chromium,firefox
 | `dimensionOrder.<key>` | – | Custom sort order for that dimension's values |
 | `widgets.<name>` | `true` | Toggle a card off (12 widgets) |
 | `sections.<name>.title` + `.html` | – | Custom HTML block below the summary |
-| `workers` | `1` | Shown in the header |
+| `workers` | _auto_ | Real thread count observed during the run. Override with `reporting-labs.workers=N` if you want a fixed number. |
 | `projects` | `java` | Shown in header + used by heatmap |
+| `screenshot` | `on-failure` | `never` \| `on-failure` \| `always` \| `only-on-pass`. Applied to Playwright auto-screenshots and to `Rl.shouldCaptureScreenshot(failed)` for Selenium tests. |
+| `trace` | `on-failure` | Same values. Controls whether `RlPlaywright` attaches the trace zip. |
+| `video` | `never` | Same values. Informational — the library never records video itself, but a Selenium/Playwright test can honour `Rl.shouldCaptureVideo(failed)`. |
+
+### Auto-detected fields — you don't set these
+
+**Worker count.** The report shows the real number of threads that ran tests
+(observed at runtime). No `workers=` line needed unless you want to override.
+
+**CI metadata.** When you run in a supported CI, `build` / `branch` / `commit` / `ci`
+header chips are filled in automatically. Explicit `reporting-labs.metadata.build=…`
+still wins on overlap. Supported providers:
+
+| Provider | Detected via |
+|---|---|
+| GitHub Actions | `GITHUB_ACTIONS`, `GITHUB_RUN_NUMBER`, `GITHUB_REF_NAME`, `GITHUB_SHA` |
+| Jenkins | `JENKINS_URL`, `BUILD_NUMBER`, `GIT_BRANCH`, `GIT_COMMIT` |
+| GitLab CI | `GITLAB_CI`, `CI_PIPELINE_IID`, `CI_COMMIT_REF_NAME`, `CI_COMMIT_SHA` |
+| CircleCI | `CIRCLECI`, `CIRCLE_BUILD_NUM`, `CIRCLE_BRANCH`, `CIRCLE_SHA1` |
+| Travis CI | `TRAVIS`, `TRAVIS_BUILD_NUMBER`, `TRAVIS_BRANCH`, `TRAVIS_COMMIT` |
+| Buildkite | `BUILDKITE`, `BUILDKITE_BUILD_NUMBER`, `BUILDKITE_BRANCH`, `BUILDKITE_COMMIT` |
+| TeamCity | `TEAMCITY_VERSION`, `BUILD_NUMBER`, `BUILD_VCS_NUMBER` |
+| Azure Pipelines | `TF_BUILD`, `BUILD_BUILDNUMBER`, `BUILD_SOURCEBRANCHNAME`, `BUILD_SOURCEVERSION` |
+
+### Screenshot / trace / video policy for Selenium
+
+Playwright users get screenshots and traces automatically — `RlPlaywright.attach(page)`
+honours the config on its own. For Selenium (or any other driver), use the
+`Rl.shouldCapture*` helpers so one config line drives all your base classes:
+
+```java
+@AfterMethod
+void afterMethod(ITestResult result) {
+    boolean failed = result.getStatus() != ITestResult.SUCCESS;
+    if (Rl.shouldCaptureScreenshot(failed)) {
+        byte[] png = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+        Rl.attach("failure.png", "image/png", png);
+    }
+    driver.quit();
+}
+```
+
+Now flipping `reporting-labs.screenshot=always` in the properties file (or
+`-Dreporting-labs.screenshot=only-on-pass` on the CLI) reshapes what your
+suite attaches without touching a single test.
 
 ### CLI overrides (per-run)
 
