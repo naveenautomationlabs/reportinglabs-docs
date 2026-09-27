@@ -19,13 +19,13 @@ TestNG or JUnit 5 artifact). Then add the Playwright add-on:
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.6</version>
+    <version>0.1.7</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.6'
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.7'
 ```
 
 ## The one line
