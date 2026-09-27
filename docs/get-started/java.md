@@ -32,13 +32,13 @@ All artifacts live under the `dev.reportinglabs` groupId on Maven Central.
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.9</version>
+    <version>0.1.10</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.9'
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.10'
 ```
 
 **Nothing else to wire.** TestNG finds the listener through `ServiceLoader`.
@@ -58,13 +58,13 @@ explicitly — both ways work:
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.9</version>
+    <version>0.1.10</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.9'
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.10'
 ```
 
 Then turn on JUnit's extension auto-detection — one file, one line:
@@ -100,7 +100,7 @@ Every other knob is in [Configuration](/get-started/java/configuration).
 | Your stack | What the guide covers |
 |---|---|
 | [**Playwright + Java**](/get-started/java/playwright) | One line — `RlPlaywright.attach(page)` — gives you API calls, trace zips and failure screenshots automatically. |
-| [**Selenium + Java**](/get-started/java/selenium) | One line — `RlSelenium.attach(driver)` — records every open/click/type as a timed step, marks the failing action, screenshots by policy and captures console output. Works with `@BeforeTest` drivers and parallel TestNG. |
+| [**Selenium + Java**](/get-started/java/selenium) | Zero code — add the dependency and your existing `BaseTest` / `DriverFactory` / page objects are found automatically: every open/click/type as a timed step, the failing action marked, screenshots by policy, console output. Works with `@BeforeTest` drivers, `ThreadLocal` factories and parallel TestNG. |
 | [**REST Assured + Java**](/get-started/java/rest-assured) | A 25-line filter that records every request/response into the API tab, with secrets masked. |
 | [**Other tools**](/get-started/java/other-tools) | Appium, Cucumber JVM, Karate, `HttpClient`, JDBC — what works today and how. |
 

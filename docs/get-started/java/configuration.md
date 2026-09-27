@@ -59,7 +59,7 @@ Copy this as-is; every line is optional.
 :::caution Comments go on their own line
 `java.util.Properties` has no inline comments — in
 `reporting-labs.screenshot=always   # only on pass` the value becomes
-`always   # only on pass` and silently matches nothing. From 0.1.9 the
+`always   # only on pass` and silently matches nothing. From 0.1.10 the
 option-style keys tolerate a trailing `# …`, but keep comments on separate
 lines anyway; older versions and free-text keys (`title`, `accent`,
 `customCss`, `links.*`, …) read the `#` literally.
@@ -88,8 +88,8 @@ reporting-labs.bdd=false
 reporting-labs.open=never
 
 # ─── Capture policy ─────────────────────────────────────────────────────────
-# Playwright add-on honours these automatically. Selenium / Appium base tests
-# honour them via Rl.shouldCaptureScreenshot() — see the Selenium guide.
+# The Playwright and Selenium add-ons honour these automatically. Base tests
+# that take their own screenshots use Rl.shouldCaptureScreenshot().
 # never | on-failure | always | only-on-pass
 reporting-labs.screenshot=on-failure
 # never | on-failure | always | only-on-pass
@@ -98,6 +98,8 @@ reporting-labs.trace=on-failure
 reporting-labs.video=never
 # copy System.out / System.err lines into each test's Console output
 reporting-labs.captureStdout=true
+# Selenium add-on: find the WebDriver on the test instance and record its actions
+reporting-labs.selenium.autoAttach=true
 
 # ─── Header ─────────────────────────────────────────────────────────────────
 reporting-labs.project.name=ShopLite Web
@@ -166,10 +168,11 @@ reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 | `embedFonts` | `true` | Inline IBM Plex woff2 (~140 KB) |
 | `editorLinks` | `false` | "Open in IDE" link per test |
 | `bdd` | `false` | Gherkin-style Given/When/Then |
-| `screenshot` | `on-failure` | Capture policy — honoured by Playwright add-on and `Rl.shouldCaptureScreenshot()` |
+| `screenshot` | `on-failure` | Capture policy — honoured by the Playwright and Selenium add-ons and `Rl.shouldCaptureScreenshot()` |
 | `trace` | `on-failure` | Capture policy for the Playwright trace zip |
 | `video` | `never` | Capture policy read by `Rl.shouldCaptureVideo()` |
 | `captureStdout` | `true` | Copy `System.out` / `System.err` lines into each test's Console output |
+| `selenium.autoAttach` | `true` | Selenium add-on: discover the WebDriver on the test instance (fields, `ThreadLocal`, page objects) and record its actions |
 | `project.*` | – | `name`, `version`, `team`, `url`, `description` |
 | `metadata.<key>` | – | Header chip; `build` labels the trend x-axis |
 | `links.<key>` | – | Turn a chip value into a link; `{id}` placeholder |

@@ -12,9 +12,11 @@ anywhere in that body. Here's what that means tool by tool.
 
 ## Appium (Android / iOS)
 
-Identical to [Selenium](/get-started/java/selenium). `AndroidDriver` and
-`IOSDriver` both implement `TakesScreenshot`, so the same `BaseTest`
-`tearDown()` works verbatim:
+Identical to [Selenium](/get-started/java/selenium): with the
+`reporting-labs-selenium` dependency on the classpath an `AndroidDriver` /
+`IOSDriver` field is found the same way and every tap, type and find becomes
+a step. Without the add-on, both drivers implement `TakesScreenshot`, so the
+manual `BaseTest` `tearDown()` works verbatim:
 
 ```java
 @AfterMethod(alwaysRun = true)

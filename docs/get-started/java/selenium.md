@@ -8,11 +8,12 @@ import TabItem from '@theme/TabItem';
 
 # Selenium + Java
 
-**One line.** Wrap your driver with `RlSelenium.attach(...)` and every test
-that uses it gets a step-by-step trail (open, click, type, with timings),
-the failing action highlighted, a screenshot per the capture policy, and the
-console output of the test — no `@AfterMethod` screenshot code, no listener
-of your own.
+**Zero code.** Add one dependency and every test that drives a WebDriver
+gets a step-by-step trail (open, click, type, with timings), the failing
+action highlighted, a screenshot per the capture policy, and the console
+output of the test. No wrapper to call, no `@AfterMethod` screenshot code,
+no listener of your own. Your `BaseTest`, `DriverFactory` and page objects
+stay exactly as they are.
 
 ![Failed Selenium test — hooks, steps, the failing find in red, screenshot, console output](/img/screenshots/09-selenium-detail-light.png)
 
@@ -23,38 +24,52 @@ TestNG or JUnit 5 artifact). Then add the Selenium add-on:
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-selenium</artifactId>
-    <version>0.1.9</version>
+    <version>0.1.10</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.9'
+testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.10'
 ```
 
-Works with Selenium 4.x (any 4.x — it uses the `EventFiringDecorator` that
-ships with `selenium-java`).
+That is the whole setup. Works with Selenium 4.x (any 4.x — it uses the
+`EventFiringDecorator` that ships with `selenium-java`).
 
-## The one line
+## How it finds your driver
 
-Wherever you create the driver — `@BeforeTest`, `@BeforeClass`,
-`@BeforeMethod`, a `DriverFactory` — wrap it and **use the returned driver**:
+reportingLabs registers itself through `ServiceLoader`, so being on the test
+classpath is enough. When a test starts (and again after every `@Before*`
+hook) it looks at the test instance for a WebDriver and quietly swaps in a
+step-recording decorator:
+
+| Where your driver lives | Found? |
+|---|---|
+| A `WebDriver` field on the test class or any base class (`protected WebDriver driver;`) | Yes |
+| A `ThreadLocal<WebDriver>` — instance or `static`, e.g. `DriverFactory.tlDriver` reached through a `df` field on your `BaseTest` | Yes — `getDriver()` returns the recording driver |
+| A `WebDriver` held by a page object, `ElementUtil` or any helper object that hangs off the test instance (up to three levels deep) | Yes — page objects built before the test started record too |
+| A driver created *inside* the `@Test` body and stored in a field | Screenshot yes, steps no (it appears too late for the recorder) |
+| A field typed as a concrete class (`ChromeDriver driver;`) | Screenshot yes; steps only for actions that go through page objects holding it as `WebDriver` |
+| A local variable that never lands in a field, or a static holder in a class no field of the test points to | No — call `RlSelenium.attach(driver)` once after creating it (see below) |
+
+This is the typical shape and it needs nothing from you:
 
 <Tabs groupId="java-framework">
 <TabItem value="testng" label="TestNG" default>
 
 ```java
-import dev.reportinglabs.selenium.RlSelenium;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.*;
-
 public class BaseTest {
     protected WebDriver driver;
+    protected Properties prop;
+    DriverFactory df;
+    protected LoginPage loginPage;
 
     @BeforeTest
     public void setup() {
-        driver = RlSelenium.attach(new ChromeDriver());   // <-- the one line
+        df = new DriverFactory();
+        prop = df.initProp();
+        driver = df.initDriver(prop);          // your own factory, untouched
+        loginPage = new LoginPage(driver);
     }
 
     @AfterTest
@@ -68,17 +83,14 @@ public class BaseTest {
 <TabItem value="junit5" label="JUnit 5">
 
 ```java
-import dev.reportinglabs.selenium.RlSelenium;
-import org.junit.jupiter.api.*;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-
 public class BaseTest {
     protected WebDriver driver;
+    protected LoginPage loginPage;
 
     @BeforeEach
     void setUp() {
-        driver = RlSelenium.attach(new ChromeDriver());   // <-- the one line
+        driver = new DriverFactory().initDriver();   // your own factory, untouched
+        loginPage = new LoginPage(driver);
     }
 
     @AfterEach
@@ -92,8 +104,26 @@ public class BaseTest {
 </Tabs>
 
 Creating the driver once and reusing it across tests is fine — capture is
-per **test**, not per `attach()`. A `ThreadLocal<WebDriver>` factory for
-`parallel="methods"` works the same way: attach on each thread.
+per **test**. A `ThreadLocal<WebDriver>` factory for `parallel="methods"`
+works the same way, each thread gets its own recording driver.
+
+Already taking your own screenshot in `@AfterMethod`? Keep it. If you attach
+it as `screen.png` it replaces the automatic one, so you never get two.
+
+To switch the auto-discovery off: `reporting-labs.selenium.autoAttach=false`.
+
+### When the driver is out of sight — `RlSelenium.attach`
+
+For a driver that lives only in a local variable, or in a static holder no
+field of the test points to, wrap it yourself once and use the returned
+driver:
+
+```java
+driver = RlSelenium.attach(new ChromeDriver());
+```
+
+`attach()` is idempotent — wrapping a driver twice, or wrapping one the
+auto-discovery already found, returns the same recording driver.
 
 ## What you get automatically
 
@@ -205,8 +235,9 @@ Want an extra screenshot mid-test? `RlSelenium.screenshot("after-login.png")`.
 
 ## Without the add-on — do it by hand
 
-If you'd rather not wrap the driver, the manual pattern still works: take
-the bytes yourself and let `Rl.shouldCaptureScreenshot()` apply the policy.
+If you'd rather not add the Selenium artifact, the manual pattern still
+works: take the bytes yourself and let `Rl.shouldCaptureScreenshot()` apply
+the policy.
 
 ```java
 @AfterMethod(alwaysRun = true)
@@ -225,8 +256,8 @@ automatic steps, though.
 
 ## Appium
 
-`AndroidDriver` / `IOSDriver` are WebDrivers — `RlSelenium.attach(driver)`
-works unchanged, steps included.
+`AndroidDriver` / `IOSDriver` are WebDrivers — the same auto-discovery
+finds them, steps included.
 
 ## Next
 
