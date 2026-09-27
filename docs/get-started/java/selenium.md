@@ -198,6 +198,9 @@ reporting-labs.screenshot=on-failure
 | `always` | on every test — useful while hunting flaky tests |
 | `only-on-pass` | only on passing tests — proves a green run visually |
 
+A **skipped** test (`SkipException`, `@Disabled`, failed assumption) never gets
+a screenshot, whatever the policy — nothing ran, so there is nothing to show.
+
 Override for one run without touching the file:
 
 ```bash
