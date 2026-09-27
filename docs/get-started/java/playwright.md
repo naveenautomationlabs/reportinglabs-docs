@@ -19,13 +19,13 @@ TestNG or JUnit 5 artifact). Then add the Playwright add-on:
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.7</version>
+    <version>0.1.8</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.7'
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.8'
 ```
 
 ## The one line
@@ -124,7 +124,7 @@ Nothing else in the test changes — `page.click()`, `page.fill()`,
 
 | Captured | Where it shows | Default policy |
 |---|---|---|
-| **Every request/response** — method, URL, status, timing, headers, body | **API** tab and the test's detail panel | always |
+| **Every request the page makes** — method, URL, status, timing, request headers + body, response headers; response body for XHR/fetch calls | **API** tab and the test's detail panel | always |
 | **Playwright trace** (`trace.zip`) — drop it into [trace.playwright.dev](https://trace.playwright.dev) | Attachments on the test | on failure |
 | **Full-page screenshot** (`failure.png`) | Attachments on the test | on failure |
 
@@ -132,9 +132,44 @@ Nothing else in the test changes — `page.click()`, `page.fill()`,
 
 ![Test detail — attachments panel](/img/screenshots/03-test-detail-light.png)
 
+In the test's detail panel each call expands to the full request and
+response — headers, bodies — with **Copy as cURL** and **Copy URL** buttons,
+exactly as in the Node.js report.
+
 Sensitive headers (`Authorization`, `Cookie`, `X-Api-Key`, …) are masked as
 `****` before they reach the report. Add your own keys with
 `reporting-labs.maskKeys` — see [Configuration](/get-started/java/configuration).
+
+## API tests — `page.request()` and `APIRequestContext`
+
+Calls made through Playwright's API client don't go through the page, so
+they need one more line: wrap the context with `RlPlaywright.record(...)` and
+use the wrapper.
+
+```java
+APIRequestContext api = RlPlaywright.record(page.request());
+
+api.get("/v1/orders", RequestOptions.create()
+    .setHeader("Authorization", "Bearer " + token)
+    .setQueryParam("page", 1));
+
+api.post("/v1/orders", RequestOptions.create()
+    .setHeader("Authorization", "Bearer " + token)
+    .setData(Map.of("sku", "JEAN-BLUE-32", "qty", 1)));   // body recorded as JSON
+```
+
+Standalone contexts work the same way:
+
+```java
+APIRequestContext api = RlPlaywright.record(playwright.request().newContext());
+```
+
+Every call is recorded with method, URL (query params included), request
+headers and body (`setData` / `setForm` / `setMultipart`), status, timing,
+response headers and the response body (text types, capped at 200 KB — the
+same rules as `import 'reporting-labs/auto'` on the Node side). A connection
+error is recorded as a failed call with the error message, then rethrown.
+Outside a test the wrapper simply delegates.
 
 ## Change what gets captured — one config line
 
