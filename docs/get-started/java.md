@@ -242,6 +242,128 @@ Nothing else in your test code changes. Same `page.click()`, `page.fill()`, `pag
 RlPlaywright.attach(browser.newContext());   // pages opened later get auto-wired too
 ```
 
+## Selenium Java — screenshots by policy
+
+Playwright users get screenshots for free because we own the `Page`. Selenium is
+different — `driver` lives in your base class, not ours — so the pattern is:
+**you take the byte[]; we decide whether to attach it.**
+
+Put this in your `BaseTest`. That's all. Every test in the suite inherits it.
+
+<Tabs groupId="java-framework">
+<TabItem value="testng" label="TestNG" default>
+
+```java
+import dev.reportinglabs.core.Rl;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.ITestResult;
+import org.testng.annotations.*;
+
+public class BaseTest {
+    protected WebDriver driver;
+
+    @BeforeMethod(alwaysRun = true)
+    public void setUp() {
+        driver = new ChromeDriver();
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void tearDown(ITestResult result) {
+        boolean failed = result.getStatus() != ITestResult.SUCCESS;
+
+        // Rl.shouldCaptureScreenshot(failed) checks reporting-labs.screenshot
+        // and returns true when the policy says "capture this one".
+        // You still take the shot with Selenium (we don't ship a driver).
+        if (Rl.shouldCaptureScreenshot(failed) && driver != null) {
+            byte[] png = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+            Rl.attach(result.getName() + ".png", "image/png", png);
+        }
+
+        if (driver != null) driver.quit();
+    }
+}
+```
+
+</TabItem>
+<TabItem value="junit5" label="JUnit 5">
+
+```java
+import dev.reportinglabs.core.Rl;
+import org.junit.jupiter.api.*;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class BaseTest {
+    protected WebDriver driver;
+
+    @BeforeEach
+    void setUp() {
+        driver = new ChromeDriver();
+    }
+
+    @AfterEach
+    void tearDown(TestInfo info) {
+        // JUnit 5 doesn't tell @AfterEach whether the test failed; use
+        // TestWatcher for that. Simplest form:
+        boolean failed = failureFlag.get();
+        if (Rl.shouldCaptureScreenshot(failed) && driver != null) {
+            byte[] png = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+            Rl.attach(info.getDisplayName() + ".png", "image/png", png);
+        }
+        if (driver != null) driver.quit();
+        failureFlag.remove();
+    }
+
+    private static final ThreadLocal<Boolean> failureFlag = ThreadLocal.withInitial(() -> false);
+
+    @RegisterExtension
+    static TestWatcher watcher = new TestWatcher() {
+        @Override public void testFailed(ExtensionContext c, Throwable cause) { failureFlag.set(true); }
+    };
+}
+```
+
+</TabItem>
+</Tabs>
+
+**How the report looks.** The attached PNG shows up under the test's
+**Attachments** panel — click the thumbnail to preview it inline, no unzip:
+
+![Test detail — attachments panel with screenshot](/img/screenshots/03-test-detail-light.png)
+
+### Flip capture behaviour from one line
+
+The whole point of the helper is one config line drives the whole suite. No
+test code changes.
+
+```properties title="src/test/resources/reporting-labs.properties"
+reporting-labs.screenshot=on-failure   # default — snap only when a test fails
+```
+
+| Value | When you'll see a screenshot |
+|---|---|
+| `never` | Never. The `Rl.shouldCaptureScreenshot(failed)` call always returns `false`. |
+| `on-failure` *(default)* | Only when the test fails. The most common setting for CI. |
+| `always` | On every test — passes and failures. Handy during flake hunts. |
+| `only-on-pass` | Only on passes. Rare, but useful to prove a green run visually. |
+
+Override per-run without editing the file:
+
+```bash
+mvn test -Dreporting-labs.screenshot=always
+```
+
+Or via env var in CI:
+
+```bash
+export REPORTING_LABS_SCREENSHOT=on-failure
+```
+
+Same helper trio works for the other capture kinds — `Rl.shouldCaptureVideo(failed)`
+(if you're recording with Monte / ashot / a custom recorder) and
+`Rl.shouldCaptureTrace(failed)` (Playwright users get this automatically).
+
 ## Annotations
 
 All annotations live in `dev.reportinglabs.core.annotations`. Method-level wins over class-level. Same set for JUnit 5 and TestNG.
@@ -424,7 +546,7 @@ Sensitive keys (`password`, `token`, `authorization`, `cookie`, `apiKey`, `secre
 `Rl.*` doesn't care what happens inside the test body — only the framework's `@Test` lifecycle. Same package works for:
 
 - **Playwright for Java** — auto-capture with `reporting-labs-playwright` (see above)
-- **Selenium Java** — `Rl.attach("failure.png", "image/png", ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES))`
+- **Selenium Java** — one `BaseTest` with the `@AfterMethod` shown in [Selenium Java — screenshots by policy](#selenium-java--screenshots-by-policy)
 - **REST Assured** — `Rl.api("POST", "/v1/orders", resp.statusCode())`
 - **Karate**, **Cucumber JVM** — run under JUnit 5 or TestNG; annotations and `Rl.*` work the same
 - **Plain code**, `HttpClient`, JDBC, whatever
@@ -516,10 +638,13 @@ reporting-labs.project.url=https://shoplite.example.com
 reporting-labs.project.description=Frontend regression suite
 
 # metadata.<name> becomes a chip. metadata.build labels the trend x-axis.
-reporting-labs.metadata.build=ci-4287
+# build / branch / commit / ci are auto-detected on GitHub Actions, Jenkins,
+# GitLab CI, CircleCI, Travis, Buildkite, TeamCity and Azure Pipelines —
+# uncomment only if you want to override the auto-detected value.
+# reporting-labs.metadata.build=ci-4287
+# reporting-labs.metadata.branch=release/2.4.0
+# reporting-labs.metadata.commit=abc123f
 reporting-labs.metadata.env=staging
-reporting-labs.metadata.branch=release/2.4.0
-reporting-labs.metadata.commit=abc123f
 reporting-labs.metadata.region=apac
 
 # Turn @Story("SHOP-231") etc. into clickable chips. {id} = annotation value.
@@ -623,27 +748,14 @@ still wins on overlap. Supported providers:
 | TeamCity | `TEAMCITY_VERSION`, `BUILD_NUMBER`, `BUILD_VCS_NUMBER` |
 | Azure Pipelines | `TF_BUILD`, `BUILD_BUILDNUMBER`, `BUILD_SOURCEBRANCHNAME`, `BUILD_SOURCEVERSION` |
 
-### Screenshot / trace / video policy for Selenium
+### Screenshot / trace / video policy
 
-Playwright users get screenshots and traces automatically — `RlPlaywright.attach(page)`
-honours the config on its own. For Selenium (or any other driver), use the
-`Rl.shouldCapture*` helpers so one config line drives all your base classes:
+**Playwright** — nothing to do. `RlPlaywright.attach(page)` reads
+`reporting-labs.screenshot` / `.trace` on its own.
 
-```java
-@AfterMethod
-void afterMethod(ITestResult result) {
-    boolean failed = result.getStatus() != ITestResult.SUCCESS;
-    if (Rl.shouldCaptureScreenshot(failed)) {
-        byte[] png = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-        Rl.attach("failure.png", "image/png", png);
-    }
-    driver.quit();
-}
-```
-
-Now flipping `reporting-labs.screenshot=always` in the properties file (or
-`-Dreporting-labs.screenshot=only-on-pass` on the CLI) reshapes what your
-suite attaches without touching a single test.
+**Selenium / any other driver** — one `@AfterMethod` in your `BaseTest` calls
+`Rl.shouldCaptureScreenshot(failed)`. Full walkthrough with code:
+[Selenium Java — screenshots by policy](#selenium-java--screenshots-by-policy).
 
 ### CLI overrides (per-run)
 
