@@ -72,6 +72,28 @@ Rl.attach("screen.png", "image/png", bytes);         // any file — image, vide
 
 ![Test detail — steps, data block, attachments](/img/screenshots/03-test-detail-light.png)
 
+### `Rl.step(title, body)` — timed, nested steps
+
+The Java equivalent of Playwright's `test.step()`. The body runs as a named
+step with its duration; steps nest; a body that throws marks the step red
+with the exception and rethrows it unchanged.
+
+```java
+Rl.step("login as demo", () -> {
+    driver.findElement(By.id("email")).sendKeys("demo@shop.io");
+    driver.findElement(By.id("password")).sendKeys("Secret@123");
+    driver.findElement(By.id("submit")).click();
+});
+
+String orderId = Rl.step("create order", () -> api.createOrder(payload));   // returns a value
+```
+
+With the [Selenium add-on](/get-started/java/selenium) or the
+[Playwright add-on](/get-started/java/playwright) the driver's own actions
+appear nested under your steps. Framework hooks (`@BeforeMethod`,
+`@BeforeClass`, `@AfterEach`, …) show as **Before Hooks** / **After Hooks**
+with their timings, automatically.
+
 ### `Rl.log(String)`
 
 One line per step. Shows in order with a timestamp. This is the cheapest way
@@ -122,6 +144,21 @@ Rl.shouldCaptureTrace()        // reads reporting-labs.trace
 
 Each also has a `(boolean failed)` overload if you already hold the outcome.
 Full walkthrough in [Selenium + Java](/get-started/java/selenium).
+
+## Console output — captured automatically
+
+Every `System.out.println` / `System.err.println` that runs during a test
+lands in that test's **Console output** / **Console errors** section (like
+`console.log` in the Playwright report). Lines printed from `@BeforeClass`
+go to the first test of the class; lines from `@AfterMethod` go to the test
+that just finished. Turn it off with `reporting-labs.captureStdout=false`.
+
+## Retries and flaky tests
+
+A TestNG `IRetryAnalyzer` retry is not a new row: the failed attempt and the
+retry are grouped as *Attempt 1 · Failed* / *Retry 1 · Passed* tabs on one
+test, the test is marked **Flaky**, and the Overview's Flaky KPI counts it —
+the same treatment Playwright retries get in the Node.js report.
 
 ## Calling helpers from `@AfterMethod` / `@AfterEach`
 

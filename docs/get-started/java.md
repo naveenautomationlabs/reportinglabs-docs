@@ -100,7 +100,7 @@ Every other knob is in [Configuration](/get-started/java/configuration).
 | Your stack | What the guide covers |
 |---|---|
 | [**Playwright + Java**](/get-started/java/playwright) | One line — `RlPlaywright.attach(page)` — gives you API calls, trace zips and failure screenshots automatically. |
-| [**Selenium + Java**](/get-started/java/selenium) | A `BaseTest` that screenshots by policy (`on-failure`, `always`, …) with one config line. Works with parallel TestNG too. |
+| [**Selenium + Java**](/get-started/java/selenium) | One line — `RlSelenium.attach(driver)` — records every open/click/type as a timed step, marks the failing action, screenshots by policy and captures console output. Works with `@BeforeTest` drivers and parallel TestNG. |
 | [**REST Assured + Java**](/get-started/java/rest-assured) | A 25-line filter that records every request/response into the API tab, with secrets masked. |
 | [**Other tools**](/get-started/java/other-tools) | Appium, Cucumber JVM, Karate, `HttpClient`, JDBC — what works today and how. |
 

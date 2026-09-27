@@ -8,56 +8,57 @@ import TabItem from '@theme/TabItem';
 
 # Selenium + Java
 
-With Selenium **your** base class owns the `WebDriver`, so reportingLabs
-can't grab a screenshot on its own. The split is simple:
+**One line.** Wrap your driver with `RlSelenium.attach(...)` and every test
+that uses it gets a step-by-step trail (open, click, type, with timings),
+the failing action highlighted, a screenshot per the capture policy, and the
+console output of the test — no `@AfterMethod` screenshot code, no listener
+of your own.
 
-> **You take the screenshot bytes. reportingLabs decides whether to attach
-> them — based on one config line.**
-
-That decision is `Rl.shouldCaptureScreenshot()`. It reads
-`reporting-labs.screenshot` (`on-failure` by default) and already knows
-whether the test that just finished passed or failed — no `ITestResult`
-juggling, no `TestWatcher`.
+![Failed Selenium test — hooks, steps, the failing find in red, screenshot, console output](/img/screenshots/09-selenium-detail-light.png)
 
 Finish [Step 1 on the Java overview](/get-started/java) first (install the
-TestNG or JUnit 5 artifact). Nothing extra to install for Selenium.
+TestNG or JUnit 5 artifact). Then add the Selenium add-on:
 
-## The BaseTest
+```xml title="pom.xml"
+<dependency>
+    <groupId>dev.reportinglabs</groupId>
+    <artifactId>reporting-labs-selenium</artifactId>
+    <version>0.1.9</version>
+    <scope>test</scope>
+</dependency>
+```
 
-Put this in your base class once. Every test class that extends it inherits
-the behaviour.
+```gradle title="build.gradle"
+testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.9'
+```
+
+Works with Selenium 4.x (any 4.x — it uses the `EventFiringDecorator` that
+ships with `selenium-java`).
+
+## The one line
+
+Wherever you create the driver — `@BeforeTest`, `@BeforeClass`,
+`@BeforeMethod`, a `DriverFactory` — wrap it and **use the returned driver**:
 
 <Tabs groupId="java-framework">
 <TabItem value="testng" label="TestNG" default>
 
 ```java
-import dev.reportinglabs.core.Rl;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
+import dev.reportinglabs.selenium.RlSelenium;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.*;
 
 public class BaseTest {
-
     protected WebDriver driver;
 
-    @BeforeMethod(alwaysRun = true)
-    public void setUp() {
-        driver = new ChromeDriver();
+    @BeforeTest
+    public void setup() {
+        driver = RlSelenium.attach(new ChromeDriver());   // <-- the one line
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterTest
     public void tearDown() {
-        if (driver == null) return;
-
-        // Policy check: true when reporting-labs.screenshot says "capture this one".
-        if (Rl.shouldCaptureScreenshot()) {
-            byte[] png = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-            Rl.attach("screen.png", "image/png", png);
-        }
-
         driver.quit();
     }
 }
@@ -67,33 +68,21 @@ public class BaseTest {
 <TabItem value="junit5" label="JUnit 5">
 
 ```java
-import dev.reportinglabs.core.Rl;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
+import dev.reportinglabs.selenium.RlSelenium;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 public class BaseTest {
-
     protected WebDriver driver;
 
     @BeforeEach
     void setUp() {
-        driver = new ChromeDriver();
+        driver = RlSelenium.attach(new ChromeDriver());   // <-- the one line
     }
 
     @AfterEach
     void tearDown() {
-        if (driver == null) return;
-
-        // Policy check: true when reporting-labs.screenshot says "capture this one".
-        if (Rl.shouldCaptureScreenshot()) {
-            byte[] png = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
-            Rl.attach("screen.png", "image/png", png);
-        }
-
         driver.quit();
     }
 }
@@ -102,11 +91,24 @@ public class BaseTest {
 </TabItem>
 </Tabs>
 
-**Why does this work from an after-hook?** Both TestNG and JUnit tell
-reportingLabs "test finished" *before* your `@AfterMethod` / `@AfterEach`
-runs. reportingLabs remembers the test that just ended on the current thread,
-so `Rl.attach()`, `Rl.log()` and friends called from a teardown still land on
-the right test. Parallel runs are safe — the memory is per thread.
+Creating the driver once and reusing it across tests is fine — capture is
+per **test**, not per `attach()`. A `ThreadLocal<WebDriver>` factory for
+`parallel="methods"` works the same way: attach on each thread.
+
+## What you get automatically
+
+| Captured | Where it shows |
+|---|---|
+| **Steps** — `open <url>`, `click id: submit`, `type "…" into name: email`, `clear`, `submit`, `navigate back`, `accept alert`, `switch to frame` — each with its duration | **Steps** in the test detail; nested under your `Rl.step()` blocks and under the hook that ran them |
+| **The failing action** — a `NoSuchElementException` on `findElement`, a stale click — marked red with the exception | Steps (and the error block above them) |
+| **Before / After hooks** — `@BeforeTest setup`, `@BeforeClass regSetup`, `@AfterMethod …` with timings | Steps → *Before Hooks* / *After Hooks* |
+| **Screenshot** per `reporting-labs.screenshot` (default `on-failure`) | Attachments |
+| **Console output** — every `System.out` / `System.err` line printed during the test | Console output / Console errors |
+| **Retries** — `IRetryAnalyzer` attempts grouped as *Attempt 1 · Failed / Retry 1 · Passed*, test marked **Flaky** | Attempt tabs in the detail; Flaky KPI on the Overview |
+
+Text typed into anything that looks like a password field (`password`,
+`pwd`, `pin`, `otp`, `token`, `cvv`, `card` in the locator) is shown as
+`••••`.
 
 ## A test on top of it
 
@@ -120,22 +122,18 @@ import org.openqa.selenium.By;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Map;
-
 @Owner("naveen") @Feature("login")
 public class LoginTest extends BaseTest {
 
     @Test(description = "logs in with a valid user")
     @Priority("P0") @Severity("blocker") @Story("SHOP-101")
     public void valid_login() {
-        Rl.testData("Credentials", Map.of("user", "demo@shop.io", "password", "Secret@123"));
-
-        Rl.log("opening login page");
         driver.get("https://shoplite.example.com/login");
 
-        Rl.log("submitting form");
-        driver.findElement(By.id("email")).sendKeys("demo@shop.io");
-        driver.findElement(By.id("password")).sendKeys("Secret@123");
+        Rl.step("fill credentials", () -> {                 // optional grouping
+            driver.findElement(By.id("email")).sendKeys("demo@shop.io");
+            driver.findElement(By.id("password")).sendKeys("Secret@123");
+        });
         driver.findElement(By.id("submit")).click();
 
         Assert.assertEquals(driver.getTitle(), "My account");
@@ -153,22 +151,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 
-import java.util.Map;
-
 @Owner("naveen") @Feature("login")
 class LoginTest extends BaseTest {
 
     @Test
     @Priority("P0") @Severity("blocker") @Story("SHOP-101")
     void valid_login() {
-        Rl.testData("Credentials", Map.of("user", "demo@shop.io", "password", "Secret@123"));
-
-        Rl.log("opening login page");
         driver.get("https://shoplite.example.com/login");
 
-        Rl.log("submitting form");
-        driver.findElement(By.id("email")).sendKeys("demo@shop.io");
-        driver.findElement(By.id("password")).sendKeys("Secret@123");
+        Rl.step("fill credentials", () -> {
+            driver.findElement(By.id("email")).sendKeys("demo@shop.io");
+            driver.findElement(By.id("password")).sendKeys("Secret@123");
+        });
         driver.findElement(By.id("submit")).click();
 
         Assertions.assertEquals("My account", driver.getTitle());
@@ -179,13 +173,19 @@ class LoginTest extends BaseTest {
 </TabItem>
 </Tabs>
 
-`password` is masked as `****` in the report automatically. The `Rl.log()`
-lines become the step list; the screenshot shows under **Attachments** when
-the test fails:
+The report shows:
 
-![Test detail — steps, data block and the attached screenshot](/img/screenshots/03-test-detail-light.png)
+```
+hook      Before Hooks                              2.3s
+selenium  open https://shoplite.example.com/login   412ms
+test.step fill credentials                          210ms
+  selenium  type "demo@shop.io" into id: email      98ms
+  selenium  type •••• into id: password             77ms
+selenium  click id: submit                          116ms
+hook      After Hooks                               14ms
+```
 
-## Flip capture behaviour — one config line
+## Screenshot policy — one config line
 
 ```properties title="src/test/resources/reporting-labs.properties"
 reporting-labs.screenshot=on-failure
@@ -193,43 +193,40 @@ reporting-labs.screenshot=on-failure
 
 | Value | You get a screenshot… |
 |---|---|
-| `never` | never — `Rl.shouldCaptureScreenshot()` always returns `false` |
+| `never` | never |
 | `on-failure` *(default)* | only when the test fails — the usual CI setting |
 | `always` | on every test — useful while hunting flaky tests |
-| `only-on-pass` | only on passing tests — proves a green run visually |
+| `only-on-pass` | only on passing tests |
 
-A **skipped** test (`SkipException`, `@Disabled`, failed assumption) never gets
-a screenshot, whatever the policy — nothing ran, so there is nothing to show.
+A **skipped** test never gets one. Override per run with
+`-Dreporting-labs.screenshot=always` or `REPORTING_LABS_SCREENSHOT=always`.
 
-Override for one run without touching the file:
+Want an extra screenshot mid-test? `RlSelenium.screenshot("after-login.png")`.
 
-```bash
-mvn test -Dreporting-labs.screenshot=always
-```
+## Without the add-on — do it by hand
 
-```bash
-export REPORTING_LABS_SCREENSHOT=on-failure   # env var form, handy in CI
-```
-
-## Parallel TestNG
-
-The usual `ThreadLocal<WebDriver>` pattern works unchanged — reportingLabs
-tracks the current test per thread as well, so `parallel="methods"` in
-`testng.xml` keeps screenshots on the right rows. The report header shows the
-real number of worker threads it saw.
-
-## Recording video?
-
-If you record with a tool like Monte Screen Recorder or a Selenium Grid video
-sidecar, gate it the same way:
+If you'd rather not wrap the driver, the manual pattern still works: take
+the bytes yourself and let `Rl.shouldCaptureScreenshot()` apply the policy.
 
 ```java
-if (Rl.shouldCaptureVideo()) {
-    Rl.attach("run.mp4", "video/mp4", Files.readAllBytes(videoPath));
+@AfterMethod(alwaysRun = true)
+public void tearDown() {
+    if (Rl.shouldCaptureScreenshot()) {
+        byte[] png = ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+        Rl.attach("screen.png", "image/png", png);
+    }
+    driver.quit();
 }
 ```
 
-…and set `reporting-labs.video=on-failure` (default is `never`).
+Both frameworks tell reportingLabs a test finished *before* the after-hook
+runs, so `Rl.attach()` from a teardown lands on the right test. You lose the
+automatic steps, though.
+
+## Appium
+
+`AndroidDriver` / `IOSDriver` are WebDrivers — `RlSelenium.attach(driver)`
+works unchanged, steps included.
 
 ## Next
 

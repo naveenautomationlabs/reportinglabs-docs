@@ -96,6 +96,8 @@ reporting-labs.screenshot=on-failure
 reporting-labs.trace=on-failure
 # never | on-failure | always | only-on-pass
 reporting-labs.video=never
+# copy System.out / System.err lines into each test's Console output
+reporting-labs.captureStdout=true
 
 # ─── Header ─────────────────────────────────────────────────────────────────
 reporting-labs.project.name=ShopLite Web
@@ -167,6 +169,7 @@ reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 | `screenshot` | `on-failure` | Capture policy — honoured by Playwright add-on and `Rl.shouldCaptureScreenshot()` |
 | `trace` | `on-failure` | Capture policy for the Playwright trace zip |
 | `video` | `never` | Capture policy read by `Rl.shouldCaptureVideo()` |
+| `captureStdout` | `true` | Copy `System.out` / `System.err` lines into each test's Console output |
 | `project.*` | – | `name`, `version`, `team`, `url`, `description` |
 | `metadata.<key>` | – | Header chip; `build` labels the trend x-axis |
 | `links.<key>` | – | Turn a chip value into a link; `{id}` placeholder |
