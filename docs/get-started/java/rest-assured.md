@@ -37,6 +37,10 @@ import java.util.Map;
 
 public class RlRestAssuredFilter implements Filter {
 
+    // Keep the report light: bodies beyond this are truncated (same cap as the
+    // Node.js reporter and the Playwright add-on).
+    private static final int MAX_BODY = 200 * 1024;
+
     @Override
     public Response filter(FilterableRequestSpecification req,
                            FilterableResponseSpecification res,
@@ -47,9 +51,14 @@ public class RlRestAssuredFilter implements Filter {
 
         Object body = req.getBody();
         Rl.api(req.getMethod(), req.getURI(), response.getStatusCode(), duration,
-               headers(req.getHeaders()), body == null ? null : body.toString(),
-               headers(response.getHeaders()), response.asString());
+               headers(req.getHeaders()), body == null ? null : cap(body.toString()),
+               headers(response.getHeaders()), cap(response.asString()));
         return response;
+    }
+
+    private static String cap(String s) {
+        if (s == null || s.length() <= MAX_BODY) return s;
+        return s.substring(0, MAX_BODY) + "\n… truncated (" + s.length() + " chars)";
     }
 
     private static Map<String, String> headers(Iterable<Header> headers) {
@@ -59,6 +68,10 @@ public class RlRestAssuredFilter implements Filter {
     }
 }
 ```
+
+Binary responses (a PDF, an image) still come back through `asString()`;
+if your suite downloads files, skip the body for those — e.g. only pass it
+when `response.getContentType()` contains `json`, `xml` or `text`.
 
 ## 2. Register it once
 
