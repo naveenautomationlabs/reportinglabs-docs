@@ -87,9 +87,12 @@ Rl.testData("Login", Map.of("user", "demo@shop.io", "password", "Secret@123"));
 // report shows:  user  demo@shop.io      password  ****
 ```
 
-Masked by default (case-insensitive substring match): `password`, `passwd`,
-`secret`, `token`, `authorization`, `cookie`, `apikey`, `api-key`, `card`,
-`cvv`, `cvc`, `pan`, `ssn`. Add more with `reporting-labs.maskKeys`.
+Masked by default (case-insensitive; `-` and `_` are ignored, so `X-Api-Key`,
+`api_key` and `apiKey` all match): `password`, `passwd`, `pwd`, `secret`,
+`token`, `apikey`, `authorization`, `auth`, `cookie`, `session`, `csrf`,
+`xsrf`, `privatekey`, `clientsecret`, `accesstoken`, `refreshtoken`,
+`cardnumber`, `card`, `cvv`, `cvc`, `pan`, `ssn`. Add more with
+`reporting-labs.maskKeys`.
 
 TestNG `@DataProvider` parameters are captured as a **Parameters** block
 automatically — see [Data-driven tests](/get-started/java/data-driven).
