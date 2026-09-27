@@ -126,3 +126,22 @@ Works. Both frameworks tell reportingLabs a test finished *before* the
 after-hook runs, so reportingLabs remembers the test that just ended on the
 current thread. `Rl.attach()` / `Rl.log()` from a teardown land on that test.
 This is what makes the Selenium screenshot pattern possible.
+
+Calling them from `@BeforeMethod` / `@BeforeEach` works too — the test is
+already open by then. That's why `RlPlaywright.attach(page)` can live in a
+setup hook.
+
+## Skipped tests show why
+
+The **Skipped** card and the test detail show the reason, whichever way the
+test was skipped:
+
+| Framework | Skip mechanism | Reason shown |
+|---|---|---|
+| TestNG | `throw new SkipException("payment sandbox is down")` | the exception message |
+| TestNG | `@Test(enabled = false)` | — (never runs, not reported) |
+| JUnit 5 | `@Disabled("waiting on SHOP-77")` | the annotation value |
+| JUnit 5 | `Assumptions.assumeTrue(cond, "needs staging seed")` | `Assumption failed: needs staging seed` |
+
+An assumption failure is reported as **skipped**, not failed — no screenshot
+or trace is captured for it.
