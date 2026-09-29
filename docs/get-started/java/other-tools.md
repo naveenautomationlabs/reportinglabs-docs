@@ -23,13 +23,13 @@ anywhere in that body.
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.18</version>
+    <version>0.1.19</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.18'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.19'   // the reporter for TestNG
 ```
 
 </TabItem>
@@ -40,13 +40,13 @@ testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.18'   // the rep
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.18</version>
+    <version>0.1.19</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.18'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.19'   // the reporter for JUnit 5
 ```
 
 </TabItem>
@@ -117,10 +117,19 @@ line, with Given/When/Then as steps and tags as filters.
 
 ## Karate
 
-Karate's JUnit 5 runner executes features as dynamic tests, which the Jupiter
-extension does not observe today. A dedicated Karate hook is on the roadmap.
-Until then, Karate's own HTML report remains the right place for feature-level
-detail.
+Karate's JUnit 5 runner executes features as dynamic tests, and dynamic tests
+are rows: with `reporting-labs-junit5` on the classpath and auto-detection on,
+every scenario of a `@Karate.Test` runner is one row named after it
+(`[2:13] wrong status fails`), under the runner and feature in the tree, with
+Karate's match failure as the error. Nothing to configure beyond the JUnit 5
+setup. Karate's own HTML report still has the step-level detail (requests,
+responses, `print` output), which the runner does not hand to JUnit.
+
+```java
+class OrdersRunner {
+    @Karate.Test Karate testOrders() { return Karate.run("orders").relativeTo(getClass()); }
+}
+```
 
 ## Plain `HttpClient`, OkHttp, Retrofit
 

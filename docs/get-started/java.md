@@ -39,13 +39,13 @@ All artifacts live under the `dev.reportinglabs` groupId on Maven Central.
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.18</version>
+    <version>0.1.19</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.18'
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.19'
 ```
 
 **Nothing else to wire.** TestNG finds the listener through `ServiceLoader`.
@@ -65,13 +65,13 @@ explicitly — both ways work:
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.18</version>
+    <version>0.1.19</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.18'
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.19'
 ```
 
 Then turn on JUnit's extension auto-detection — one file, one line:
@@ -81,6 +81,22 @@ junit.jupiter.extensions.autodetection.enabled=true
 ```
 
 That is the whole setup. No `@ExtendWith` on any class.
+
+Every JUnit shape is a row of its own: `@Test`, `@ParameterizedTest` (one row
+per argument set, titled by its display name, a password column masked),
+`@RepeatedTest`, `@TestFactory` dynamic tests (one row per dynamic test under
+the factory, dynamic containers as tree levels), `@Nested` classes (tree by
+`@DisplayName`, enclosing `@BeforeEach` / `@AfterEach` listed), tests inherited
+from a base class or a test interface (the row points at the declaring file),
+`@Disabled` methods and classes (skipped with the reason), assumptions
+(skipped with the message), `@Timeout` (explained as a time-out), `@Tag`
+(a tag chip), `TestReporter.publishEntry` (a log line), a failing `@BeforeEach`
+(the test fails with the hook's error), a failing `@BeforeAll` (every test of
+the class fails with it), a failing `@AfterEach` (fails the test, as JUnit
+does), a failing `@AfterAll` (an error at the top of the report), and
+junit-pioneer's `@RetryingTest` (attempts grouped, the test marked Flaky).
+One limit: a `@Timeout` in `SEPARATE_THREAD` mode runs the body on another
+thread, so `Rl.log` and `System.out` from inside it are not on the row.
 
 </TabItem>
 </Tabs>

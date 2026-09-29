@@ -91,8 +91,8 @@ String orderId = Rl.step("create order", () -> api.createOrder(payload));   // r
 With the [Selenium add-on](/get-started/java/selenium) or the
 [Playwright add-on](/get-started/java/playwright) the driver's own actions
 appear nested under your steps. Framework hooks (`@BeforeMethod`,
-`@BeforeClass`, `@AfterEach`, …) show as **Before Hooks** / **After Hooks**
-with their timings, automatically.
+`@BeforeClass`, `@BeforeAll`, `@BeforeEach`, `@AfterEach`, `@AfterAll`, …)
+show as **Before Hooks** / **After Hooks** with their timings, automatically.
 
 ### `Rl.log(String)`
 
