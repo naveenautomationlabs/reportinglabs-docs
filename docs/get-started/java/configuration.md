@@ -59,7 +59,7 @@ Copy this as-is; every line is optional.
 :::caution Comments go on their own line
 `java.util.Properties` has no inline comments — in
 `reporting-labs.screenshot=always   # only on pass` the value becomes
-`always   # only on pass` and silently matches nothing. From 0.1.15 the
+`always   # only on pass` and silently matches nothing. From 0.1.16 the
 option-style keys tolerate a trailing `# …`, but keep comments on separate
 lines anyway; older versions and free-text keys (`title`, `accent`,
 `customCss`, `links.*`, …) read the `#` literally.
@@ -100,8 +100,9 @@ reporting-labs.playwright.autoAttach=true
 reporting-labs.playwright.steps=true
 # never | on-failure | always | only-on-pass
 reporting-labs.playwright.screenshot=on-failure
-# trace.zip, opens in trace.playwright.dev
-reporting-labs.playwright.trace=on-failure
+# trace.zip, opens in trace.playwright.dev. Off by default: recording snapshots
+# costs about 70 ms per short test (a 240-test suite took 54 s instead of 37 s)
+reporting-labs.playwright.trace=never
 # video needs the context created with RlPlaywright.contextOptions()
 reporting-labs.playwright.video=never
 
@@ -116,7 +117,7 @@ reporting-labs.bdd=false
 # Default capture policy: used by a tool that has no setting above and by
 # Rl.shouldCaptureScreenshot() in your own base classes
 # reporting-labs.screenshot=on-failure
-# reporting-labs.trace=on-failure
+# reporting-labs.trace=never
 # reporting-labs.video=never
 
 # Header
@@ -187,9 +188,9 @@ reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 | `selenium.screenshot` | `on-failure` | Selenium add-on: screenshot at the end of each test. `never` / `on-failure` / `always` / `only-on-pass` |
 | `playwright.steps` | `true` | Playwright add-on: every action as a timed step, read from the trace at the end of the test |
 | `playwright.screenshot` | `on-failure` | Playwright add-on: full-page screenshot at the end of each test |
-| `playwright.trace` | `on-failure` | Playwright add-on: trace zip |
+| `playwright.trace` | `never` | Playwright add-on: trace zip. `on-failure` records every test with snapshots and screenshots, which costs about 70 ms per short test; the step list does not need it |
 | `playwright.video` | `never` | Playwright add-on: video, when the context was created with `RlPlaywright.contextOptions()` |
-| `screenshot`, `trace`, `video` | `on-failure`, `on-failure`, `never` | Defaults for a tool without its own setting, and what `Rl.shouldCaptureScreenshot()` / `Trace()` / `Video()` read in your own base classes |
+| `screenshot`, `trace`, `video` | `on-failure`, `never`, `never` | Defaults for a tool without its own setting, and what `Rl.shouldCaptureScreenshot()` / `Trace()` / `Video()` read in your own base classes |
 | `captureStdout` | `true` | Copy `System.out` / `System.err` lines into each test's Console output |
 | `selenium.autoAttach` | `true` | Selenium add-on: discover the WebDriver on the test instance (fields, `ThreadLocal`, page objects) and record its actions |
 | `restassured.autoRecord` | `true` | REST Assured add-on: add the recording filter to `RestAssured.filters()` |
@@ -240,7 +241,8 @@ mvn test \
   -Dreporting-labs.screenshot=always
 ```
 
-Environment variables — replace `.` with `_`, uppercase, prefix `REPORTING_LABS_`:
+Environment variables — replace `.` with `_`, uppercase, prefix `REPORTING_LABS_`.
+They win over the file and lose to `-D`, so CI can set them without touching the project:
 
 ```bash
 export REPORTING_LABS_TITLE="Nightly"

@@ -29,21 +29,21 @@ The reporter for your test framework, plus the Playwright add-on. Playwright for
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.15</version>
+    <version>0.1.16</version>
     <scope>test</scope>
 </dependency>
 <!-- finds your Page, records API calls, trace and screenshot -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.15</version>
+    <version>0.1.16</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.15'   // the reporter for TestNG
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.15'   // API calls, traces and screenshots from the Page
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.16'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.16'   // API calls, traces and screenshots from the Page
 ```
 
 </TabItem>
@@ -54,21 +54,21 @@ testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.15'   // API
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.15</version>
+    <version>0.1.16</version>
     <scope>test</scope>
 </dependency>
 <!-- finds your Page, records API calls, trace and screenshot -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.15</version>
+    <version>0.1.16</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.15'   // the reporter for JUnit 5
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.15'   // API calls, traces and screenshots from the Page
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.16'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.16'   // API calls, traces and screenshots from the Page
 ```
 
 </TabItem>
@@ -212,7 +212,7 @@ Open the file in a browser. It is self-contained: mail it, attach it to a ticket
 |---|---|---|
 | **Every action** — `navigate to …`, `fill #user-name with "…"`, `click #login-button`, `expect h1 to have text "…"` — with timing, the failing one marked red with its error. Read back from Playwright's own trace at the end of the test, so nothing is wrapped: `assertThat(page)` and `assertThat(locator)` keep working. Values typed into password-like fields show as •••• | **Steps** on the test | always (`reporting-labs.playwright.steps=false` turns it off) |
 | **Every `APIRequestContext` call** — method, URL, status, timing, request headers + body, response headers + body | **API** tab and the test's detail panel | always |
-| **Playwright trace** (`trace.zip`) — drop it into [trace.playwright.dev](https://trace.playwright.dev) | Attachments on the test | on failure |
+| **Playwright trace** (`trace.zip`) — drop it into [trace.playwright.dev](https://trace.playwright.dev) | Attachments on the test | never (set `reporting-labs.playwright.trace=on-failure`; recording snapshots costs about 70 ms per short test) |
 | **Full-page screenshot** (`failure.png`; `screen.png` on a passing test with policy `always`) | Attachments on the test | on failure |
 | **Video** (`video.webm`) when the context is created with `RlPlaywright.contextOptions()`, see below | Attachments on the test, playable inline | never (set `reporting-labs.playwright.video`) |
 | **Where it failed**: the failing line (`FailuresTest.java:26`), a code snippet, and a plain-language reading of the error (element not found, assertion, site unreachable, test timed out) | Error block on the test, Failure clusters, Graphs | always |
@@ -309,21 +309,25 @@ reporting-labs.playwright.autoAttach=true
 reporting-labs.playwright.steps=true
 # never | on-failure | always | only-on-pass
 reporting-labs.playwright.screenshot=on-failure
+# off by default: snapshots cost about 70 ms per short test
 reporting-labs.playwright.trace=on-failure
 # needs RlPlaywright.contextOptions(), see Videos
 reporting-labs.playwright.video=never
 ```
 
-With `trace=never` a lightweight trace (no screenshots, no snapshots) still
-runs for the steps; `steps=false` switches that off too.
+With `trace=never` (the default) a lightweight trace without screenshots or
+snapshots still runs for the steps; it costs nothing measurable. `steps=false`
+switches that off too. A browser closed inside the test body (a
+try-with-resources around `Playwright`) is gone before the test ends, so its
+steps and screenshot cannot be collected; close it in your after-hook.
 
 The plain `reporting-labs.screenshot` / `trace` / `video` keys are the
 defaults for every tool; the `playwright.` ones win when both are set.
 
 | Value | Screenshot / trace / video is attached… |
 |---|---|
-| `never` | never — trace recording is not even started, so no overhead |
-| `on-failure` *(default)* | only when the test fails |
+| `never` *(default for trace)* | never; for the trace only the lightweight step recording runs |
+| `on-failure` *(default for screenshot)* | only when the test fails |
 | `always` | on every test |
 | `only-on-pass` | only on passing tests |
 
