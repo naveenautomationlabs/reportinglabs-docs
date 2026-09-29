@@ -70,7 +70,7 @@ Rl.api("POST", "/v1/orders", 201, 340);              // API row (see REST Assure
 Rl.attach("screen.png", "image/png", bytes);         // any file — image, video, zip, text
 ```
 
-![Test detail — steps, data block, attachments](/img/screenshots/03-test-detail-light.png)
+![Test detail from a Java run: annotation chips, steps, parameters block, screenshot, console output](/img/screenshots/12-selenium-passed-light.png)
 
 ### `Rl.step(title, body)` — timed, nested steps
 

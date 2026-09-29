@@ -192,7 +192,7 @@ public Object[][] users() throws Exception {
 
 ## What the report shows
 
-![Tests tab — one row per data row](/img/screenshots/02-tests-light.png)
+![One report row per DataProvider row; the row's values show as a Parameters block, passwords masked](/img/screenshots/12-selenium-passed-light.png)
 
 - **One row per data row** — never collapsed, even when the method name is the same.
 - **Parameters block** on each row (TestNG automatic; JUnit 5 via `Rl.testData`).

@@ -209,9 +209,9 @@ Open the file in a browser. It is self-contained: mail it, attach it to a ticket
 | **Playwright trace** (`trace.zip`) — drop it into [trace.playwright.dev](https://trace.playwright.dev) | Attachments on the test | on failure |
 | **Full-page screenshot** (`failure.png`) | Attachments on the test | on failure |
 
-![API tab — every call the page made, with status and timing](/img/screenshots/05-api-light.png)
+![API tab of a Playwright Java run: every call the pages made, with status, timing and the test it belongs to](/img/screenshots/14-playwright-java-api-light.png)
 
-![Test detail — attachments panel](/img/screenshots/03-test-detail-light.png)
+![A failed Playwright Java test: error, hooks, log, the API call it made, failure.png and trace.zip](/img/screenshots/13-playwright-java-detail-light.png)
 
 In the test's detail panel each call expands to the full request and
 response — headers, bodies — with **Copy as cURL** and **Copy URL** buttons,

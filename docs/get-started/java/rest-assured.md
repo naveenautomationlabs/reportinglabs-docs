@@ -13,7 +13,7 @@ in the 30-line filter below, register it once, and every call your tests make
 shows up in the report's **API** tab — method, URL, status, timing, headers
 and bodies — with secrets masked.
 
-![API tab — every call, with status and timing](/img/screenshots/05-api-light.png)
+![API tab of a REST Assured run: every call with method, status, timing and the test it belongs to](/img/screenshots/16-rest-assured-api-light.png)
 
 ## Step 1. Add the dependency
 
@@ -210,7 +210,10 @@ public class OrdersApiTest extends ApiBaseTest {
 ```
 
 Nothing about the test changed. The filter recorded the call; the report shows
-the row under the test **and** in the suite-wide API tab.
+the row under the test **and** in the suite-wide API tab. Click the row to see
+headers and bodies on both sides, with **Copy as cURL**:
+
+![Test detail: the POST /v1/orders call expanded, request and response headers and bodies, secrets masked, Copy as cURL](/img/screenshots/15-rest-assured-detail-light.png)
 
 ## Step 6. Run and open the report
 

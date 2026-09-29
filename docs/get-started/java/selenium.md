@@ -119,6 +119,8 @@ Open the file in a browser. It is self-contained: mail it, attach it to a ticket
 
 ## Step 4. Open the report
 
+![Overview of a Selenium run: pass rate, needs-attention list ranked by priority, failure clusters, flaky tests](/img/screenshots/10-selenium-overview-light.png)
+
 Every test that drove the browser now shows:
 
 - **Steps**: `open <url>`, `click id: submit`, `type "…" into name: email`, each with its duration, and the failing action in red.
@@ -126,6 +128,10 @@ Every test that drove the browser now shows:
 - **Attachments**: `screen.png` per the screenshot policy (default: on failure).
 - **Console output**: every `System.out` / `System.err` line printed during the test, secrets masked.
 - **Retries** grouped as attempts on one row, the test marked Flaky.
+
+![A passing test: Selenium steps grouped under Rl.step(), the DataProvider row as Parameters, screenshot, console output](/img/screenshots/12-selenium-passed-light.png)
+
+![A retried test: Attempt 1 failed, Retry 1 passed, marked Flaky](/img/screenshots/11-selenium-flaky-light.png)
 
 ## Step 5 (optional). Tags and config
 
