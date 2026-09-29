@@ -116,6 +116,13 @@ Masked by default (case-insensitive; `-` and `_` are ignored, so `X-Api-Key`,
 `cardnumber`, `card`, `cvv`, `cvc`, `pan`, `ssn`. Add more with
 `reporting-labs.maskKeys`.
 
+The same applies to free text: `Rl.log()` lines, `System.out` / `System.err`
+output, step titles, and error messages including TestNG / JUnit assertion
+output. `password=x`, `Password: x`, `{password=x}`, `"password":"x"`,
+`X-Api-Key: x`, "password is x", "with password S3cret@1", `Bearer ...`, JWTs
+and well-known token formats show as `****`. A failing
+`assertEquals(token, ...)` shows `but found [****]`.
+
 TestNG `@DataProvider` parameters are captured as a **Parameters** block
 automatically — see [Data-driven tests](/get-started/java/data-driven).
 

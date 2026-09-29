@@ -134,7 +134,8 @@ reporting-labs.history.file=reporting-labs.history.json
 reporting-labs.history.keep=30
 
 # ─── Data masking ───────────────────────────────────────────────────────────
-# Extra case-insensitive substrings to mask in testData and API headers, on
+# Extra case-insensitive substrings to mask in testData, API headers, log lines,
+# console output and error messages, on
 # top of the defaults (password, token, authorization, cookie, card, cvv, ...).
 # reporting-labs.maskKeys=internalCustomerId,phone
 
