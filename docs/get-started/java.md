@@ -17,7 +17,7 @@ Pick the guide for your tool; each one is complete on its own, from `pom.xml` to
 | Your stack | Guide |
 |---|---|
 | Selenium (or Appium) | [Selenium + Java](/get-started/java/selenium): add the dependency, nothing else. Steps, screenshots, hooks, console output appear on their own. |
-| Playwright | [Playwright + Java](/get-started/java/playwright): add the dependency, nothing else. API calls, traces and screenshots from the Page it finds on your test. |
+| Playwright | [Playwright + Java](/get-started/java/playwright): add the dependency, nothing else. Traces and screenshots from the Page it finds on your test, the API tab from your `APIRequestContext`. |
 | REST Assured | [REST Assured + Java](/get-started/java/rest-assured): add the dependency, every request lands in the API tab. |
 | Cucumber JVM | [Cucumber + Java](/get-started/java/cucumber): one property, one row per scenario with Given/When/Then as steps. |
 | Anything else | [Other tools + Java](/get-started/java/other-tools): Karate, HttpClient, JDBC, Appium. |
@@ -39,13 +39,13 @@ All artifacts live under the `dev.reportinglabs` groupId on Maven Central.
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.14</version>
+    <version>0.1.15</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.14'
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.15'
 ```
 
 **Nothing else to wire.** TestNG finds the listener through `ServiceLoader`.
@@ -65,13 +65,13 @@ explicitly — both ways work:
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.14</version>
+    <version>0.1.15</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.14'
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.15'
 ```
 
 Then turn on JUnit's extension auto-detection — one file, one line:
@@ -106,7 +106,7 @@ Every other knob is in [Configuration](/get-started/java/configuration).
 
 | Your stack | What the guide covers |
 |---|---|
-| [**Playwright + Java**](/get-started/java/playwright) | Zero code — add the dependency and the `Page`, `Browser` or `APIRequestContext` on your test is found automatically: API calls, trace zips and failure screenshots. Works with factories, base classes, `ThreadLocal` holders and parallel runs. |
+| [**Playwright + Java**](/get-started/java/playwright) | Zero code — add the dependency and the `Page`, `Browser` or `APIRequestContext` on your test is found automatically: trace zips and failure screenshots for UI tests, every request and response for API tests. Works with factories, base classes, `ThreadLocal` holders and parallel runs. |
 | [**Selenium + Java**](/get-started/java/selenium) | Zero code — add the dependency and your existing `BaseTest` / `DriverFactory` / page objects are found automatically: every open/click/type as a timed step, the failing action marked, screenshots by policy, console output. Works with `@BeforeTest` drivers, `ThreadLocal` factories and parallel TestNG. |
 | [**REST Assured + Java**](/get-started/java/rest-assured) | Zero code — add the dependency and every request/response lands in the API tab, with secrets masked. |
 | [**Cucumber + Java**](/get-started/java/cucumber) | One property — every scenario is a row named after it, at its feature line, with the Gherkin steps, hooks, data tables and tags as filters. TestNG runner or JUnit Platform engine. |

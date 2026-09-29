@@ -10,10 +10,11 @@ import TabItem from '@theme/TabItem';
 
 **Zero code.** Add the dependency and your `BaseTest`, `PlaywrightFactory`
 and page objects stay exactly as they are. The `Page` is found on the test
-instance and the report fills itself: every network call the page makes, a
-Playwright trace and a full-page screenshot when the test fails. An
-`APIRequestContext` field is recorded the same way, so API tests get the
-**API** tab without a wrapper.
+instance and the report fills itself: a Playwright trace and a full-page
+screenshot when the test fails. An `APIRequestContext` field is recorded the
+same way, so API tests get the **API** tab with every request and response,
+without a wrapper. The page's own network traffic (fonts, images, scripts)
+stays out of the API tab; it is in the trace.
 
 ## Step 1. Add two dependencies
 
@@ -27,21 +28,21 @@ The reporter for your test framework, plus the Playwright add-on. Playwright for
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.14</version>
+    <version>0.1.15</version>
     <scope>test</scope>
 </dependency>
 <!-- finds your Page, records API calls, trace and screenshot -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.14</version>
+    <version>0.1.15</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.14'   // the reporter for TestNG
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.14'   // API calls, traces and screenshots from the Page
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.15'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.15'   // API calls, traces and screenshots from the Page
 ```
 
 </TabItem>
@@ -52,21 +53,21 @@ testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.14'   // API
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.14</version>
+    <version>0.1.15</version>
     <scope>test</scope>
 </dependency>
 <!-- finds your Page, records API calls, trace and screenshot -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.14</version>
+    <version>0.1.15</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.14'   // the reporter for JUnit 5
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.14'   // API calls, traces and screenshots from the Page
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.15'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.15'   // API calls, traces and screenshots from the Page
 ```
 
 </TabItem>
@@ -106,7 +107,7 @@ instance for Playwright objects and wires them:
 
 | It finds | Where it looks | What happens |
 |---|---|---|
-| `Page` | a field on the test class or a base class, a page object, a factory, a `ThreadLocal`, a list or map | API calls recorded, trace started, screenshot at the end per policy |
+| `Page` | a field on the test class or a base class, a page object, a factory, a `ThreadLocal`, a list or map | trace started, screenshot at the end per policy |
 | `BrowserContext` | same places | every current and future page of the context, popups included |
 | `Browser` | same places | every open context; pages created later in the test body through `browser.newPage()` / `newContext()` |
 | `APIRequestContext` | a field or a `ThreadLocal` | the field is replaced with the recording wrapper, every `get/post/...` lands in the API tab |
@@ -208,13 +209,13 @@ Open the file in a browser. It is self-contained: mail it, attach it to a ticket
 
 | Captured | Where it shows | Default policy |
 |---|---|---|
-| **Every request the page makes** — method, URL, status, timing, request headers + body, response headers; response body for XHR/fetch calls | **API** tab and the test's detail panel | always |
+| **Every `APIRequestContext` call** — method, URL, status, timing, request headers + body, response headers + body | **API** tab and the test's detail panel | always |
 | **Playwright trace** (`trace.zip`) — drop it into [trace.playwright.dev](https://trace.playwright.dev) | Attachments on the test | on failure |
 | **Full-page screenshot** (`failure.png`; `screen.png` on a passing test with policy `always`) | Attachments on the test | on failure |
 | **Video** (`video.webm`) when the context is created with `RlPlaywright.contextOptions()`, see below | Attachments on the test, playable inline | never (set `reporting-labs.playwright.video`) |
 | **Where it failed**: the failing line (`FailuresTest.java:26`), a code snippet, and a plain-language reading of the error (element not found, assertion, site unreachable, test timed out) | Error block on the test, Failure clusters, Graphs | always |
 
-![API tab of a Playwright Java run: every call the pages made, with status, timing and the test it belongs to](/img/screenshots/14-playwright-java-api-light.png)
+![API tab of a Playwright Java run: every APIRequestContext call, with status, timing and the test it belongs to](/img/screenshots/14-playwright-java-api-light.png)
 
 ![A failed Playwright Java test: error, hooks, log, the API call it made, failure.png and trace.zip](/img/screenshots/13-playwright-java-detail-light.png)
 
@@ -252,6 +253,10 @@ public class UsersApiTest {
     }
 }
 ```
+
+The page's own traffic is not an API call: a UI test's fonts, images and
+scripts stay out of the API tab, exactly as in the Node.js reporter. The trace
+zip has every request if you need one.
 
 Two cases still need a line, because the object never sits on the test:
 a context created inside the test body, or `page.request()`. Wrap it where it

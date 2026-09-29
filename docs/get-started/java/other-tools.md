@@ -23,13 +23,13 @@ anywhere in that body.
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.14</version>
+    <version>0.1.15</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.14'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.15'   // the reporter for TestNG
 ```
 
 </TabItem>
@@ -40,13 +40,13 @@ testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.14'   // the rep
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.14</version>
+    <version>0.1.15</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.14'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.15'   // the reporter for JUnit 5
 ```
 
 </TabItem>
