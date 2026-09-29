@@ -337,6 +337,18 @@ Per-run override without editing the file:
 mvn test -Dreporting-labs.playwright.trace=always
 ```
 
+## What it costs
+
+Measured on a 240-test suite (200 UI tests against a local site, 40 API tests, four parallel classes), same machine, same run repeated:
+
+| Setup | Suite time |
+|---|---|
+| No reporter on the classpath | 37 s |
+| reportingLabs, defaults (steps on, screenshot on failure, trace off) | 36 s |
+| reportingLabs with `playwright.trace=on-failure` | 54 s |
+
+The step list and screenshots cost nothing measurable. Recording a full trace (DOM snapshots and screencast for every test, so the failing ones can be attached) is what costs, about 70 ms per short test; turn it on when you want `trace.zip` on failures. The report itself was written in under 200 ms after the last test, is 1 MB for those 240 tests with 10 failure screenshots embedded, and opens in a browser in about 0.2 s with the Tests, API and Graphs tabs each rendering in under 150 ms.
+
 ## Multi-tab flows
 
 Popups and new tabs are covered when the discovery finds the `BrowserContext`
