@@ -30,21 +30,21 @@ The reporter for your test framework, plus the Selenium add-on. Works with Selen
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.16</version>
+    <version>0.1.17</version>
     <scope>test</scope>
 </dependency>
 <!-- zero-code Selenium steps and screenshots -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-selenium</artifactId>
-    <version>0.1.16</version>
+    <version>0.1.17</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.16'   // the reporter for TestNG
-testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.16'   // zero-code Selenium steps and screenshots
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.17'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.17'   // zero-code Selenium steps and screenshots
 ```
 
 </TabItem>
@@ -55,21 +55,21 @@ testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.16'   // zero-
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.16</version>
+    <version>0.1.17</version>
     <scope>test</scope>
 </dependency>
 <!-- zero-code Selenium steps and screenshots -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-selenium</artifactId>
-    <version>0.1.16</version>
+    <version>0.1.17</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.16'   // the reporter for JUnit 5
-testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.16'   // zero-code Selenium steps and screenshots
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.17'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.17'   // zero-code Selenium steps and screenshots
 ```
 
 </TabItem>
@@ -179,9 +179,15 @@ step-recording decorator:
 | A `WebDriver` field on the test class or any base class (`protected WebDriver driver;`) | Yes |
 | A `ThreadLocal<WebDriver>` — instance or `static`, e.g. `DriverFactory.tlDriver` reached through a `df` field on your `BaseTest` | Yes — `getDriver()` returns the recording driver |
 | A `WebDriver` held by a page object, `ElementUtil` or any helper object that hangs off the test instance (up to three levels deep) | Yes — page objects built before the test started record too |
+| A static holder in a class the test only calls (`DriverManager.getDriver()`) | Yes — the classes your test refers to are looked at too, two hops out |
 | A driver created *inside* the `@Test` body and stored in a field | Screenshot yes, steps no (it appears too late for the recorder) |
 | A field typed as a concrete class (`ChromeDriver driver;`) | Screenshot yes; steps only for actions that go through page objects holding it as `WebDriver` |
-| A local variable that never lands in a field, or a static holder in a class no field of the test points to | No — call `RlSelenium.attach(driver)` once after creating it (see below) |
+| A driver made in a Cucumber `@Before` hook and kept in a static factory | Yes — see [Cucumber](/get-started/java/cucumber) |
+| A local variable that never lands in a field, or a holder in a class outside your own packages | No — call `RlSelenium.attach(driver)` once after creating it (see below) |
+
+A quit driver left behind in a `ThreadLocal` (a factory that never calls
+`remove()`) does no harm: the screenshot goes to the driver the test actually
+used, and a driver with no session left is skipped.
 
 This is the typical shape and it needs nothing from you:
 
@@ -260,9 +266,9 @@ auto-discovery already found, returns the same recording driver.
 
 | Captured | Where it shows |
 |---|---|
-| **Steps** — `open <url>`, `click id: submit`, `type "…" into name: email`, `clear`, `submit`, `navigate back`, `accept alert`, `switch to frame` — each with its duration | **Steps** in the test detail; nested under your `Rl.step()` blocks and under the hook that ran them |
+| **Steps** — `open <url>`, `click id: submit`, `type "…" into name: email`, `clear`, `submit`, `navigate back`, `refresh`, `accept alert`, `switch to frame`, `switch to window`, `switch to default content`, `open new tab`, `run script "…"`, `perform actions: pointerMove, pointerDown` — each with its duration. An element found from another element reads `click css selector: .row -> tag name: button` | **Steps** in the test detail; nested under your `Rl.step()` blocks and under the hook that ran them |
 | **The failing action** — a `NoSuchElementException` on `findElement`, a stale click — marked red with the exception | Steps (and the error block above them) |
-| **Before / After hooks** — `@BeforeTest setup`, `@BeforeClass regSetup`, `@AfterMethod …` with timings | Steps → *Before Hooks* / *After Hooks* |
+| **Before / After hooks** — `@BeforeTest setup`, `@BeforeClass regSetup`, `@AfterMethod …` (TestNG) and `@BeforeAll`, `@BeforeEach`, `@AfterEach`, `@AfterAll` (JUnit 5, `@Nested` classes included) with timings | Steps → *Before Hooks* / *After Hooks* |
 | **Screenshot** per `reporting-labs.selenium.screenshot` (default `on-failure`) | Attachments |
 | **Console output** — every `System.out` / `System.err` line printed during the test | Console output / Console errors |
 | **Retries** — `IRetryAnalyzer` attempts grouped as *Attempt 1 · Failed / Retry 1 · Passed*, test marked **Flaky** | Attempt tabs in the detail; Flaky KPI on the Overview |

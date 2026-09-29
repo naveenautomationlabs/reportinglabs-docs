@@ -27,21 +27,21 @@ The reporter for your test framework, plus the REST Assured add-on. Works with R
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.16</version>
+    <version>0.1.17</version>
     <scope>test</scope>
 </dependency>
 <!-- records every REST Assured call -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-rest-assured</artifactId>
-    <version>0.1.16</version>
+    <version>0.1.17</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.16'         // the reporter for TestNG
-testImplementation 'dev.reportinglabs:reporting-labs-rest-assured:0.1.16'   // records every REST Assured call
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.17'         // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-rest-assured:0.1.17'   // records every REST Assured call
 ```
 
 </TabItem>
@@ -52,21 +52,21 @@ testImplementation 'dev.reportinglabs:reporting-labs-rest-assured:0.1.16'   // r
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.16</version>
+    <version>0.1.17</version>
     <scope>test</scope>
 </dependency>
 <!-- records every REST Assured call -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-rest-assured</artifactId>
-    <version>0.1.16</version>
+    <version>0.1.17</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.16'         // the reporter for JUnit 5
-testImplementation 'dev.reportinglabs:reporting-labs-rest-assured:0.1.16'   // records every REST Assured call
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.17'         // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-rest-assured:0.1.17'   // records every REST Assured call
 ```
 
 </TabItem>
@@ -102,8 +102,11 @@ junit.jupiter.extensions.autodetection.enabled=true
 ## Step 3. Write tests as usual
 
 Your `given().when().then()` code stays exactly as it is. The add-on puts its
-filter into `RestAssured.filters()` when the run starts (and again after a
-`RestAssured.reset()`), so every request goes through it.
+filter into `RestAssured.filters()` when the run starts and puts it back at
+every lifecycle point (test start, after each `@Before*` / `@After*`, each
+Cucumber step), so a `RestAssured.reset()` or `replaceFiltersWith(...)` in a
+hook costs nothing. Your own `RestAssured.filters(...)` and
+`given().filter(...)` run alongside it.
 
 ```java
 import dev.reportinglabs.core.Rl;
@@ -162,6 +165,15 @@ headers and bodies on both sides, with **Copy as cURL**:
 
 Already have your own recording filter from an earlier version? Remove it, or
 every call shows twice.
+
+One case is out of reach: `RestAssured.reset()` or `replaceFiltersWith(...)`
+*inside a test body* drops the filter for the rest of that test (the next test
+gets it back). If you must reset mid-test, add the filter back on the same line:
+
+```java
+RestAssured.reset();
+RestAssured.filters(new dev.reportinglabs.restassured.RlRestAssuredFilter());
+```
 
 To switch the automatic filter off: `reporting-labs.restassured.autoRecord=false`.
 You can then add it yourself, globally or per request:

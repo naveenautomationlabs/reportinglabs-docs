@@ -33,14 +33,14 @@ plugin (it names the row and fills it in).
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.16</version>
+    <version>0.1.17</version>
     <scope>test</scope>
 </dependency>
 <!-- the Cucumber plugin -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-cucumber</artifactId>
-    <version>0.1.16</version>
+    <version>0.1.17</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -65,7 +65,7 @@ plugin opens and closes each row itself.
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-cucumber</artifactId>
-    <version>0.1.16</version>
+    <version>0.1.17</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -80,7 +80,7 @@ public class RunCucumberTest { }
 </TabItem>
 </Tabs>
 
-Gradle: `testImplementation("dev.reportinglabs:reporting-labs-cucumber:0.1.16")`
+Gradle: `testImplementation("dev.reportinglabs:reporting-labs-cucumber:0.1.17")`
 (plus `reporting-labs-testng` with the TestNG runner).
 
 ## Step 2. Register the plugin
@@ -148,9 +148,35 @@ history file, screenshot policy for a Selenium driver used from step definitions
 | A data table under a step | A table in the test data section, named after the step |
 | A doc string under a step | A text block, named after the step, secrets masked |
 | `System.out` from step definitions | Console output on the row, colour codes from the `pretty` plugin stripped |
-| REST Assured calls, Selenium actions | Recorded as on any other test once the [REST Assured](/get-started/java/rest-assured) or [Selenium](/get-started/java/selenium) add-on is on the classpath |
+| REST Assured calls, Selenium and Playwright actions | Recorded as on any other test once the [REST Assured](/get-started/java/rest-assured), [Selenium](/get-started/java/selenium) or [Playwright](/get-started/java/playwright) add-on is on the classpath: see below |
 
 ![A scenario with a data table: the table pinned as test data, the two POST calls it made in the API section](/img/screenshots/19-cucumber-table-light.png)
+
+## Selenium, Playwright and REST Assured from step definitions
+
+Cucumber builds your step-definition and hook classes itself, so the add-ons
+cannot look at a test instance the way they do with TestNG or JUnit. They
+look at the classes instead: every glue class that runs (hooks included) is
+handed over, and the static holders those classes reach are searched, which
+is where a Cucumber framework keeps its driver anyway:
+
+```java
+public class Hooks {
+    @Before public void openBrowser() { DriverFactory.start(); }   // sets a static ThreadLocal<WebDriver>
+    @After  public void closeBrowser() { DriverFactory.stop(); }
+}
+public class WebSteps {
+    @When("I log in as {string}") public void login(String u) { DriverFactory.get().findElement(By.id("user-name")).sendKeys(u); }
+}
+```
+
+That records every Selenium action as a step under the Gherkin step that made
+it, the same for a Playwright `Page` in a static factory (steps, trace,
+screenshot per policy), and REST Assured calls from any step. Screenshots are
+taken before your `@After` hooks run, so quitting the driver there is fine.
+The one shape that needs a line is a driver kept in a plain instance field of
+a step class with no static holder anywhere: `RlSelenium.attach(driver)` /
+`RlPlaywright.attach(page)` once after creating it.
 
 ## Tags become filters
 
@@ -210,6 +236,10 @@ ignored by the engine; move the line to `junit-platform.properties`.
 **The file column shows `features/orders.feature` instead of `src/test/resources/features/orders.feature`.**
 The features are not under `src/test/resources` (or `src/main/resources`), so the
 classpath path is shown as is. The row still works; only the label differs.
+
+**No Selenium steps or screenshot on a scenario.** The driver is not in a static
+holder any glue class reaches (see above). Call `RlSelenium.attach(driver)`
+once after creating it, or move it to a `ThreadLocal` in your factory.
 
 **Steps from a `pretty` plugin show up twice.** They do not: the step list is
 built from Cucumber's events, the console block is your `System.out`. Drop
