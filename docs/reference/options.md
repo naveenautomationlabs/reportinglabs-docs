@@ -46,7 +46,7 @@ Every option, defaults inline. Everything is optional.
 | `dimensions` | `['priority','severity','feature','owner']` | Meta keys treated as chart/filter dimensions |
 | `dimensionOrder` | `{}` | Custom value ordering per dimension |
 | `links` | `{}` | Turns meta values into links, e.g. `{ story: 'https://acme.atlassian.net/browse/{id}' }`. An object `{ url: '...{p}...{id}', display: '{id}' }` builds the URL from the fields of an object passed to `meta()` and shows only `display` |
-| `maskKeys` | – | Extra substring matches whose values are masked (passwords/tokens are always masked) |
+| `maskKeys` | – | Extra key names whose values are masked, in data blocks, API panels and free text alike (passwords, tokens, API keys, cookies, JWTs, Bearer values are always masked) |
 | `env` | – | Extra rows on the Environment card |
 | `editorLinks` | on locally, off in CI | "Open in VS Code" links |
 | `bdd` | auto | Style Given/When/Then steps as Gherkin |

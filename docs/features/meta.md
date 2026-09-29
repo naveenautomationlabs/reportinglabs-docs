@@ -128,7 +128,9 @@ with `{id}` is enough.
 await log('opening checkout');
 ```
 
-Timestamped log lines. Lines containing "error" or "fail" render red; "warn" amber. Sensitive-looking strings (Bearer tokens, JWTs, `password=`) are masked automatically.
+Timestamped log lines. Lines containing "error" or "fail" render red; "warn" amber.
+
+Secrets in the text are masked automatically, the same way `console.log` output, step titles and assertion messages are: `password=x`, `Password: x`, `{ password: 'x' }`, `"password":"x"`, `X-Api-Key: x`, `access_token=x`, "password is x", "with password S3cret@1", `Bearer ...`, JWTs and well-known token formats (GitHub, AWS, Slack, Stripe, Google, GitLab, npm, SendGrid) all show as `****`. Keys you add with `maskKeys` are masked in text too.
 
 ## `testData(obj, name?)`
 
