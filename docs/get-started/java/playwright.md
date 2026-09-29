@@ -24,21 +24,21 @@ The reporter for your test framework, plus the Playwright add-on. Playwright for
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.10</version>
+    <version>0.1.11</version>
     <scope>test</scope>
 </dependency>
 <!-- API calls, traces and screenshots from the Page -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.10</version>
+    <version>0.1.11</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.10'   // the reporter for TestNG
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.10'   // API calls, traces and screenshots from the Page
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.11'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.11'   // API calls, traces and screenshots from the Page
 ```
 
 </TabItem>
@@ -49,21 +49,21 @@ testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.10'   // API
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.10</version>
+    <version>0.1.11</version>
     <scope>test</scope>
 </dependency>
 <!-- API calls, traces and screenshots from the Page -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.10</version>
+    <version>0.1.11</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.10'   // the reporter for JUnit 5
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.10'   // API calls, traces and screenshots from the Page
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.11'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.11'   // API calls, traces and screenshots from the Page
 ```
 
 </TabItem>
@@ -208,6 +208,8 @@ Open the file in a browser. It is self-contained: mail it, attach it to a ticket
 | **Every request the page makes** — method, URL, status, timing, request headers + body, response headers; response body for XHR/fetch calls | **API** tab and the test's detail panel | always |
 | **Playwright trace** (`trace.zip`) — drop it into [trace.playwright.dev](https://trace.playwright.dev) | Attachments on the test | on failure |
 | **Full-page screenshot** (`failure.png`) | Attachments on the test | on failure |
+| **Video** (`video.webm`) when the context is created with `RlPlaywright.contextOptions()`, see below | Attachments on the test, playable inline | never (set `reporting-labs.video`) |
+| **Where it failed**: the failing line (`FailuresTest.java:26`), a code snippet, and a plain-language reading of the error (element not found, assertion, site unreachable, test timed out) | Error block on the test, Failure clusters, Graphs | always |
 
 ![API tab of a Playwright Java run: every call the pages made, with status, timing and the test it belongs to](/img/screenshots/14-playwright-java-api-light.png)
 
@@ -252,6 +254,26 @@ same rules as `import 'reporting-labs/auto'` on the Node side). A connection
 error is recorded as a failed call with the error message, then rethrown.
 Outside a test the wrapper simply delegates.
 
+## Videos
+
+Playwright records video per browser context, so the context has to be created with a recording folder.
+`RlPlaywright.contextOptions()` returns `Browser.NewContextOptions` with that folder set whenever
+`reporting-labs.video` is not `never`. Add your own options to it:
+
+```java
+context = browser.newContext(RlPlaywright.contextOptions().setViewportSize(1280, 800));
+page    = context.newPage();
+RlPlaywright.attach(page);
+```
+
+```properties title="src/test/resources/reporting-labs.properties"
+# never | on-failure | always | only-on-pass
+reporting-labs.video=on-failure
+```
+
+Close the context in your after-hook as usual; the file is only complete then. Videos the policy wants are
+copied to `target/reporting-labs/assets/` and play inline in the test's detail; the rest are deleted.
+
 ## Change what gets captured — one config line
 
 Playwright auto-capture reads the capture policy from
@@ -262,9 +284,11 @@ Playwright auto-capture reads the capture policy from
 reporting-labs.screenshot=on-failure
 # never | on-failure | always | only-on-pass
 reporting-labs.trace=on-failure
+# never | on-failure | always | only-on-pass  (needs RlPlaywright.contextOptions(), see Videos)
+reporting-labs.video=never
 ```
 
-| Value | Screenshot / trace is attached… |
+| Value | Screenshot / trace / video is attached… |
 |---|---|
 | `never` | never — trace recording is not even started, so no overhead |
 | `on-failure` *(default)* | only when the test fails |

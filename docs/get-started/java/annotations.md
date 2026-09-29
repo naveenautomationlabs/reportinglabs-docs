@@ -102,7 +102,9 @@ to make a failure readable — you see exactly how far the test got.
 ### `Rl.testData(name, value)`
 
 Pins a labelled block on the test. Pass a `Map` for a key/value table, or any
-object for text (it's JSON-serialised). Sensitive keys are masked as `****`.
+object for text (it's JSON-serialised). A `List` of `Map`s (rows from JSON, Excel or a
+database) and a CSV string (`"sku,qty\nJEAN-BLUE-32,1"`) render as a table. Sensitive
+keys and columns are masked as `****`.
 
 ```java
 Rl.testData("Login", Map.of("user", "demo@shop.io", "password", "Secret@123"));

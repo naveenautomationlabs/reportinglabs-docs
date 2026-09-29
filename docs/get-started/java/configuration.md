@@ -59,7 +59,7 @@ Copy this as-is; every line is optional.
 :::caution Comments go on their own line
 `java.util.Properties` has no inline comments — in
 `reporting-labs.screenshot=always   # only on pass` the value becomes
-`always   # only on pass` and silently matches nothing. From 0.1.10 the
+`always   # only on pass` and silently matches nothing. From 0.1.11 the
 option-style keys tolerate a trailing `# …`, but keep comments on separate
 lines anyway; older versions and free-text keys (`title`, `accent`,
 `customCss`, `links.*`, …) read the `#` literally.
@@ -95,6 +95,7 @@ reporting-labs.screenshot=on-failure
 # never | on-failure | always | only-on-pass
 reporting-labs.trace=on-failure
 # never | on-failure | always | only-on-pass
+# Playwright: create the context with RlPlaywright.contextOptions() to record
 reporting-labs.video=never
 # copy System.out / System.err lines into each test's Console output
 reporting-labs.captureStdout=true
@@ -177,7 +178,7 @@ reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 | `project.*` | – | `name`, `version`, `team`, `url`, `description` |
 | `metadata.<key>` | – | Header chip; `build` labels the trend x-axis |
 | `links.<key>` | – | Turn a chip value into a link; `{id}` placeholder |
-| `env.<label>` | – | Extra row in the Environment card |
+| `env.<label>` | – | Extra row in the Environment card. A label with a space needs `\ ` in a properties file: `reporting-labs.env.App\ version=2.4.0`. Values that are URLs become links |
 | `history.enabled` | `true` | Read/write `reporting-labs.history.json` for the trend |
 | `history.file` | `reporting-labs.history.json` | Path, relative to CWD |
 | `history.keep` | `30` | Max runs kept |
