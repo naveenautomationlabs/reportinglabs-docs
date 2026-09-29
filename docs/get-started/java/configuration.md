@@ -59,14 +59,14 @@ Copy this as-is; every line is optional.
 :::caution Comments go on their own line
 `java.util.Properties` has no inline comments — in
 `reporting-labs.screenshot=always   # only on pass` the value becomes
-`always   # only on pass` and silently matches nothing. From 0.1.13 the
+`always   # only on pass` and silently matches nothing. From 0.1.14 the
 option-style keys tolerate a trailing `# …`, but keep comments on separate
 lines anyway; older versions and free-text keys (`title`, `accent`,
 `customCss`, `links.*`, …) read the `#` literally.
 :::
 
 ```properties title="src/test/resources/reporting-labs.properties"
-# ─── Look & feel ─────────────────────────────────────────────────────────────
+# Look and feel
 reporting-labs.title=Nightly regression
 # auto: target/ (Maven) or build/ (Gradle)
 # reporting-labs.outputFolder=target/reporting-labs
@@ -82,38 +82,50 @@ reporting-labs.palette=lab
 reporting-labs.embedFonts=true
 # "Open in IDE" link per test
 reporting-labs.editorLinks=false
-# style Given/When/Then as Gherkin
-reporting-labs.bdd=false
-# never | on-failure | always
+# open the report in the browser after the run: never | on-failure | always
 reporting-labs.open=never
-
-# ─── Capture policy ─────────────────────────────────────────────────────────
-# The Playwright and Selenium add-ons honour these automatically. Base tests
-# that take their own screenshots use Rl.shouldCaptureScreenshot().
-# never | on-failure | always | only-on-pass
-reporting-labs.screenshot=on-failure
-# never | on-failure | always | only-on-pass
-reporting-labs.trace=on-failure
-# never | on-failure | always | only-on-pass
-# Playwright: create the context with RlPlaywright.contextOptions() to record
-reporting-labs.video=never
 # copy System.out / System.err lines into each test's Console output
 reporting-labs.captureStdout=true
-# Selenium add-on: find the WebDriver on the test instance and record its actions
+
+# Selenium (reporting-labs-selenium)
+# find the WebDriver on the test instance and record every action as a step
 reporting-labs.selenium.autoAttach=true
-# REST Assured add-on: register the recording filter in RestAssured.filters()
+# screenshot at the end of each test: never | on-failure | always | only-on-pass
+reporting-labs.selenium.screenshot=on-failure
+
+# Playwright (reporting-labs-playwright)
+# find the Page / BrowserContext / Browser / APIRequestContext on the test instance
+reporting-labs.playwright.autoAttach=true
+# never | on-failure | always | only-on-pass
+reporting-labs.playwright.screenshot=on-failure
+# trace.zip, opens in trace.playwright.dev
+reporting-labs.playwright.trace=on-failure
+# video needs the context created with RlPlaywright.contextOptions()
+reporting-labs.playwright.video=never
+
+# REST Assured (reporting-labs-rest-assured)
+# register the recording filter in RestAssured.filters()
 reporting-labs.restassured.autoRecord=true
 
-# ─── Header ─────────────────────────────────────────────────────────────────
+# Cucumber (reporting-labs-cucumber)
+# style Given / When / Then as Gherkin in the step list
+reporting-labs.bdd=false
+
+# Default capture policy: used by a tool that has no setting above and by
+# Rl.shouldCaptureScreenshot() in your own base classes
+# reporting-labs.screenshot=on-failure
+# reporting-labs.trace=on-failure
+# reporting-labs.video=never
+
+# Header
 reporting-labs.project.name=ShopLite Web
 reporting-labs.project.version=2.4.0
 reporting-labs.project.team=QA Platform
 reporting-labs.project.url=https://shoplite.example.com
 reporting-labs.project.description=Frontend regression suite
 
-# metadata.<name> becomes a header chip. build labels the trend x-axis.
-# build / branch / commit / ci are AUTO-DETECTED in CI (see below) —
-# set them only to override.
+# metadata.<name> becomes a header chip; build labels the trend x-axis.
+# build / branch / commit / ci are auto-detected in CI, set them only to override.
 reporting-labs.metadata.env=staging
 reporting-labs.metadata.region=apac
 # reporting-labs.metadata.build=ci-4287
@@ -125,34 +137,32 @@ reporting-labs.links.story=https://shoplite.atlassian.net/browse/{id}
 reporting-labs.links.epic=https://shoplite.atlassian.net/browse/{id}
 reporting-labs.links.issue=https://shoplite.atlassian.net/browse/{id}
 
-# ─── Environment card ───────────────────────────────────────────────────────
-# Extra rows. URLs become links automatically.
-reporting-labs.env.App version=2.4.0
-reporting-labs.env.Test data=staging-seed-12
+# Environment card: extra rows, URLs become links. A label with a space needs "\ ".
+reporting-labs.env.App\ version=2.4.0
+reporting-labs.env.Test\ data=staging-seed-12
 reporting-labs.env.Docs=https://reportinglabs.dev
 
-# ─── History + trend ────────────────────────────────────────────────────────
+# History and trend
 reporting-labs.history.enabled=true
 reporting-labs.history.file=reporting-labs.history.json
 reporting-labs.history.keep=30
 
-# ─── Data masking ───────────────────────────────────────────────────────────
-# Extra case-insensitive substrings to mask in testData, API headers, log lines,
-# console output and error messages, on
-# top of the defaults (password, token, authorization, cookie, card, cvv, ...).
+# Data masking: extra case-insensitive substrings to mask in test data, API
+# headers and bodies, log lines, console output and error messages, on top of
+# the defaults (password, token, authorization, cookie, card, cvv, ...)
 # reporting-labs.maskKeys=internalCustomerId,phone
 
-# ─── Charts ─────────────────────────────────────────────────────────────────
+# Charts
 reporting-labs.dimensions=priority,severity,owner,feature
 reporting-labs.dimensionOrder.severity=blocker,critical,major,minor,trivial
 reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 
-# ─── Widgets (all default true) ─────────────────────────────────────────────
+# Widgets (all default true)
 # reporting-labs.widgets.trend=false
 # reporting-labs.widgets.timeline=false
 # reporting-labs.widgets.flaky=false
 
-# ─── Extra HTML sections below the summary ──────────────────────────────────
+# Extra HTML sections below the summary
 # reporting-labs.sections.release.title=Release notes
 # reporting-labs.sections.release.html=<p>See <a href="https://example.com/changelog">changelog</a></p>
 ```
@@ -172,12 +182,15 @@ reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 | `embedFonts` | `true` | Inline IBM Plex woff2 (~140 KB) |
 | `editorLinks` | `false` | "Open in IDE" link per test |
 | `bdd` | `false` | Gherkin-style Given/When/Then |
-| `screenshot` | `on-failure` | Capture policy — honoured by the Playwright and Selenium add-ons and `Rl.shouldCaptureScreenshot()` |
-| `trace` | `on-failure` | Capture policy for the Playwright trace zip |
-| `video` | `never` | Capture policy read by `Rl.shouldCaptureVideo()` |
+| `selenium.screenshot` | `on-failure` | Selenium add-on: screenshot at the end of each test. `never` / `on-failure` / `always` / `only-on-pass` |
+| `playwright.screenshot` | `on-failure` | Playwright add-on: full-page screenshot at the end of each test |
+| `playwright.trace` | `on-failure` | Playwright add-on: trace zip |
+| `playwright.video` | `never` | Playwright add-on: video, when the context was created with `RlPlaywright.contextOptions()` |
+| `screenshot`, `trace`, `video` | `on-failure`, `on-failure`, `never` | Defaults for a tool without its own setting, and what `Rl.shouldCaptureScreenshot()` / `Trace()` / `Video()` read in your own base classes |
 | `captureStdout` | `true` | Copy `System.out` / `System.err` lines into each test's Console output |
 | `selenium.autoAttach` | `true` | Selenium add-on: discover the WebDriver on the test instance (fields, `ThreadLocal`, page objects) and record its actions |
 | `restassured.autoRecord` | `true` | REST Assured add-on: add the recording filter to `RestAssured.filters()` |
+| `playwright.autoAttach` | `true` | Playwright add-on: discover `Page`, `BrowserContext`, `Browser` and `APIRequestContext` on the test instance (fields, base classes, page objects, factories, `ThreadLocal`) and record them |
 | `project.*` | – | `name`, `version`, `team`, `url`, `description` |
 | `metadata.<key>` | – | Header chip; `build` labels the trend x-axis |
 | `links.<key>` | – | Turn a chip value into a link; `{id}` placeholder |

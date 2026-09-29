@@ -25,7 +25,7 @@ const POSTERS = [
   { id: 'junit5', title: 'JUnit 5', text: 'Extension auto-detected. Parameterized tests, assumptions, nested classes.', guide: '/get-started/java' },
   { id: 'selenium', title: 'Selenium', text: 'Zero code. Every open, click and type as a step; screenshots per policy.', guide: '/get-started/java/selenium' },
   { id: 'rest-assured', title: 'REST Assured', text: 'Zero code. Every request in the API tab with headers, bodies and cURL.', guide: '/get-started/java/rest-assured' },
-  { id: 'playwright-java', title: 'Playwright for Java', text: 'One line for API calls, trace, screenshot and video.', guide: '/get-started/java/playwright' },
+  { id: 'playwright-java', title: 'Playwright for Java', text: 'Zero code. The Page on your test is found: API calls, trace, screenshot, video.', guide: '/get-started/java/playwright' },
   { id: 'appium', title: 'Appium', text: 'Android and iOS drivers through the Selenium add-on. Taps as steps.', guide: '/get-started/java/other-tools' },
   { id: 'cucumber', title: 'Cucumber JVM', text: 'One property. A row per scenario, Given/When/Then as steps, tags as filters.', guide: '/get-started/java/cucumber' },
 ];
@@ -170,7 +170,7 @@ npx reporting-labs init`}</code></pre>
           </div>
           <div className={styles.lang}>
             <div className={styles.langHead}><img src="/img/logos/java.svg" alt="" /><Heading as="h3">Java</Heading></div>
-            <p>TestNG and JUnit 5 bindings with zero-code add-ons for Selenium and REST Assured, one line for Playwright, one property for Cucumber.</p>
+            <p>TestNG and JUnit 5 bindings with zero-code add-ons for Selenium, REST Assured and Playwright, one property for Cucumber.</p>
             <pre className={styles.code}><code>{`<groupId>dev.reportinglabs</groupId>
 <artifactId>reporting-labs-testng</artifactId>`}</code></pre>
             <Link className="button button--primary" to="/get-started/java">Java guide</Link>

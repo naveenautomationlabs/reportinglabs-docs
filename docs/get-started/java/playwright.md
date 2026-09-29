@@ -8,9 +8,12 @@ import TabItem from '@theme/TabItem';
 
 # Playwright + Java
 
-**One line per test.** `RlPlaywright.attach(page)` and the report fills itself:
-every network call the page makes, a Playwright trace, and a full-page
-screenshot when the test fails.
+**Zero code.** Add the dependency and your `BaseTest`, `PlaywrightFactory`
+and page objects stay exactly as they are. The `Page` is found on the test
+instance and the report fills itself: every network call the page makes, a
+Playwright trace and a full-page screenshot when the test fails. An
+`APIRequestContext` field is recorded the same way, so API tests get the
+**API** tab without a wrapper.
 
 ## Step 1. Add two dependencies
 
@@ -24,21 +27,21 @@ The reporter for your test framework, plus the Playwright add-on. Playwright for
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.13</version>
+    <version>0.1.14</version>
     <scope>test</scope>
 </dependency>
-<!-- API calls, traces and screenshots from the Page -->
+<!-- finds your Page, records API calls, trace and screenshot -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.13</version>
+    <version>0.1.14</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.13'   // the reporter for TestNG
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.13'   // API calls, traces and screenshots from the Page
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.14'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.14'   // API calls, traces and screenshots from the Page
 ```
 
 </TabItem>
@@ -49,21 +52,21 @@ testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.13'   // API
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.13</version>
+    <version>0.1.14</version>
     <scope>test</scope>
 </dependency>
-<!-- API calls, traces and screenshots from the Page -->
+<!-- finds your Page, records API calls, trace and screenshot -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.13</version>
+    <version>0.1.14</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.13'   // the reporter for JUnit 5
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.13'   // API calls, traces and screenshots from the Page
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.14'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.14'   // API calls, traces and screenshots from the Page
 ```
 
 </TabItem>
@@ -96,48 +99,53 @@ junit.jupiter.extensions.autodetection.enabled=true
 </TabItem>
 </Tabs>
 
-## Step 3. Attach the page (one line)
+## Step 3. Keep your test as it is
 
-Call `RlPlaywright.attach(page)` right after you create the page, usually in
-your before-each hook.
+There is no call to add. When a test starts, the add-on looks at the test
+instance for Playwright objects and wires them:
+
+| It finds | Where it looks | What happens |
+|---|---|---|
+| `Page` | a field on the test class or a base class, a page object, a factory, a `ThreadLocal`, a list or map | API calls recorded, trace started, screenshot at the end per policy |
+| `BrowserContext` | same places | every current and future page of the context, popups included |
+| `Browser` | same places | every open context; pages created later in the test body through `browser.newPage()` / `newContext()` |
+| `APIRequestContext` | a field or a `ThreadLocal` | the field is replaced with the recording wrapper, every `get/post/...` lands in the API tab |
+
+Static holders count too: a `DriverFactory`-style class with a `static ThreadLocal<Page>`
+that the test only reaches through `PlaywrightFactory.getPage()` is found through the
+classes the test refers to. The scan repeats after every `@Before*` / `@After*`
+hook, so a page created in `@BeforeMethod`, `@BeforeClass` or `@BeforeEach` is
+seen before the first test runs.
+
+A typical framework, unchanged:
 
 <Tabs groupId="java-framework">
 <TabItem value="testng" label="TestNG" default>
 
 ```java
-import com.microsoft.playwright.*;
-import dev.reportinglabs.core.Rl;
-import dev.reportinglabs.core.annotations.*;
-import dev.reportinglabs.playwright.RlPlaywright;
-import org.testng.Assert;
-import org.testng.annotations.*;
+public class BaseTest {
+    protected PlaywrightFactory pf;
+    protected Page page;
+    protected LoginPage loginPage;
+
+    @Parameters({"browser", "headless"})
+    @BeforeMethod
+    public void setUp(@Optional("chromium") String browser, @Optional("true") String headless) {
+        pf = new PlaywrightFactory();
+        page = pf.initBrowser(browser, Boolean.parseBoolean(headless));   // found here
+        loginPage = new LoginPage(page);
+    }
+
+    @AfterMethod
+    public void tearDown() { pf.tearDown(); }
+}
 
 @Owner("naveen") @Feature("home")
-public class HomeTest {
-
-    Playwright playwright;
-    Browser browser;
-    Page page;
-
-    @BeforeMethod
-    public void setUp() {
-        playwright = Playwright.create();
-        browser    = playwright.chromium().launch();
-        page       = browser.newPage();
-        RlPlaywright.attach(page);          // <-- the one line
-    }
-
-    @AfterMethod(alwaysRun = true)
-    public void tearDown() {
-        if (browser != null) browser.close();
-        if (playwright != null) playwright.close();
-    }
-
-    @Test @Priority("P0") @Severity("blocker")
-    public void loads_the_home_page() {
-        Rl.log("navigating to example.com");
-        page.navigate("https://example.com");
-        Assert.assertTrue(page.title().contains("Example"));
+public class LoginTest extends BaseTest {
+    @Test @Priority("P0")
+    public void validLoginTest() {
+        InventoryPage inventory = loginPage.doLogin("standard_user", "secret_sauce");
+        Assert.assertEquals(inventory.getHeaderText(), "Products");
     }
 }
 ```
@@ -146,15 +154,8 @@ public class HomeTest {
 <TabItem value="junit5" label="JUnit 5">
 
 ```java
-import com.microsoft.playwright.*;
-import dev.reportinglabs.core.Rl;
-import dev.reportinglabs.core.annotations.*;
-import dev.reportinglabs.playwright.RlPlaywright;
-import org.junit.jupiter.api.*;
-
 @Owner("naveen") @Feature("home")
 class HomeTest {
-
     Playwright playwright;
     Browser browser;
     Page page;
@@ -163,15 +164,11 @@ class HomeTest {
     void setUp() {
         playwright = Playwright.create();
         browser    = playwright.chromium().launch();
-        page       = browser.newPage();
-        RlPlaywright.attach(page);          // <-- the one line
+        page       = browser.newPage();          // found here
     }
 
     @AfterEach
-    void tearDown() {
-        if (browser != null) browser.close();
-        if (playwright != null) playwright.close();
-    }
+    void tearDown() { browser.close(); playwright.close(); }
 
     @Test @Priority("P0") @Severity("blocker")
     void loads_the_home_page() {
@@ -185,8 +182,14 @@ class HomeTest {
 </TabItem>
 </Tabs>
 
-Nothing else in the test changes: `page.click()`, `page.fill()`,
-`page.request()` all work exactly as before.
+`page.click()`, `page.fill()`, `page.request()` all work exactly as before;
+nothing is wrapped that you can see.
+
+**Attach by hand** when a page lives somewhere the scan cannot reach (a local
+variable in a helper, an object outside your own packages): `RlPlaywright.attach(page)`
+or `RlPlaywright.attach(context)` once after creating it. Calling it on a page the
+scan already found is harmless. To switch the discovery off:
+`reporting-labs.playwright.autoAttach=false`.
 
 ## Step 4. Run and open the report
 
@@ -207,8 +210,8 @@ Open the file in a browser. It is self-contained: mail it, attach it to a ticket
 |---|---|---|
 | **Every request the page makes** — method, URL, status, timing, request headers + body, response headers; response body for XHR/fetch calls | **API** tab and the test's detail panel | always |
 | **Playwright trace** (`trace.zip`) — drop it into [trace.playwright.dev](https://trace.playwright.dev) | Attachments on the test | on failure |
-| **Full-page screenshot** (`failure.png`) | Attachments on the test | on failure |
-| **Video** (`video.webm`) when the context is created with `RlPlaywright.contextOptions()`, see below | Attachments on the test, playable inline | never (set `reporting-labs.video`) |
+| **Full-page screenshot** (`failure.png`; `screen.png` on a passing test with policy `always`) | Attachments on the test | on failure |
+| **Video** (`video.webm`) when the context is created with `RlPlaywright.contextOptions()`, see below | Attachments on the test, playable inline | never (set `reporting-labs.playwright.video`) |
 | **Where it failed**: the failing line (`FailuresTest.java:26`), a code snippet, and a plain-language reading of the error (element not found, assertion, site unreachable, test timed out) | Error block on the test, Failure clusters, Graphs | always |
 
 ![API tab of a Playwright Java run: every call the pages made, with status, timing and the test it belongs to](/img/screenshots/14-playwright-java-api-light.png)
@@ -223,36 +226,47 @@ Sensitive headers (`Authorization`, `Cookie`, `X-Api-Key`, …) are masked as
 `****` before they reach the report. Add your own keys with
 `reporting-labs.maskKeys` — see [Configuration](/get-started/java/configuration).
 
-## API tests — `page.request()` and `APIRequestContext`
+## API tests — `APIRequestContext`
 
-Calls made through Playwright's API client don't go through the page, so
-they need one more line: wrap the context with `RlPlaywright.record(...)` and
-use the wrapper.
+An `APIRequestContext` kept on the test (or in a `ThreadLocal`) is recorded
+without any change: the field is swapped for a recording wrapper when the test
+starts, and every `get/post/put/patch/delete/fetch` lands in the API tab.
+
+```java
+public class UsersApiTest {
+    Playwright playwright;
+    APIRequestContext request;                       // recorded as is
+
+    @BeforeClass
+    public void setUp() {
+        playwright = Playwright.create();
+        request = playwright.request().newContext(new APIRequest.NewContextOptions().setBaseURL(BASE_URL));
+    }
+
+    @Test
+    public void createUser() {
+        APIResponse res = request.post("/public/v2/users", RequestOptions.create()
+            .setHeader("Authorization", "Bearer " + token)      // masked in the report
+            .setData(Map.of("name", "Naveen", "email", email)));   // body recorded as JSON
+        Assert.assertEquals(res.status(), 201);
+    }
+}
+```
+
+Two cases still need a line, because the object never sits on the test:
+a context created inside the test body, or `page.request()`. Wrap it where it
+is made and use the wrapper:
 
 ```java
 APIRequestContext api = RlPlaywright.record(page.request());
-
-api.get("/v1/orders", RequestOptions.create()
-    .setHeader("Authorization", "Bearer " + token)
-    .setQueryParam("page", 1));
-
-api.post("/v1/orders", RequestOptions.create()
-    .setHeader("Authorization", "Bearer " + token)
-    .setData(Map.of("sku", "JEAN-BLUE-32", "qty", 1)));   // body recorded as JSON
-```
-
-Standalone contexts work the same way:
-
-```java
-APIRequestContext api = RlPlaywright.record(playwright.request().newContext());
+api.get("/v1/orders", RequestOptions.create().setQueryParam("page", 1));
 ```
 
 Every call is recorded with method, URL (query params included), request
 headers and body (`setData` / `setForm` / `setMultipart`), status, timing,
-response headers and the response body (text types, capped at 200 KB — the
+response headers and the response body (text types, capped at 200 KB, the
 same rules as `import 'reporting-labs/auto'` on the Node side). A connection
 error is recorded as a failed call with the error message, then rethrown.
-Outside a test the wrapper simply delegates.
 
 ## Videos
 
@@ -263,12 +277,14 @@ Playwright records video per browser context, so the context has to be created w
 ```java
 context = browser.newContext(RlPlaywright.contextOptions().setViewportSize(1280, 800));
 page    = context.newPage();
-RlPlaywright.attach(page);
 ```
+
+This is the one thing the discovery cannot do for you: Playwright decides at
+context creation whether it records, so the folder has to be passed in.
 
 ```properties title="src/test/resources/reporting-labs.properties"
 # never | on-failure | always | only-on-pass
-reporting-labs.video=on-failure
+reporting-labs.playwright.video=on-failure
 ```
 
 Close the context in your after-hook as usual; the file is only complete then. Videos the policy wants are
@@ -280,13 +296,17 @@ Playwright auto-capture reads the capture policy from
 `reporting-labs.properties`. No code change to flip it.
 
 ```properties title="src/test/resources/reporting-labs.properties"
+# Playwright (reporting-labs-playwright)
+reporting-labs.playwright.autoAttach=true
 # never | on-failure | always | only-on-pass
-reporting-labs.screenshot=on-failure
-# never | on-failure | always | only-on-pass
-reporting-labs.trace=on-failure
-# never | on-failure | always | only-on-pass  (needs RlPlaywright.contextOptions(), see Videos)
-reporting-labs.video=never
+reporting-labs.playwright.screenshot=on-failure
+reporting-labs.playwright.trace=on-failure
+# needs RlPlaywright.contextOptions(), see Videos
+reporting-labs.playwright.video=never
 ```
+
+The plain `reporting-labs.screenshot` / `trace` / `video` keys are the
+defaults for every tool; the `playwright.` ones win when both are set.
 
 | Value | Screenshot / trace / video is attached… |
 |---|---|
@@ -298,18 +318,20 @@ reporting-labs.video=never
 Per-run override without editing the file:
 
 ```bash
-mvn test -Dreporting-labs.trace=always
+mvn test -Dreporting-labs.playwright.trace=always
 ```
 
-## Multi-tab flows — attach the whole context
+## Multi-tab flows
 
-If your test opens popups or new tabs, attach the `BrowserContext` once and
-every current **and future** page is wired:
+Popups and new tabs are covered when the discovery finds the `BrowserContext`
+or the `Browser`: every current and future page of the context is wired. When
+only the `Page` is reachable, the page's own context is hooked as well, so a
+`window.open` from it still lands in the report. For a context created in a
+helper and never stored, attach it once:
 
 ```java
 BrowserContext context = browser.newContext();
-RlPlaywright.attach(context);            // pages opened later are auto-wired too
-Page page = context.newPage();
+RlPlaywright.attach(context);            // pages opened later are wired too
 ```
 
 ## Add your own detail

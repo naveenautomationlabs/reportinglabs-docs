@@ -30,21 +30,21 @@ The reporter for your test framework, plus the Selenium add-on. Works with Selen
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.13</version>
+    <version>0.1.14</version>
     <scope>test</scope>
 </dependency>
 <!-- zero-code Selenium steps and screenshots -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-selenium</artifactId>
-    <version>0.1.13</version>
+    <version>0.1.14</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.13'   // the reporter for TestNG
-testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.13'   // zero-code Selenium steps and screenshots
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.14'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.14'   // zero-code Selenium steps and screenshots
 ```
 
 </TabItem>
@@ -55,21 +55,21 @@ testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.13'   // zero-
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.13</version>
+    <version>0.1.14</version>
     <scope>test</scope>
 </dependency>
 <!-- zero-code Selenium steps and screenshots -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-selenium</artifactId>
-    <version>0.1.13</version>
+    <version>0.1.14</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.13'   // the reporter for JUnit 5
-testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.13'   // zero-code Selenium steps and screenshots
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.14'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.14'   // zero-code Selenium steps and screenshots
 ```
 
 </TabItem>
@@ -160,7 +160,7 @@ Everything else is optional and lives in one properties file:
 reporting-labs.title=OpenCart regression
 reporting-labs.metadata.env=staging
 # never | on-failure | always | only-on-pass
-reporting-labs.screenshot=on-failure
+reporting-labs.selenium.screenshot=on-failure
 # open the report in the browser when a test fails
 reporting-labs.open=on-failure
 ```
@@ -263,7 +263,7 @@ auto-discovery already found, returns the same recording driver.
 | **Steps** — `open <url>`, `click id: submit`, `type "…" into name: email`, `clear`, `submit`, `navigate back`, `accept alert`, `switch to frame` — each with its duration | **Steps** in the test detail; nested under your `Rl.step()` blocks and under the hook that ran them |
 | **The failing action** — a `NoSuchElementException` on `findElement`, a stale click — marked red with the exception | Steps (and the error block above them) |
 | **Before / After hooks** — `@BeforeTest setup`, `@BeforeClass regSetup`, `@AfterMethod …` with timings | Steps → *Before Hooks* / *After Hooks* |
-| **Screenshot** per `reporting-labs.screenshot` (default `on-failure`) | Attachments |
+| **Screenshot** per `reporting-labs.selenium.screenshot` (default `on-failure`) | Attachments |
 | **Console output** — every `System.out` / `System.err` line printed during the test | Console output / Console errors |
 | **Retries** — `IRetryAnalyzer` attempts grouped as *Attempt 1 · Failed / Retry 1 · Passed*, test marked **Flaky** | Attempt tabs in the detail; Flaky KPI on the Overview |
 
@@ -349,7 +349,7 @@ hook      After Hooks                               14ms
 ## Screenshot policy — one config line
 
 ```properties title="src/test/resources/reporting-labs.properties"
-reporting-labs.screenshot=on-failure
+reporting-labs.selenium.screenshot=on-failure
 ```
 
 | Value | You get a screenshot… |
@@ -360,7 +360,7 @@ reporting-labs.screenshot=on-failure
 | `only-on-pass` | only on passing tests |
 
 A **skipped** test never gets one. Override per run with
-`-Dreporting-labs.screenshot=always` or `REPORTING_LABS_SCREENSHOT=always`.
+`-Dreporting-labs.selenium.screenshot=always`.
 
 Want an extra screenshot mid-test? `RlSelenium.screenshot("after-login.png")`.
 
