@@ -12,10 +12,22 @@ import TabItem from '@theme/TabItem';
 every network call the page makes, a Playwright trace, and a full-page
 screenshot when the test fails.
 
-Finish [Step 1 on the Java overview](/get-started/java) first (install the
-TestNG or JUnit 5 artifact). Then add the Playwright add-on:
+## Step 1. Add two dependencies
+
+The reporter for your test framework, plus the Playwright add-on. Playwright for Java 1.47 or newer.
+
+<Tabs groupId="java-framework">
+<TabItem value="testng" label="TestNG" default>
 
 ```xml title="pom.xml"
+<!-- the reporter for TestNG -->
+<dependency>
+    <groupId>dev.reportinglabs</groupId>
+    <artifactId>reporting-labs-testng</artifactId>
+    <version>0.1.10</version>
+    <scope>test</scope>
+</dependency>
+<!-- API calls, traces and screenshots from the Page -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
@@ -25,12 +37,68 @@ TestNG or JUnit 5 artifact). Then add the Playwright add-on:
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.10'
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.10'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.10'   // API calls, traces and screenshots from the Page
 ```
 
-## The one line
+</TabItem>
+<TabItem value="junit5" label="JUnit 5">
 
-Call `RlPlaywright.attach(page)` right after you create the page — usually in
+```xml title="pom.xml"
+<!-- the reporter for JUnit 5 -->
+<dependency>
+    <groupId>dev.reportinglabs</groupId>
+    <artifactId>reporting-labs-junit5</artifactId>
+    <version>0.1.10</version>
+    <scope>test</scope>
+</dependency>
+<!-- API calls, traces and screenshots from the Page -->
+<dependency>
+    <groupId>dev.reportinglabs</groupId>
+    <artifactId>reporting-labs-playwright</artifactId>
+    <version>0.1.10</version>
+    <scope>test</scope>
+</dependency>
+```
+
+```gradle title="build.gradle"
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.10'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.10'   // API calls, traces and screenshots from the Page
+```
+
+</TabItem>
+</Tabs>
+
+## Step 2. Register the reporter
+
+<Tabs groupId="java-framework">
+<TabItem value="testng" label="TestNG" default>
+
+Nothing to do. TestNG finds the listener on its own through `ServiceLoader`.
+
+If your project already lists listeners in `testng.xml`, add this one there too. Both ways work:
+
+```xml title="testng.xml (optional)"
+<listeners>
+    <listener class-name="dev.reportinglabs.testng.ReportingLabsListener"/>
+</listeners>
+```
+
+</TabItem>
+<TabItem value="junit5" label="JUnit 5">
+
+One line in one file turns on JUnit's extension auto-detection. No `@ExtendWith` on any class.
+
+```properties title="src/test/resources/junit-platform.properties"
+junit.jupiter.extensions.autodetection.enabled=true
+```
+
+</TabItem>
+</Tabs>
+
+## Step 3. Attach the page (one line)
+
+Call `RlPlaywright.attach(page)` right after you create the page, usually in
 your before-each hook.
 
 <Tabs groupId="java-framework">
@@ -117,8 +185,21 @@ class HomeTest {
 </TabItem>
 </Tabs>
 
-Nothing else in the test changes — `page.click()`, `page.fill()`,
+Nothing else in the test changes: `page.click()`, `page.fill()`,
 `page.request()` all work exactly as before.
+
+## Step 4. Run and open the report
+
+```bash
+mvn clean test        # or: ./gradlew clean test
+```
+
+| Build tool | Report |
+|---|---|
+| Maven | `target/reporting-labs/index.html` |
+| Gradle | `build/reporting-labs/index.html` |
+
+Open the file in a browser. It is self-contained: mail it, attach it to a ticket, drop it in Slack.
 
 ## What you get automatically
 

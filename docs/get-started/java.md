@@ -12,16 +12,22 @@ One report, any Java stack. reportingLabs plugs into your **test framework**
 (JUnit 5 or TestNG) — it doesn't care whether the test body drives Playwright,
 Selenium, REST Assured or plain Java.
 
-Setup is two steps:
+Pick the guide for your tool; each one is complete on its own, from `pom.xml` to the open report:
 
-1. **Install for your test framework** — this page, two minutes.
-2. **Open the guide for your tool** — Playwright, Selenium, REST Assured, or something else.
+| Your stack | Guide |
+|---|---|
+| Selenium (or Appium) | [Selenium + Java](/get-started/java/selenium): add the dependency, nothing else. Steps, screenshots, hooks, console output appear on their own. |
+| Playwright | [Playwright + Java](/get-started/java/playwright): one line, `RlPlaywright.attach(page)`, for API calls, traces and screenshots. |
+| REST Assured | [REST Assured + Java](/get-started/java/rest-assured): a 30-line filter, registered once. |
+| Anything else | [Other tools + Java](/get-started/java/other-tools): Cucumber, Karate, HttpClient, JDBC. |
+
+Or install the framework artifact here and go from there.
 
 ![Java-generated report — Overview tab](/img/screenshots/08-java-overview-light.png)
 
 *Real run of the JUnit 5 example that ships in the [reporting-labs-java repo](https://github.com/naveenautomationlabs/reporting-labs-java/tree/main/examples). Every language port renders the same template, so a Java report looks exactly like a Node.js one.*
 
-## Step 1 — install for your test framework
+## Step 1. Install for your test framework
 
 All artifacts live under the `dev.reportinglabs` groupId on Maven Central.
 
@@ -78,7 +84,7 @@ That is the whole setup. No `@ExtendWith` on any class.
 </TabItem>
 </Tabs>
 
-## Run it
+## Step 2. Run and open the report
 
 ```bash
 mvn test        # or: ./gradlew test
@@ -95,7 +101,7 @@ Want it to open in the browser when a test fails? Add
 `reporting-labs.open=on-failure` to `src/test/resources/reporting-labs.properties`.
 Every other knob is in [Configuration](/get-started/java/configuration).
 
-## Step 2 — open the guide for your tool
+## Step 3. Open the guide for your tool
 
 | Your stack | What the guide covers |
 |---|---|

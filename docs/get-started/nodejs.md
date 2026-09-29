@@ -13,7 +13,7 @@ reportingLabs ships one npm package that works with **both plain JavaScript and 
 
 Two commands to install, one line in your Playwright config, done.
 
-## Install
+## Step 1. Install
 
 ```bash
 npm i -D reporting-labs
@@ -22,7 +22,7 @@ npx reporting-labs init
 
 `init` writes a `reporting-labs.config.ts` (or `reporting-labs.config.js` if your project is plain JS) with every option commented out.
 
-## Wire it up
+## Step 2. Add the reporter to your Playwright config
 
 Open your Playwright config and add the reporter.
 
@@ -59,7 +59,9 @@ module.exports = defineConfig({
 </TabItem>
 </Tabs>
 
-That is the whole setup. Run your tests and open the report:
+That is the whole setup.
+
+## Step 3. Run and open the report
 
 ```bash
 npx playwright test
@@ -72,7 +74,7 @@ The report is one self-contained HTML file. No server, no login, no expiry. You 
 
 ![Overview tab of the report](/img/screenshots/01-overview-light.png)
 
-## Tag your tests
+## Step 4. Tag your tests (optional)
 
 Three tiny helpers add the details the report needs. Import them from `reporting-labs`.
 
@@ -133,9 +135,10 @@ test('places an order with a saved card', async ({ page }) => {
 
 All three are optional. A test with no `meta()` still shows up — the report just cannot rank it by priority.
 
-## Auto-capture API calls
+## Step 5. Auto-capture API calls (already on)
 
-Add one import (or `require`) to the top of your Playwright config:
+The config file that `init` created starts with this import, so API capture is already on.
+If you did not use `init`, add it to the top of your Playwright config:
 
 <Tabs groupId="js-ts">
 <TabItem value="ts" label="TypeScript" default>

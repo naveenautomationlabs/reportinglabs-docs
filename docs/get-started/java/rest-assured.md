@@ -15,10 +15,76 @@ and bodies — with secrets masked.
 
 ![API tab — every call, with status and timing](/img/screenshots/05-api-light.png)
 
-Finish [Step 1 on the Java overview](/get-started/java) first (install the
-TestNG or JUnit 5 artifact). Nothing extra to install for REST Assured.
+## Step 1. Add the dependency
 
-## 1. The filter
+Only the reporter for your test framework. There is no separate REST Assured artifact; the filter below is
+plain code you keep in your project.
+
+<Tabs groupId="java-framework">
+<TabItem value="testng" label="TestNG" default>
+
+```xml title="pom.xml"
+<!-- the reporter for TestNG -->
+<dependency>
+    <groupId>dev.reportinglabs</groupId>
+    <artifactId>reporting-labs-testng</artifactId>
+    <version>0.1.10</version>
+    <scope>test</scope>
+</dependency>
+```
+
+```gradle title="build.gradle"
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.10'   // the reporter for TestNG
+```
+
+</TabItem>
+<TabItem value="junit5" label="JUnit 5">
+
+```xml title="pom.xml"
+<!-- the reporter for JUnit 5 -->
+<dependency>
+    <groupId>dev.reportinglabs</groupId>
+    <artifactId>reporting-labs-junit5</artifactId>
+    <version>0.1.10</version>
+    <scope>test</scope>
+</dependency>
+```
+
+```gradle title="build.gradle"
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.10'   // the reporter for JUnit 5
+```
+
+</TabItem>
+</Tabs>
+
+## Step 2. Register the reporter
+
+<Tabs groupId="java-framework">
+<TabItem value="testng" label="TestNG" default>
+
+Nothing to do. TestNG finds the listener on its own through `ServiceLoader`.
+
+If your project already lists listeners in `testng.xml`, add this one there too. Both ways work:
+
+```xml title="testng.xml (optional)"
+<listeners>
+    <listener class-name="dev.reportinglabs.testng.ReportingLabsListener"/>
+</listeners>
+```
+
+</TabItem>
+<TabItem value="junit5" label="JUnit 5">
+
+One line in one file turns on JUnit's extension auto-detection. No `@ExtendWith` on any class.
+
+```properties title="src/test/resources/junit-platform.properties"
+junit.jupiter.extensions.autodetection.enabled=true
+```
+
+</TabItem>
+</Tabs>
+
+## Step 3. Add the filter
 
 Copy this into your test sources. It records the call and returns the
 response untouched.
@@ -73,7 +139,7 @@ Binary responses (a PDF, an image) still come back through `asString()`;
 if your suite downloads files, skip the body for those — e.g. only pass it
 when `response.getContentType()` contains `json`, `xml` or `text`.
 
-## 2. Register it once
+## Step 4. Register the filter once
 
 <Tabs groupId="java-framework">
 <TabItem value="testng" label="TestNG" default>
@@ -112,7 +178,7 @@ public class ApiBaseTest {
 
 Prefer per-request? `given().filter(new RlRestAssuredFilter())` works too.
 
-## 3. Write tests as usual
+## Step 5. Write tests as usual
 
 ```java
 import dev.reportinglabs.core.Rl;
@@ -145,6 +211,20 @@ public class OrdersApiTest extends ApiBaseTest {
 
 Nothing about the test changed. The filter recorded the call; the report shows
 the row under the test **and** in the suite-wide API tab.
+
+## Step 6. Run and open the report
+
+```bash
+mvn clean test        # or: ./gradlew clean test
+```
+
+| Build tool | Report |
+|---|---|
+| Maven | `target/reporting-labs/index.html` |
+| Gradle | `build/reporting-labs/index.html` |
+
+Open the file in a browser. It is self-contained: mail it, attach it to a ticket, drop it in Slack.
+
 
 ## What gets masked
 

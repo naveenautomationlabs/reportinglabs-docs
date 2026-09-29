@@ -17,10 +17,23 @@ stay exactly as they are.
 
 ![Failed Selenium test — hooks, steps, the failing find in red, screenshot, console output](/img/screenshots/09-selenium-detail-light.png)
 
-Finish [Step 1 on the Java overview](/get-started/java) first (install the
-TestNG or JUnit 5 artifact). Then add the Selenium add-on:
+## Step 1. Add two dependencies
+
+The reporter for your test framework, plus the Selenium add-on. Works with Selenium 4.x (it uses the
+`EventFiringDecorator` that ships with `selenium-java`).
+
+<Tabs groupId="java-framework">
+<TabItem value="testng" label="TestNG" default>
 
 ```xml title="pom.xml"
+<!-- the reporter for TestNG -->
+<dependency>
+    <groupId>dev.reportinglabs</groupId>
+    <artifactId>reporting-labs-testng</artifactId>
+    <version>0.1.10</version>
+    <scope>test</scope>
+</dependency>
+<!-- zero-code Selenium steps and screenshots -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-selenium</artifactId>
@@ -30,11 +43,123 @@ TestNG or JUnit 5 artifact). Then add the Selenium add-on:
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.10'
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.10'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.10'   // zero-code Selenium steps and screenshots
 ```
 
-That is the whole setup. Works with Selenium 4.x (any 4.x — it uses the
-`EventFiringDecorator` that ships with `selenium-java`).
+</TabItem>
+<TabItem value="junit5" label="JUnit 5">
+
+```xml title="pom.xml"
+<!-- the reporter for JUnit 5 -->
+<dependency>
+    <groupId>dev.reportinglabs</groupId>
+    <artifactId>reporting-labs-junit5</artifactId>
+    <version>0.1.10</version>
+    <scope>test</scope>
+</dependency>
+<!-- zero-code Selenium steps and screenshots -->
+<dependency>
+    <groupId>dev.reportinglabs</groupId>
+    <artifactId>reporting-labs-selenium</artifactId>
+    <version>0.1.10</version>
+    <scope>test</scope>
+</dependency>
+```
+
+```gradle title="build.gradle"
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.10'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.10'   // zero-code Selenium steps and screenshots
+```
+
+</TabItem>
+</Tabs>
+
+## Step 2. Register the reporter
+
+<Tabs groupId="java-framework">
+<TabItem value="testng" label="TestNG" default>
+
+Nothing to do. TestNG finds the listener on its own through `ServiceLoader`.
+
+If your project already lists listeners in `testng.xml`, add this one there too. Both ways work:
+
+```xml title="testng.xml (optional)"
+<listeners>
+    <listener class-name="dev.reportinglabs.testng.ReportingLabsListener"/>
+</listeners>
+```
+
+</TabItem>
+<TabItem value="junit5" label="JUnit 5">
+
+One line in one file turns on JUnit's extension auto-detection. No `@ExtendWith` on any class.
+
+```properties title="src/test/resources/junit-platform.properties"
+junit.jupiter.extensions.autodetection.enabled=true
+```
+
+</TabItem>
+</Tabs>
+
+## Step 3. Run your tests as usual
+
+Your `BaseTest`, `DriverFactory` and page objects stay exactly as they are. No `attach()`, no listener of your own.
+
+```bash
+mvn clean test        # or: ./gradlew clean test
+```
+
+| Build tool | Report |
+|---|---|
+| Maven | `target/reporting-labs/index.html` |
+| Gradle | `build/reporting-labs/index.html` |
+
+Open the file in a browser. It is self-contained: mail it, attach it to a ticket, drop it in Slack.
+
+## Step 4. Open the report
+
+Every test that drove the browser now shows:
+
+- **Steps**: `open <url>`, `click id: submit`, `type "…" into name: email`, each with its duration, and the failing action in red.
+- **Before Hooks / After Hooks**: `@BeforeTest setup`, `@BeforeClass regSetup`, `@AfterMethod …` with timings.
+- **Attachments**: `screen.png` per the screenshot policy (default: on failure).
+- **Console output**: every `System.out` / `System.err` line printed during the test, secrets masked.
+- **Retries** grouped as attempts on one row, the test marked Flaky.
+
+## Step 5 (optional). Tags and config
+
+Annotate tests so the report can rank and group them:
+
+```java
+import dev.reportinglabs.core.Rl;
+import dev.reportinglabs.core.annotations.*;
+
+@Owner("naveen") @Feature("register")
+public class RegisterPageTest extends BaseTest {
+
+    @Test @Priority("P1") @Severity("critical") @Story("SHOP-811")
+    public void userRegisterTest() {
+        Rl.log("Registering a new user");                    // log line
+        Rl.step("fill the form", () -> registerPage.fill(user));   // groups the Selenium steps under it
+        RlSelenium.screenshot("after-register.png");         // extra screenshot mid-test
+        Assert.assertTrue(registerPage.isRegistered());
+    }
+}
+```
+
+Everything else is optional and lives in one properties file:
+
+```properties title="src/test/resources/reporting-labs.properties"
+reporting-labs.title=OpenCart regression
+reporting-labs.metadata.env=staging
+# never | on-failure | always | only-on-pass
+reporting-labs.screenshot=on-failure
+# open the report in the browser when a test fails
+reporting-labs.open=on-failure
+```
+
+Full list in [Configuration](/get-started/java/configuration).
 
 ## How it finds your driver
 
