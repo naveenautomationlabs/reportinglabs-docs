@@ -96,6 +96,8 @@ reporting-labs.selenium.screenshot=on-failure
 # Playwright (reporting-labs-playwright)
 # find the Page / BrowserContext / Browser / APIRequestContext on the test instance
 reporting-labs.playwright.autoAttach=true
+# every action (click, fill, navigate, expect) as a step, read from the trace
+reporting-labs.playwright.steps=true
 # never | on-failure | always | only-on-pass
 reporting-labs.playwright.screenshot=on-failure
 # trace.zip, opens in trace.playwright.dev
@@ -183,6 +185,7 @@ reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 | `editorLinks` | `false` | "Open in IDE" link per test |
 | `bdd` | `false` | Gherkin-style Given/When/Then |
 | `selenium.screenshot` | `on-failure` | Selenium add-on: screenshot at the end of each test. `never` / `on-failure` / `always` / `only-on-pass` |
+| `playwright.steps` | `true` | Playwright add-on: every action as a timed step, read from the trace at the end of the test |
 | `playwright.screenshot` | `on-failure` | Playwright add-on: full-page screenshot at the end of each test |
 | `playwright.trace` | `on-failure` | Playwright add-on: trace zip |
 | `playwright.video` | `never` | Playwright add-on: video, when the context was created with `RlPlaywright.contextOptions()` |

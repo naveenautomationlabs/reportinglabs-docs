@@ -10,7 +10,8 @@ import TabItem from '@theme/TabItem';
 
 **Zero code.** Add the dependency and your `BaseTest`, `PlaywrightFactory`
 and page objects stay exactly as they are. The `Page` is found on the test
-instance and the report fills itself: a Playwright trace and a full-page
+instance and the report fills itself: every click, fill and navigation as a
+timed step with the failing one in red, a Playwright trace and a full-page
 screenshot when the test fails. An `APIRequestContext` field is recorded the
 same way, so API tests get the **API** tab with every request and response,
 without a wrapper. The page's own network traffic (fonts, images, scripts)
@@ -107,7 +108,7 @@ instance for Playwright objects and wires them:
 
 | It finds | Where it looks | What happens |
 |---|---|---|
-| `Page` | a field on the test class or a base class, a page object, a factory, a `ThreadLocal`, a list or map | trace started, screenshot at the end per policy |
+| `Page` | a field on the test class or a base class, a page object, a factory, a `ThreadLocal`, a list or map | every action as a step, trace and screenshot at the end per policy |
 | `BrowserContext` | same places | every current and future page of the context, popups included |
 | `Browser` | same places | every open context; pages created later in the test body through `browser.newPage()` / `newContext()` |
 | `APIRequestContext` | a field or a `ThreadLocal` | the field is replaced with the recording wrapper, every `get/post/...` lands in the API tab |
@@ -209,6 +210,7 @@ Open the file in a browser. It is self-contained: mail it, attach it to a ticket
 
 | Captured | Where it shows | Default policy |
 |---|---|---|
+| **Every action** — `navigate to …`, `fill #user-name with "…"`, `click #login-button`, `expect h1 to have text "…"` — with timing, the failing one marked red with its error. Read back from Playwright's own trace at the end of the test, so nothing is wrapped: `assertThat(page)` and `assertThat(locator)` keep working. Values typed into password-like fields show as •••• | **Steps** on the test | always (`reporting-labs.playwright.steps=false` turns it off) |
 | **Every `APIRequestContext` call** — method, URL, status, timing, request headers + body, response headers + body | **API** tab and the test's detail panel | always |
 | **Playwright trace** (`trace.zip`) — drop it into [trace.playwright.dev](https://trace.playwright.dev) | Attachments on the test | on failure |
 | **Full-page screenshot** (`failure.png`; `screen.png` on a passing test with policy `always`) | Attachments on the test | on failure |
@@ -303,12 +305,17 @@ Playwright auto-capture reads the capture policy from
 ```properties title="src/test/resources/reporting-labs.properties"
 # Playwright (reporting-labs-playwright)
 reporting-labs.playwright.autoAttach=true
+# every action as a step, read from the trace
+reporting-labs.playwright.steps=true
 # never | on-failure | always | only-on-pass
 reporting-labs.playwright.screenshot=on-failure
 reporting-labs.playwright.trace=on-failure
 # needs RlPlaywright.contextOptions(), see Videos
 reporting-labs.playwright.video=never
 ```
+
+With `trace=never` a lightweight trace (no screenshots, no snapshots) still
+runs for the steps; `steps=false` switches that off too.
 
 The plain `reporting-labs.screenshot` / `trace` / `video` keys are the
 defaults for every tool; the `playwright.` ones win when both are set.

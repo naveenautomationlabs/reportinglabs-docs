@@ -25,7 +25,7 @@ const POSTERS = [
   { id: 'junit5', title: 'JUnit 5', text: 'Extension auto-detected. Parameterized tests, assumptions, nested classes.', guide: '/get-started/java' },
   { id: 'selenium', title: 'Selenium', text: 'Zero code. Every open, click and type as a step; screenshots per policy.', guide: '/get-started/java/selenium' },
   { id: 'rest-assured', title: 'REST Assured', text: 'Zero code. Every request in the API tab with headers, bodies and cURL.', guide: '/get-started/java/rest-assured' },
-  { id: 'playwright-java', title: 'Playwright for Java', text: 'Zero code. The Page on your test is found: trace, screenshot, video. API tests get every call.', guide: '/get-started/java/playwright' },
+  { id: 'playwright-java', title: 'Playwright for Java', text: 'Zero code. The Page on your test is found: every action as a step, trace, screenshot, video.', guide: '/get-started/java/playwright' },
   { id: 'appium', title: 'Appium', text: 'Android and iOS drivers through the Selenium add-on. Taps as steps.', guide: '/get-started/java/other-tools' },
   { id: 'cucumber', title: 'Cucumber JVM', text: 'One property. A row per scenario, Given/When/Then as steps, tags as filters.', guide: '/get-started/java/cucumber' },
 ];
