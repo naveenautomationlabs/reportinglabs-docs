@@ -153,7 +153,7 @@ Rl.api(request.method(), request.uri().toString(), r.statusCode());
 ```
 
 Want headers and bodies in the API tab too? Use the long form — see
-[REST Assured → record one call by hand](/get-started/java/rest-assured#no-filter-record-one-call-by-hand)
+[REST Assured → record one call by hand](/get-started/java/rest-assured#not-rest-assured-record-one-call-by-hand)
 for the full signature.
 
 ## JDBC / database checks

@@ -18,7 +18,7 @@ Pick the guide for your tool; each one is complete on its own, from `pom.xml` to
 |---|---|
 | Selenium (or Appium) | [Selenium + Java](/get-started/java/selenium): add the dependency, nothing else. Steps, screenshots, hooks, console output appear on their own. |
 | Playwright | [Playwright + Java](/get-started/java/playwright): one line, `RlPlaywright.attach(page)`, for API calls, traces and screenshots. |
-| REST Assured | [REST Assured + Java](/get-started/java/rest-assured): a 30-line filter, registered once. |
+| REST Assured | [REST Assured + Java](/get-started/java/rest-assured): add the dependency, every request lands in the API tab. |
 | Anything else | [Other tools + Java](/get-started/java/other-tools): Cucumber, Karate, HttpClient, JDBC. |
 
 Or install the framework artifact here and go from there.
@@ -107,7 +107,7 @@ Every other knob is in [Configuration](/get-started/java/configuration).
 |---|---|
 | [**Playwright + Java**](/get-started/java/playwright) | One line — `RlPlaywright.attach(page)` — gives you API calls, trace zips and failure screenshots automatically. |
 | [**Selenium + Java**](/get-started/java/selenium) | Zero code — add the dependency and your existing `BaseTest` / `DriverFactory` / page objects are found automatically: every open/click/type as a timed step, the failing action marked, screenshots by policy, console output. Works with `@BeforeTest` drivers, `ThreadLocal` factories and parallel TestNG. |
-| [**REST Assured + Java**](/get-started/java/rest-assured) | A 25-line filter that records every request/response into the API tab, with secrets masked. |
+| [**REST Assured + Java**](/get-started/java/rest-assured) | Zero code — add the dependency and every request/response lands in the API tab, with secrets masked. |
 | [**Other tools**](/get-started/java/other-tools) | Appium, Cucumber JVM, Karate, `HttpClient`, JDBC — what works today and how. |
 
 ## Guides that apply to every stack

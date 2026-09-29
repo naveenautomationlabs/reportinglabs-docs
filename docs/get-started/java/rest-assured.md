@@ -8,17 +8,16 @@ import TabItem from '@theme/TabItem';
 
 # REST Assured + Java
 
-REST Assured has a `Filter` hook that sees every request and response. Drop
-in the 30-line filter below, register it once, and every call your tests make
-shows up in the report's **API** tab — method, URL, status, timing, headers
-and bodies — with secrets masked.
+**Zero code.** Add one dependency and every request your REST Assured tests make
+shows up in the report's **API** tab: method, URL, status, timing, request and
+response headers and bodies, with secrets masked. No filter to write, nothing to
+register in a base class.
 
 ![API tab of a REST Assured run: every call with method, status, timing and the test it belongs to](/img/screenshots/16-rest-assured-api-light.png)
 
-## Step 1. Add the dependency
+## Step 1. Add two dependencies
 
-Only the reporter for your test framework. There is no separate REST Assured artifact; the filter below is
-plain code you keep in your project.
+The reporter for your test framework, plus the REST Assured add-on. Works with REST Assured 4.x, 5.x and 6.x.
 
 <Tabs groupId="java-framework">
 <TabItem value="testng" label="TestNG" default>
@@ -31,10 +30,18 @@ plain code you keep in your project.
     <version>0.1.11</version>
     <scope>test</scope>
 </dependency>
+<!-- records every REST Assured call -->
+<dependency>
+    <groupId>dev.reportinglabs</groupId>
+    <artifactId>reporting-labs-rest-assured</artifactId>
+    <version>0.1.11</version>
+    <scope>test</scope>
+</dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.11'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.11'         // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-rest-assured:0.1.11'   // records every REST Assured call
 ```
 
 </TabItem>
@@ -48,10 +55,18 @@ testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.11'   // the rep
     <version>0.1.11</version>
     <scope>test</scope>
 </dependency>
+<!-- records every REST Assured call -->
+<dependency>
+    <groupId>dev.reportinglabs</groupId>
+    <artifactId>reporting-labs-rest-assured</artifactId>
+    <version>0.1.11</version>
+    <scope>test</scope>
+</dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.11'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.11'         // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-rest-assured:0.1.11'   // records every REST Assured call
 ```
 
 </TabItem>
@@ -84,101 +99,11 @@ junit.jupiter.extensions.autodetection.enabled=true
 </TabItem>
 </Tabs>
 
-## Step 3. Add the filter
+## Step 3. Write tests as usual
 
-Copy this into your test sources. It records the call and returns the
-response untouched.
-
-```java title="src/test/java/com/example/RlRestAssuredFilter.java"
-import dev.reportinglabs.core.Rl;
-import io.restassured.filter.Filter;
-import io.restassured.filter.FilterContext;
-import io.restassured.http.Header;
-import io.restassured.response.Response;
-import io.restassured.specification.FilterableRequestSpecification;
-import io.restassured.specification.FilterableResponseSpecification;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-public class RlRestAssuredFilter implements Filter {
-
-    // Keep the report light: bodies beyond this are truncated (same cap as the
-    // Node.js reporter and the Playwright add-on).
-    private static final int MAX_BODY = 200 * 1024;
-
-    @Override
-    public Response filter(FilterableRequestSpecification req,
-                           FilterableResponseSpecification res,
-                           FilterContext ctx) {
-        long started = System.currentTimeMillis();
-        Response response = ctx.next(req, res);          // the real call
-        long duration = System.currentTimeMillis() - started;
-
-        Object body = req.getBody();
-        Rl.api(req.getMethod(), req.getURI(), response.getStatusCode(), duration,
-               headers(req.getHeaders()), body == null ? null : cap(body.toString()),
-               headers(response.getHeaders()), cap(response.asString()));
-        return response;
-    }
-
-    private static String cap(String s) {
-        if (s == null || s.length() <= MAX_BODY) return s;
-        return s.substring(0, MAX_BODY) + "\n… truncated (" + s.length() + " chars)";
-    }
-
-    private static Map<String, String> headers(Iterable<Header> headers) {
-        Map<String, String> out = new LinkedHashMap<>();
-        if (headers != null) for (Header h : headers) out.put(h.getName(), h.getValue());
-        return out;
-    }
-}
-```
-
-Binary responses (a PDF, an image) still come back through `asString()`;
-if your suite downloads files, skip the body for those — e.g. only pass it
-when `response.getContentType()` contains `json`, `xml` or `text`.
-
-## Step 4. Register the filter once
-
-<Tabs groupId="java-framework">
-<TabItem value="testng" label="TestNG" default>
-
-```java
-import io.restassured.RestAssured;
-import org.testng.annotations.BeforeSuite;
-
-public class ApiBaseTest {
-
-    @BeforeSuite(alwaysRun = true)
-    public void wireReporting() {
-        RestAssured.filters(new RlRestAssuredFilter());   // global — applies to every request
-    }
-}
-```
-
-</TabItem>
-<TabItem value="junit5" label="JUnit 5">
-
-```java
-import io.restassured.RestAssured;
-import org.junit.jupiter.api.BeforeAll;
-
-public class ApiBaseTest {
-
-    @BeforeAll
-    static void wireReporting() {
-        RestAssured.filters(new RlRestAssuredFilter());   // global — applies to every request
-    }
-}
-```
-
-</TabItem>
-</Tabs>
-
-Prefer per-request? `given().filter(new RlRestAssuredFilter())` works too.
-
-## Step 5. Write tests as usual
+Your `given().when().then()` code stays exactly as it is. The add-on puts its
+filter into `RestAssured.filters()` when the run starts (and again after a
+`RestAssured.reset()`), so every request goes through it.
 
 ```java
 import dev.reportinglabs.core.Rl;
@@ -189,7 +114,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 @Owner("naveen") @Feature("orders")
-public class OrdersApiTest extends ApiBaseTest {
+public class OrdersApiTest {
 
     @Test(description = "creates an order")
     @Priority("P0") @Severity("blocker") @Story("SHOP-231")
@@ -209,13 +134,7 @@ public class OrdersApiTest extends ApiBaseTest {
 }
 ```
 
-Nothing about the test changed. The filter recorded the call; the report shows
-the row under the test **and** in the suite-wide API tab. Click the row to see
-headers and bodies on both sides, with **Copy as cURL**:
-
-![Test detail: the POST /v1/orders call expanded, request and response headers and bodies, secrets masked, Copy as cURL](/img/screenshots/15-rest-assured-detail-light.png)
-
-## Step 6. Run and open the report
+## Step 4. Run and open the report
 
 ```bash
 mvn clean test        # or: ./gradlew clean test
@@ -226,8 +145,31 @@ mvn clean test        # or: ./gradlew clean test
 | Maven | `target/reporting-labs/index.html` |
 | Gradle | `build/reporting-labs/index.html` |
 
-Open the file in a browser. It is self-contained: mail it, attach it to a ticket, drop it in Slack.
+The call shows under the test **and** in the suite-wide API tab. Click the row for
+headers and bodies on both sides, with **Copy as cURL**:
 
+![Test detail: the POST /v1/orders call expanded, request and response headers and bodies, secrets masked, Copy as cURL](/img/screenshots/15-rest-assured-detail-light.png)
+
+## What gets recorded
+
+| | |
+|---|---|
+| Method, URL | Query and path params resolved, as REST Assured sent them |
+| Status, timing | Round trip in ms |
+| Request headers and body | JSON / XML / text bodies as-is; form fields as `a=1&b=2`; multipart as the part names, file names and sizes |
+| Response headers and body | Text types (JSON, XML, HTML, text) up to 200 KB, then truncated; binary types as `<application/pdf 34 KB>` |
+| Failed requests | A connection error is recorded with status 0 and the error message, then rethrown |
+
+Already have your own recording filter from an earlier version? Remove it, or
+every call shows twice.
+
+To switch the automatic filter off: `reporting-labs.restassured.autoRecord=false`.
+You can then add it yourself, globally or per request:
+
+```java
+RestAssured.filters(new dev.reportinglabs.restassured.RlRestAssuredFilter());   // global
+given().filter(new RlRestAssuredFilter()).get("/v1/health");                       // one request
+```
 
 ## What gets masked
 
@@ -241,10 +183,10 @@ Add your own with a comma-separated list:
 reporting-labs.maskKeys=x-tenant-secret,internalCustomerId
 ```
 
-Bodies are recorded as-is. If a body contains a secret, redact it before
-calling `Rl.api()` or skip the body argument (`null`).
+Bodies are masked too: `"password":"…"`, `token=…`, `Bearer …` and JWT-shaped
+values inside a JSON, form or text body show as `****`.
 
-## No filter? Record one call by hand
+## Not REST Assured? Record one call by hand
 
 For a one-off, `Rl.api()` is a plain method — call it yourself:
 

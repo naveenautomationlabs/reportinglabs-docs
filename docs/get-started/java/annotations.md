@@ -139,7 +139,7 @@ preview, so use the real one (`image/png`, `video/mp4`, `application/zip`,
 
 Adds a row to the test's API list and the suite-wide **API** tab. Three
 overloads, from a bare status up to full headers and bodies — see
-[REST Assured + Java](/get-started/java/rest-assured#no-filter-record-one-call-by-hand).
+[REST Assured + Java](/get-started/java/rest-assured#not-rest-assured-record-one-call-by-hand).
 
 ### Capture-policy helpers
 

@@ -101,6 +101,8 @@ reporting-labs.video=never
 reporting-labs.captureStdout=true
 # Selenium add-on: find the WebDriver on the test instance and record its actions
 reporting-labs.selenium.autoAttach=true
+# REST Assured add-on: register the recording filter in RestAssured.filters()
+reporting-labs.restassured.autoRecord=true
 
 # ─── Header ─────────────────────────────────────────────────────────────────
 reporting-labs.project.name=ShopLite Web
@@ -175,6 +177,7 @@ reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 | `video` | `never` | Capture policy read by `Rl.shouldCaptureVideo()` |
 | `captureStdout` | `true` | Copy `System.out` / `System.err` lines into each test's Console output |
 | `selenium.autoAttach` | `true` | Selenium add-on: discover the WebDriver on the test instance (fields, `ThreadLocal`, page objects) and record its actions |
+| `restassured.autoRecord` | `true` | REST Assured add-on: add the recording filter to `RestAssured.filters()` |
 | `project.*` | – | `name`, `version`, `team`, `url`, `description` |
 | `metadata.<key>` | – | Header chip; `build` labels the trend x-axis |
 | `links.<key>` | – | Turn a chip value into a link; `{id}` placeholder |
