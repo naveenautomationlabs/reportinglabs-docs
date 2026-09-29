@@ -4,7 +4,7 @@ import { themes as prismThemes } from 'prism-react-renderer';
 
 const config: Config = {
   title: 'reportingLabs',
-  tagline: 'One beautiful test report in a single HTML file — for JavaScript, Java, and more.',
+  tagline: 'One HTML test report for your whole stack: Playwright, Selenium, REST Assured, Cucumber, TestNG, JUnit 5. Node.js and Java.',
   favicon: 'img/favicon.svg',
 
   url: 'https://reportinglabs.dev',
@@ -61,8 +61,8 @@ const config: Config = {
         {
           title: 'Docs',
           items: [
-            { label: 'Node.js (JS & TS)', to: '/get-started/nodejs' },
-            { label: 'Java (Selenium, Playwright, REST Assured, Cucumber)', to: '/get-started/java' },
+            { label: 'Node.js', to: '/get-started/nodejs' },
+            { label: 'Java', to: '/get-started/java' },
             { label: 'Python (coming)', to: '/get-started/python' },
           ],
         },

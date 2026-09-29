@@ -22,3 +22,8 @@
   --docusaurus-highlighted-code-line-bg: rgba(111, 170, 255, 0.15);
 }
 .navbar__title { font-weight: 600; letter-spacing: -0.01em; }
+
+.footer__link-item { white-space: normal; overflow-wrap: anywhere; }
+.footer__items { overflow-wrap: anywhere; }
+.footer__item { white-space: normal; }
+.footer .col { min-width: 0; }
