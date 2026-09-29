@@ -194,3 +194,11 @@ test was skipped:
 
 An assumption failure is reported as **skipped**, not failed — no screenshot
 or trace is captured for it.
+
+## Source and issues
+
+The Java port lives in its own repository, separate from the Node.js reporter:
+
+- Source and examples: [github.com/naveenautomationlabs/reporting-labs-java](https://github.com/naveenautomationlabs/reporting-labs-java)
+- Bugs and requests: [reporting-labs-java/issues](https://github.com/naveenautomationlabs/reporting-labs-java/issues)
+- Releases: [reporting-labs-java/releases](https://github.com/naveenautomationlabs/reporting-labs-java/releases) · Maven Central: [`dev.reportinglabs`](https://central.sonatype.com/namespace/dev.reportinglabs)

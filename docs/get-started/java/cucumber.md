@@ -214,3 +214,11 @@ classpath path is shown as is. The row still works; only the label differs.
 **Steps from a `pretty` plugin show up twice.** They do not: the step list is
 built from Cucumber's events, the console block is your `System.out`. Drop
 `pretty` from `cucumber.plugin` if you do not want its output in the console block.
+
+## Source and issues
+
+The Java port lives in its own repository, separate from the Node.js reporter:
+
+- Source and examples: [github.com/naveenautomationlabs/reporting-labs-java](https://github.com/naveenautomationlabs/reporting-labs-java)
+- Bugs and requests: [reporting-labs-java/issues](https://github.com/naveenautomationlabs/reporting-labs-java/issues)
+- Releases: [reporting-labs-java/releases](https://github.com/naveenautomationlabs/reporting-labs-java/releases) · Maven Central: [`dev.reportinglabs`](https://central.sonatype.com/namespace/dev.reportinglabs)

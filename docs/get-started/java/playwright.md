@@ -330,3 +330,11 @@ See [Annotations & `Rl.*` helpers](/get-started/java/annotations) for the full l
 - Tag tests so the report can rank them → [Annotations](/get-started/java/annotations)
 - Run the same test against many rows → [Data-driven tests](/get-started/java/data-driven)
 - Header chips, trend history, output folder → [Configuration](/get-started/java/configuration)
+
+## Source and issues
+
+The Java port lives in its own repository, separate from the Node.js reporter:
+
+- Source and examples: [github.com/naveenautomationlabs/reporting-labs-java](https://github.com/naveenautomationlabs/reporting-labs-java)
+- Bugs and requests: [reporting-labs-java/issues](https://github.com/naveenautomationlabs/reporting-labs-java/issues)
+- Releases: [reporting-labs-java/releases](https://github.com/naveenautomationlabs/reporting-labs-java/releases) · Maven Central: [`dev.reportinglabs`](https://central.sonatype.com/namespace/dev.reportinglabs)

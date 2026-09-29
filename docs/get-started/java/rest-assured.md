@@ -210,3 +210,11 @@ Rl.api(String method, String url, int status, long durationMs,
 - Same request against many payloads from CSV / JSON → [Data-driven tests](/get-started/java/data-driven)
 - Tag tests with priority, owner, feature → [Annotations](/get-started/java/annotations)
 - Header chips, trend history, CI auto-detection → [Configuration](/get-started/java/configuration)
+
+## Source and issues
+
+The Java port lives in its own repository, separate from the Node.js reporter:
+
+- Source and examples: [github.com/naveenautomationlabs/reporting-labs-java](https://github.com/naveenautomationlabs/reporting-labs-java)
+- Bugs and requests: [reporting-labs-java/issues](https://github.com/naveenautomationlabs/reporting-labs-java/issues)
+- Releases: [reporting-labs-java/releases](https://github.com/naveenautomationlabs/reporting-labs-java/releases) · Maven Central: [`dev.reportinglabs`](https://central.sonatype.com/namespace/dev.reportinglabs)

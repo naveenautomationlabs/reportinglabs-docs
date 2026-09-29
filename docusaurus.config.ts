@@ -45,7 +45,14 @@ const config: Config = {
         { type: 'docSidebar', sidebarId: 'nodejs', label: 'Node.js', position: 'left' },
         { type: 'docSidebar', sidebarId: 'java', label: 'Java', position: 'left' },
         { type: 'docSidebar', sidebarId: 'python', label: 'Python', position: 'left' },
-        { href: 'https://github.com/naveenautomationlabs/reporting-labs', label: 'GitHub', position: 'right' },
+        {
+          label: 'GitHub', position: 'right',
+          items: [
+            { label: 'reporting-labs (Node.js)', href: 'https://github.com/naveenautomationlabs/reporting-labs' },
+            { label: 'reporting-labs-java', href: 'https://github.com/naveenautomationlabs/reporting-labs-java' },
+            { label: 'reportinglabs-docs (this site)', href: 'https://github.com/naveenautomationlabs/reportinglabs-docs' },
+          ],
+        },
       ],
     },
     footer: {
@@ -55,7 +62,7 @@ const config: Config = {
           title: 'Docs',
           items: [
             { label: 'Node.js (JS & TS)', to: '/get-started/nodejs' },
-            { label: 'Java (Playwright, Selenium, REST Assured)', to: '/get-started/java' },
+            { label: 'Java (Selenium, Playwright, REST Assured, Cucumber)', to: '/get-started/java' },
             { label: 'Python (coming)', to: '/get-started/python' },
           ],
         },
@@ -70,9 +77,12 @@ const config: Config = {
         {
           title: 'Community',
           items: [
-            { label: 'GitHub', href: 'https://github.com/naveenautomationlabs/reporting-labs' },
-            { label: 'npm', href: 'https://www.npmjs.com/package/reporting-labs' },
-            { label: 'Issues', href: 'https://github.com/naveenautomationlabs/reporting-labs/issues' },
+            { label: 'GitHub: reporting-labs (Node.js)', href: 'https://github.com/naveenautomationlabs/reporting-labs' },
+            { label: 'GitHub: reporting-labs-java', href: 'https://github.com/naveenautomationlabs/reporting-labs-java' },
+            { label: 'npm: reporting-labs', href: 'https://www.npmjs.com/package/reporting-labs' },
+            { label: 'Maven Central: dev.reportinglabs', href: 'https://central.sonatype.com/namespace/dev.reportinglabs' },
+            { label: 'Issues (Node.js)', href: 'https://github.com/naveenautomationlabs/reporting-labs/issues' },
+            { label: 'Issues (Java)', href: 'https://github.com/naveenautomationlabs/reporting-labs-java/issues' },
           ],
         },
       ],

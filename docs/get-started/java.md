@@ -129,4 +129,5 @@ Every other knob is in [Configuration](/get-started/java/configuration).
 
 - Source: [github.com/naveenautomationlabs/reporting-labs-java](https://github.com/naveenautomationlabs/reporting-labs-java)
 - Releases: [github.com/naveenautomationlabs/reporting-labs-java/releases](https://github.com/naveenautomationlabs/reporting-labs-java/releases)
+- Bugs and requests: [github.com/naveenautomationlabs/reporting-labs-java/issues](https://github.com/naveenautomationlabs/reporting-labs-java/issues)
 - Maven Central: [`dev.reportinglabs`](https://central.sonatype.com/namespace/dev.reportinglabs)
