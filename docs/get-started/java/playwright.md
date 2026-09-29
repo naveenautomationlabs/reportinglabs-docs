@@ -29,21 +29,21 @@ The reporter for your test framework, plus the Playwright add-on. Playwright for
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.17</version>
+    <version>0.1.18</version>
     <scope>test</scope>
 </dependency>
 <!-- finds your Page, records API calls, trace and screenshot -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.17</version>
+    <version>0.1.18</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.17'   // the reporter for TestNG
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.17'   // API calls, traces and screenshots from the Page
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.18'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.18'   // API calls, traces and screenshots from the Page
 ```
 
 </TabItem>
@@ -54,21 +54,21 @@ testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.17'   // API
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.17</version>
+    <version>0.1.18</version>
     <scope>test</scope>
 </dependency>
 <!-- finds your Page, records API calls, trace and screenshot -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.17</version>
+    <version>0.1.18</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.17'   // the reporter for JUnit 5
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.17'   // API calls, traces and screenshots from the Page
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.18'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.18'   // API calls, traces and screenshots from the Page
 ```
 
 </TabItem>
@@ -210,7 +210,7 @@ Open the file in a browser. It is self-contained: mail it, attach it to a ticket
 
 | Captured | Where it shows | Default policy |
 |---|---|---|
-| **Every action** — `navigate to …`, `fill #user-name with "…"`, `click #login-button`, `expect h1 to have text "…"` — with timing, the failing one marked red with its error. Read back from Playwright's own trace at the end of the test, so nothing is wrapped: `assertThat(page)` and `assertThat(locator)` keep working. Values typed into password-like fields show as •••• | **Steps** on the test | always (`reporting-labs.playwright.steps=false` turns it off) |
+| **Every action** — `navigate to …`, `fill #user-name with "…"`, `click #login-button`, `expect h1 to have text "…"` — with timing, the failing one marked red with its error. Read back from Playwright's own trace at the end of the test, so nothing is wrapped: `assertThat(page)` and `assertThat(locator)` keep working. Each action is filed under the `Rl.step()` block, hook or Cucumber step that was running when it happened. Values typed into password-like fields show as •••• | **Steps** on the test | always (`reporting-labs.playwright.steps=false` turns it off) |
 | **Every `APIRequestContext` call** — method, URL, status, timing, request headers + body, response headers + body | **API** tab and the test's detail panel | always |
 | **Playwright trace** (`trace.zip`) — drop it into [trace.playwright.dev](https://trace.playwright.dev) | Attachments on the test | never (set `reporting-labs.playwright.trace=on-failure`; recording snapshots costs about 70 ms per short test) |
 | **Full-page screenshot** (`failure.png`; `screen.png` on a passing test with policy `always`) | Attachments on the test | on failure |

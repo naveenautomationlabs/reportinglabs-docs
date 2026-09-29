@@ -59,7 +59,7 @@ Copy this as-is; every line is optional.
 :::caution Comments go on their own line
 `java.util.Properties` has no inline comments — in
 `reporting-labs.screenshot=always   # only on pass` the value becomes
-`always   # only on pass` and silently matches nothing. From 0.1.17 the
+`always   # only on pass` and silently matches nothing. From 0.1.18 the
 option-style keys tolerate a trailing `# …`, but keep comments on separate
 lines anyway; older versions and free-text keys (`title`, `accent`,
 `customCss`, `links.*`, …) read the `#` literally.

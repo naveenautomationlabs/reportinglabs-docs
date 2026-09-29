@@ -16,8 +16,10 @@ Nothing changes in your step definitions.
 
 ![A failed scenario: the undefined step marked in red at orders.feature:40, the feature file snippet, the step after it shown as not run](/img/screenshots/18-cucumber-detail-light.png)
 
-Works with the **TestNG runner** (`AbstractTestNGCucumberTests`) and the
-**JUnit Platform engine** (`cucumber-junit-platform-engine`), serial or
+Works with the **TestNG runner** (`AbstractTestNGCucumberTests`), the
+**JUnit Platform engine** (`cucumber-junit-platform-engine`) and the
+**JUnit 4 runner** (`@RunWith(Cucumber.class)`, plugin line in
+`cucumber.properties`, no other reporter artifact needed), serial or
 parallel, Cucumber 7.x.
 
 ## Step 1. Add the dependencies
@@ -33,14 +35,14 @@ plugin (it names the row and fills it in).
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.17</version>
+    <version>0.1.18</version>
     <scope>test</scope>
 </dependency>
 <!-- the Cucumber plugin -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-cucumber</artifactId>
-    <version>0.1.17</version>
+    <version>0.1.18</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -65,7 +67,7 @@ plugin opens and closes each row itself.
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-cucumber</artifactId>
-    <version>0.1.17</version>
+    <version>0.1.18</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -80,7 +82,7 @@ public class RunCucumberTest { }
 </TabItem>
 </Tabs>
 
-Gradle: `testImplementation("dev.reportinglabs:reporting-labs-cucumber:0.1.17")`
+Gradle: `testImplementation("dev.reportinglabs:reporting-labs-cucumber:0.1.18")`
 (plus `reporting-labs-testng` with the TestNG runner).
 
 ## Step 2. Register the plugin
@@ -143,6 +145,9 @@ history file, screenshot policy for a Selenium driver used from step definitions
 | `Given` / `When` / `Then` / `And` steps, Background included | One step each, in order, with timing; the failing one in red with its message |
 | A step after a failure | Shown as **not run** in grey, so you can tell "never ran" from "passed" |
 | A step with no step definition | The row fails at that step, the error points at the feature line with a snippet, and the explanation says which expression to write |
+| A step matching two step definitions | Same treatment: the feature line, and the explanation lists the methods that collided |
+| A step that aborts the scenario (`TestAbortedException`, `AssumptionViolatedException`) | The scenario is **skipped** with the message as its reason; the aborting step and the ones after it show as not run, never red |
+| `scenario.attach(bytes, "image/png", "name")` / `scenario.log("...")` from a hook or step | An attachment on the row (named after the name you gave, extension from the media type) / a log line |
 | `@Before` / `@After` / `@BeforeStep` / `@AfterStep` hooks | Under **Before Hooks** / **After Hooks** with the method name; a failed hook fails the scenario |
 | `Scenario Outline` rows | One row per Examples line, titled `Create orders per row (JEAN-BLUE-32, 1)`, with an **Examples** data block; history and "new vs known" work per row |
 | A data table under a step | A table in the test data section, named after the step |
@@ -170,9 +175,10 @@ public class WebSteps {
 }
 ```
 
-That records every Selenium action as a step under the Gherkin step that made
-it, the same for a Playwright `Page` in a static factory (steps, trace,
-screenshot per policy), and REST Assured calls from any step. Screenshots are
+That records every Selenium and Playwright action as a step under the Gherkin
+step that made it (for Playwright the actions are read back from the trace
+and filed by time under the right step), a trace and screenshot per policy,
+and REST Assured calls from any step. Screenshots are
 taken before your `@After` hooks run, so quitting the driver there is fine.
 The one shape that needs a line is a driver kept in a plain instance field of
 a step class with no static holder anywhere: `RlSelenium.attach(driver)` /
@@ -218,9 +224,9 @@ public void listOrders(String token) {
 
 ## Parallel runs
 
-Both runners are fine in parallel: `@DataProvider(parallel = true)` on the
-TestNG runner, or `cucumber.execution.parallel.enabled=true` on the JUnit
-Platform engine. Each scenario is recorded on the thread that runs it, and the
+Parallel is fine: `@DataProvider(parallel = true)` on the TestNG runner, or
+`cucumber.execution.parallel.enabled=true` on the JUnit Platform engine (the
+JUnit 4 runner is serial by design). Each scenario is recorded on the thread that runs it, and the
 Timeline shows one lane per worker.
 
 ## Troubleshooting
