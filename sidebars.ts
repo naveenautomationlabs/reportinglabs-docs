@@ -66,6 +66,7 @@ const sidebars: SidebarsConfig = {
         'get-started/java/playwright',
         'get-started/java/selenium',
         'get-started/java/rest-assured',
+        'get-started/java/cucumber',
         'get-started/java/other-tools',
       ],
     },

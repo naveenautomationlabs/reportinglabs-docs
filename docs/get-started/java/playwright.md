@@ -24,21 +24,21 @@ The reporter for your test framework, plus the Playwright add-on. Playwright for
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.12</version>
+    <version>0.1.13</version>
     <scope>test</scope>
 </dependency>
 <!-- API calls, traces and screenshots from the Page -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.12</version>
+    <version>0.1.13</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.12'   // the reporter for TestNG
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.12'   // API calls, traces and screenshots from the Page
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.13'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.13'   // API calls, traces and screenshots from the Page
 ```
 
 </TabItem>
@@ -49,21 +49,21 @@ testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.12'   // API
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.12</version>
+    <version>0.1.13</version>
     <scope>test</scope>
 </dependency>
 <!-- API calls, traces and screenshots from the Page -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-playwright</artifactId>
-    <version>0.1.12</version>
+    <version>0.1.13</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.12'   // the reporter for JUnit 5
-testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.12'   // API calls, traces and screenshots from the Page
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.13'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-playwright:0.1.13'   // API calls, traces and screenshots from the Page
 ```
 
 </TabItem>

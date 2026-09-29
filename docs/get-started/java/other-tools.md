@@ -23,13 +23,13 @@ anywhere in that body.
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.12</version>
+    <version>0.1.13</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.12'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.13'   // the reporter for TestNG
 ```
 
 </TabItem>
@@ -40,13 +40,13 @@ testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.12'   // the rep
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.12</version>
+    <version>0.1.13</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.12'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.13'   // the reporter for JUnit 5
 ```
 
 </TabItem>
@@ -109,32 +109,11 @@ Rl.meta("platform", "android");
 
 ## Cucumber JVM
 
-**Via the TestNG runner** (`AbstractTestNGCucumberTests`): every scenario runs
-as one TestNG test, so every scenario becomes one row in the report. Call
-`Rl.log()` / `Rl.testData()` / `Rl.attach()` from step definitions or hooks —
-they attach to the scenario that is running. The scenario name appears in the
-row's **Parameters** block.
-
-```java
-public class RunCucumberTest extends AbstractTestNGCucumberTests {
-    @Override @DataProvider(parallel = true)
-    public Object[][] scenarios() { return super.scenarios(); }
-}
-```
-
-```java
-// in your step definitions
-@When("I add {string} to the cart")
-public void addToCart(String sku) {
-    Rl.log("adding " + sku);
-    // ...
-}
-```
-
-**Via the JUnit Platform engine** (`@Suite` + `cucumber-junit-platform-engine`):
-scenarios run on Cucumber's own engine, not Jupiter, so the JUnit 5 extension
-does not see them. Use the TestNG runner for now — first-class Cucumber support
-(scenario titles, Gherkin steps in the log) is planned.
+Cucumber has its own guide now: [Cucumber + Java](/get-started/java/cucumber).
+Add `reporting-labs-cucumber`, register `dev.reportinglabs.cucumber.ReportingLabsPlugin`
+in `cucumber.properties` (TestNG runner) or `junit-platform.properties` (JUnit
+Platform engine), and every scenario is a row named after it, at its feature
+line, with Given/When/Then as steps and tags as filters.
 
 ## Karate
 

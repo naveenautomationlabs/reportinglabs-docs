@@ -30,21 +30,21 @@ The reporter for your test framework, plus the Selenium add-on. Works with Selen
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.12</version>
+    <version>0.1.13</version>
     <scope>test</scope>
 </dependency>
 <!-- zero-code Selenium steps and screenshots -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-selenium</artifactId>
-    <version>0.1.12</version>
+    <version>0.1.13</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.12'   // the reporter for TestNG
-testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.12'   // zero-code Selenium steps and screenshots
+testImplementation 'dev.reportinglabs:reporting-labs-testng:0.1.13'   // the reporter for TestNG
+testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.13'   // zero-code Selenium steps and screenshots
 ```
 
 </TabItem>
@@ -55,21 +55,21 @@ testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.12'   // zero-
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-junit5</artifactId>
-    <version>0.1.12</version>
+    <version>0.1.13</version>
     <scope>test</scope>
 </dependency>
 <!-- zero-code Selenium steps and screenshots -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-selenium</artifactId>
-    <version>0.1.12</version>
+    <version>0.1.13</version>
     <scope>test</scope>
 </dependency>
 ```
 
 ```gradle title="build.gradle"
-testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.12'   // the reporter for JUnit 5
-testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.12'   // zero-code Selenium steps and screenshots
+testImplementation 'dev.reportinglabs:reporting-labs-junit5:0.1.13'   // the reporter for JUnit 5
+testImplementation 'dev.reportinglabs:reporting-labs-selenium:0.1.13'   // zero-code Selenium steps and screenshots
 ```
 
 </TabItem>
