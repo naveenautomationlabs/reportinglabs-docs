@@ -15,7 +15,7 @@ Everything that matters about the run, above the fold. Header carries the title,
 
 ## Tests
 
-Every test as a searchable row. Filter by outcome, priority, owner, feature, tag or free text. Sort by duration, name or file. Click a row to open the full detail.
+Every test as a searchable row. Filter by status (the Any status dropdown: Passed, Failed, Flaky, Skipped, with counts; the `f` key toggles failed-only), priority, owner, feature, tag or free text. Sort by duration, name or file. Click a row to open the full detail.
 
 ![Tests list](/img/screenshots/02-tests-light.png)
 
