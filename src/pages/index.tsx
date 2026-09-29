@@ -59,7 +59,7 @@ function Hero() {
             <Link className={`button button--secondary button--lg ${styles.cta}`} to="/get-started/java">Get started · Java</Link>
           </div>
           <div className={styles.installs}>
-            <code>npm i -D reporting-labs</code>
+            <code>npm i -D reporting-labs@latest</code>
             <code>dev.reportinglabs · Maven Central</code>
           </div>
         </div>
@@ -164,7 +164,7 @@ function Languages() {
           <div className={styles.lang}>
             <div className={styles.langHead}><img src="/img/logos/nodejs.svg" alt="" /><Heading as="h3">Node.js</Heading></div>
             <p>Playwright Test reporter for JavaScript and TypeScript. Automatic API capture, trace and video attachments, sharding and merge.</p>
-            <pre className={styles.code}><code>{`npm i -D reporting-labs
+            <pre className={styles.code}><code>{`npm i -D reporting-labs@latest
 npx reporting-labs init`}</code></pre>
             <Link className="button button--primary" to="/get-started/nodejs">Node.js guide</Link>
           </div>

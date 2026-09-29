@@ -16,7 +16,7 @@ Two commands to install, one line in your Playwright config, done.
 ## Step 1. Install
 
 ```bash
-npm i -D reporting-labs
+npm i -D reporting-labs@latest
 npx reporting-labs init
 ```
 
@@ -167,7 +167,7 @@ Nothing that changes what you write against the reporter.
 
 |  | TypeScript | JavaScript |
 |---|---|---|
-| Install command | `npm i -D reporting-labs` | `npm i -D reporting-labs` |
+| Install command | `npm i -D reporting-labs@latest` | `npm i -D reporting-labs@latest` |
 | Config filename | `playwright.config.ts` | `playwright.config.js` |
 | Reporter config | `reporting-labs.config.ts` | `reporting-labs.config.js` |
 | Import style | `import { meta } from 'reporting-labs'` | `const { meta } = require('reporting-labs')` |
