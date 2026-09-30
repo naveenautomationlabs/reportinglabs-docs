@@ -47,6 +47,8 @@ Every option, defaults inline. Everything is optional.
 | `dimensionOrder` | `{}` | Custom value ordering per dimension |
 | `links` | `{}` | Turns meta values into links, e.g. `{ story: 'https://acme.atlassian.net/browse/{id}' }`. An object `{ url: '...{p}...{id}', display: '{id}' }` builds the URL from the fields of an object passed to `meta()` and shows only `display` |
 | `maskKeys` | – | Extra key names whose values are masked, in data blocks, API panels and free text alike (passwords, tokens, API keys, cookies, JWTs, Bearer values are always masked) |
+| `maskValues` | – | Literal values to blank wherever they appear, keyed or not: `[process.env.PASSWORD]` |
+| `maskFromEnv` | `true` | Learn the values of environment variables whose names look sensitive (`PASSWORD`, `API_TOKEN`, `OAUTH_CLIENT_SECRET`) and blank them everywhere. The masker also remembers every value it masks, so a secret seen once as `password=x` is blanked later in `Logging in as admin / x` |
 | `env` | – | Extra rows on the Environment card |
 | `editorLinks` | on locally, off in CI | "Open in VS Code" links |
 | `bdd` | auto | Style Given/When/Then steps as Gherkin |
