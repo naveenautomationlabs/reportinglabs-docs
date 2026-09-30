@@ -75,6 +75,10 @@ reporting-labs.title=Nightly regression
 reporting-labs.theme=auto
 # lab | ocean | ember | mono
 reporting-labs.palette=lab
+# your logo in the header: a png/jpg/svg file next to this properties file
+# (src/test/resources/logo.png), an https URL, or a data URI. Files are
+# embedded, so the report stays one self-contained HTML file.
+# reporting-labs.logo=logo.png
 # brand color, overrides the palette accent
 # reporting-labs.accent=#7C3AED
 # reporting-labs.customCss=.hdr .title{letter-spacing:.02em}
@@ -180,6 +184,7 @@ reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 | `open` | `never` | `never` \| `on-failure` \| `always` — open in browser; skipped in CI/headless |
 | `theme` | `auto` | `auto` \| `light` \| `dark` |
 | `palette` | `lab` | `lab` \| `ocean` \| `ember` \| `mono` |
+| `logo` | reportingLabs mark | Your logo in the header: a png/jpg/svg/gif/webp file (path or test-classpath resource, embedded), an `https://` URL, or a data URI |
 | `accent` | palette's | Brand accent hex |
 | `customCss` | – | Extra CSS appended to the report |
 | `embedFonts` | `true` | Inline IBM Plex woff2 (~140 KB) |
