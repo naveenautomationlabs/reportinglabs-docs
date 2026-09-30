@@ -198,6 +198,13 @@ reporting-labs.maskKeys=x-tenant-secret,internalCustomerId
 Bodies are masked too: `"password":"…"`, `token=…`, `Bearer …` and JWT-shaped
 values inside a JSON, form or text body show as `****`.
 
+The same masker runs over log lines, `System.out` / `System.err`, step titles,
+error messages and data blocks, and it remembers what it masked: once a value
+has been seen under a sensitive key (`password=…`, a `Credentials` data block,
+a `PASSWORD` environment variable), that value is blanked wherever it turns up
+again, even in a line with no key at all, such as `Logging in as admin / s3cret`.
+Add values it cannot know about with `reporting-labs.maskValues`.
+
 ## Not REST Assured? Record one call by hand
 
 For a one-off, `Rl.api()` is a plain method — call it yourself:

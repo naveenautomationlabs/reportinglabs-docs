@@ -158,6 +158,10 @@ reporting-labs.history.keep=30
 # headers and bodies, log lines, console output and error messages, on top of
 # the defaults (password, token, authorization, cookie, card, cvv, ...)
 # reporting-labs.maskKeys=internalCustomerId,phone
+# literal values to blank wherever they appear (pass the real ones from CI: -Dreporting-labs.maskValues=$PASSWORD)
+# reporting-labs.maskValues=secret_sauce
+# values of PASSWORD / API_TOKEN / *_SECRET environment variables and -D properties are learned automatically
+reporting-labs.maskFromEnv=true
 
 # Charts
 reporting-labs.dimensions=priority,severity,owner,feature
@@ -208,6 +212,8 @@ reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 | `history.file` | `reporting-labs.history.json` | Path, relative to CWD |
 | `history.keep` | `30` | Max runs kept |
 | `maskKeys` | – | Extra sensitive-key substrings (comma-separated) |
+| `maskValues` | – | Literal values to blank wherever they appear, keyed or not (comma-separated) |
+| `maskFromEnv` | `true` | Learn the values of environment variables and `-D` properties whose names look sensitive (`PASSWORD`, `API_TOKEN`, `OAUTH_CLIENT_SECRET`) and blank them everywhere |
 | `dimensions` | `priority,severity,owner,feature` | Meta keys used in charts + filters |
 | `dimensionOrder.<key>` | – | Custom sort order for that dimension |
 | `widgets.<name>` | `true` | Turn a card off |
