@@ -133,6 +133,9 @@ reporting-labs.project.description=Frontend regression suite
 
 # metadata.<name> becomes a header chip; build labels the trend x-axis.
 # build / branch / commit / ci are auto-detected in CI, set them only to override.
+# the env chip. Resolved in this order: -Dreporting-labs.metadata.env or REPORTING_LABS_METADATA_ENV,
+# the variable reporting-labs.envVar names, then -Denv / ENV / TEST_ENV / APP_ENV / any *_ENV variable,
+# then this value. A runtime value beats the file, as for every key.
 reporting-labs.metadata.env=staging
 reporting-labs.metadata.region=apac
 # reporting-labs.metadata.build=ci-4287
@@ -211,6 +214,7 @@ reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 | `history.enabled` | `true` | Read/write `reporting-labs.history.json` for the trend |
 | `history.file` | `reporting-labs.history.json` | Path, relative to CWD |
 | `history.keep` | `30` | Max runs kept |
+| `envVar` | – | Name of the variable holding the environment name, when it is not `ENV`, `TEST_ENV`, `APP_ENV` or anything ending in `_ENV` |
 | `maskKeys` | – | Extra sensitive-key substrings (comma-separated) |
 | `maskValues` | – | Literal values to blank wherever they appear, keyed or not (comma-separated) |
 | `maskFromEnv` | `true` | Learn the values of environment variables and `-D` properties whose names look sensitive (`PASSWORD`, `API_TOKEN`, `OAUTH_CLIENT_SECRET`) and blank them everywhere |
@@ -227,19 +231,21 @@ reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 tests. Configure parallelism in Surefire, `testng.xml` or Gradle as usual;
 nothing to tell reportingLabs.
 
-**CI metadata.** On a supported CI the `build`, `branch`, `commit` and `ci`
-chips fill themselves. Anything you set explicitly still wins.
+**CI metadata.** On a supported CI the `branch`, `commit` and `ci` chips fill
+themselves, and the run number labels the trend chart. Anything you set
+explicitly still wins; the run number becomes a header chip only when you set
+`metadata.build` yourself.
 
 | Provider | Detected from |
 |---|---|
-| GitHub Actions | `GITHUB_ACTIONS`, `GITHUB_RUN_NUMBER`, `GITHUB_REF_NAME`, `GITHUB_SHA` |
-| Jenkins | `JENKINS_URL`, `BUILD_NUMBER`, `GIT_BRANCH`, `GIT_COMMIT` |
-| GitLab CI | `GITLAB_CI`, `CI_PIPELINE_IID`, `CI_COMMIT_REF_NAME`, `CI_COMMIT_SHA` |
-| CircleCI | `CIRCLECI`, `CIRCLE_BUILD_NUM`, `CIRCLE_BRANCH`, `CIRCLE_SHA1` |
-| Travis CI | `TRAVIS`, `TRAVIS_BUILD_NUMBER`, `TRAVIS_BRANCH`, `TRAVIS_COMMIT` |
-| Buildkite | `BUILDKITE`, `BUILDKITE_BUILD_NUMBER`, `BUILDKITE_BRANCH`, `BUILDKITE_COMMIT` |
-| TeamCity | `TEAMCITY_VERSION`, `BUILD_NUMBER`, `BUILD_VCS_NUMBER` |
-| Azure Pipelines | `TF_BUILD`, `BUILD_BUILDNUMBER`, `BUILD_SOURCEBRANCHNAME`, `BUILD_SOURCEVERSION` |
+| GitHub Actions | `GITHUB_ACTIONS`, `GITHUB_REF_NAME`, `GITHUB_SHA`; trend label `GITHUB_RUN_NUMBER` |
+| Jenkins | `JENKINS_URL`, `GIT_BRANCH`, `GIT_COMMIT`; trend label `BUILD_NUMBER` |
+| GitLab CI | `GITLAB_CI`, `CI_COMMIT_REF_NAME`, `CI_COMMIT_SHA`; trend label `CI_PIPELINE_IID` |
+| CircleCI | `CIRCLECI`, `CIRCLE_BRANCH`, `CIRCLE_SHA1`; trend label `CIRCLE_BUILD_NUM` |
+| Travis CI | `TRAVIS`, `TRAVIS_BRANCH`, `TRAVIS_COMMIT`; trend label `TRAVIS_BUILD_NUMBER` |
+| Buildkite | `BUILDKITE`, `BUILDKITE_BRANCH`, `BUILDKITE_COMMIT`; trend label `BUILDKITE_BUILD_NUMBER` |
+| TeamCity | `TEAMCITY_VERSION`; trend label `BUILD_NUMBER` |
+| Azure Pipelines | `TF_BUILD`, `BUILD_SOURCEBRANCHNAME`, `BUILD_SOURCEVERSION`; trend label `BUILD_BUILDNUMBER` |
 
 ## Per-run overrides
 
