@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
@@ -87,6 +87,176 @@ function ToolStrip() {
               <span>{t.name}</span>
             </div>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- install in three steps ---------- */
+const JAVA_VERSION = '0.1.21';
+
+type Snip = { file: string; lines: string[]; typed?: boolean };
+type Step = { title: string; text: string; snip: Snip; result?: string };
+
+const NODE_STEPS: Record<'ts' | 'js', Step[]> = {
+  ts: [
+    { title: 'Install', text: 'One package. init writes a config with every option commented out.', snip: { file: 'terminal', typed: true, lines: ['npm i -D reporting-labs@latest', 'npx reporting-labs init'] } },
+    { title: 'Add the reporter', text: 'One line in the Playwright config. That is the whole setup.', snip: { file: 'playwright.config.ts', lines: ["import reportingLabs from './reporting-labs.config';", '', 'export default defineConfig({', "  reporter: [['list'], ['reporting-labs', reportingLabs]],", '});'] } },
+    { title: 'Run', text: 'Your usual command. The report is one HTML file next to your config.', snip: { file: 'terminal', typed: true, lines: ['npx playwright test'] }, result: 'reporting-labs/index.html' },
+  ],
+  js: [
+    { title: 'Install', text: 'One package. init writes a config with every option commented out.', snip: { file: 'terminal', typed: true, lines: ['npm i -D reporting-labs@latest', 'npx reporting-labs init --js'] } },
+    { title: 'Add the reporter', text: 'One line in the Playwright config. That is the whole setup.', snip: { file: 'playwright.config.js', lines: ["const reportingLabs = require('./reporting-labs.config');", '', 'module.exports = defineConfig({', "  reporter: [['list'], ['reporting-labs', reportingLabs]],", '});'] } },
+    { title: 'Run', text: 'Your usual command. The report is one HTML file next to your config.', snip: { file: 'terminal', typed: true, lines: ['npx playwright test'] }, result: 'reporting-labs/index.html' },
+  ],
+};
+
+const JAVA_STEPS: Record<'testng' | 'junit5', Step[]> = {
+  testng: [
+    { title: 'Add the dependency', text: 'One artifact from Maven Central. Selenium, REST Assured, Playwright and Cucumber add-ons are one more each.', snip: { file: 'pom.xml', lines: ['<dependency>', '  <groupId>dev.reportinglabs</groupId>', '  <artifactId>reporting-labs-testng</artifactId>', `  <version>${JAVA_VERSION}</version>`, '  <scope>test</scope>', '</dependency>'] } },
+    { title: 'Nothing to wire', text: 'TestNG finds the listener through ServiceLoader. A properties file is optional, for a title or auto-open.', snip: { file: 'src/test/resources/reporting-labs.properties', lines: ['# optional', 'reporting-labs.title=Checkout regression', 'reporting-labs.open=on-failure'] } },
+    { title: 'Run', text: 'Your usual command. The report is one HTML file in the build folder.', snip: { file: 'terminal', typed: true, lines: ['mvn test'] }, result: 'target/reporting-labs/index.html' },
+  ],
+  junit5: [
+    { title: 'Add the dependency', text: 'One artifact from Maven Central. Selenium, REST Assured, Playwright and Cucumber add-ons are one more each.', snip: { file: 'pom.xml', lines: ['<dependency>', '  <groupId>dev.reportinglabs</groupId>', '  <artifactId>reporting-labs-junit5</artifactId>', `  <version>${JAVA_VERSION}</version>`, '  <scope>test</scope>', '</dependency>'] } },
+    { title: 'Turn on auto-detection', text: 'One line in a properties file. No @ExtendWith on any class.', snip: { file: 'src/test/resources/junit-platform.properties', lines: ['junit.jupiter.extensions.autodetection.enabled=true'] } },
+    { title: 'Run', text: 'Your usual command. The report is one HTML file in the build folder.', snip: { file: 'terminal', typed: true, lines: ['mvn test'] }, result: 'target/reporting-labs/index.html' },
+  ],
+};
+
+function useReducedMotion() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const on = (e: MediaQueryListEvent) => setReduced(e.matches);
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+  return reduced;
+}
+
+function CopyButton({ text }: { text: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button type="button" className={styles.copy} aria-label="Copy" onClick={() => {
+      navigator.clipboard?.writeText(text).then(() => { setCopied(true); setTimeout(() => setCopied(false), 1400); });
+    }}>{copied ? 'Copied' : 'Copy'}</button>
+  );
+}
+
+/* A code block that plays when its step becomes active: shell lines are typed character by
+   character, file contents appear line by line. Calls onDone once the animation has finished. */
+function Snippet({ snip, active, instant, onDone }: { snip: Snip; active: boolean; instant: boolean; onDone: () => void }) {
+  const full = snip.lines.join('\n');
+  const [chars, setChars] = useState(instant ? full.length : 0);
+  const [finished, setFinished] = useState(instant);
+  useEffect(() => {
+    if (!active || finished) return;
+    if (instant) { setChars(full.length); setFinished(true); onDone(); return; }
+    if (snip.typed) {
+      let i = 0;
+      const id = setInterval(() => {
+        i += 1; setChars(i);
+        if (i >= full.length) { clearInterval(id); setTimeout(() => { setFinished(true); onDone(); }, 350); }
+      }, 32);
+      return () => clearInterval(id);
+    }
+    const id = setTimeout(() => { setFinished(true); onDone(); }, snip.lines.length * 110 + 450);
+    return () => clearTimeout(id);
+  }, [active, finished, instant, snip, full, onDone]);
+  const shown = snip.typed ? full.slice(0, chars) : full;
+  const typing = snip.typed && active && !finished;
+  return (
+    <div className={`${styles.snip} ${snip.typed ? styles.term : ''}`}>
+      <div className={styles.bar}><i /><i /><i /><span>{snip.file}</span><CopyButton text={full} /></div>
+      <pre className={styles.snipBody}>
+        {snip.typed ? (
+          <code>
+            {!active ? (
+              <span className={styles.line}><span className={styles.prompt}>$ </span><span className={styles.cursor} /></span>
+            ) : shown.split('\n').map((l, i, arr) => (
+              <span key={i} className={styles.line}><span className={styles.prompt}>$ </span>{l}{i === arr.length - 1 && typing && <span className={styles.cursor} />}</span>
+            ))}
+          </code>
+        ) : (
+          <code>
+            {snip.lines.map((l, i) => (
+              <span key={i} className={`${styles.line} ${active || instant ? styles.lineOn : ''}`} style={{ animationDelay: `${i * 110}ms` }}>{l || ' '}</span>
+            ))}
+          </code>
+        )}
+      </pre>
+    </div>
+  );
+}
+
+function InstallColumn({ logo, name, note, variants, steps, guide, label }: {
+  logo: string; name: string; note: string; variants: { id: string; label: string }[]; steps: Record<string, Step[]>; guide: string; label: string;
+}) {
+  const reduced = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const [variant, setVariant] = useState(variants[0].id);
+  const [started, setStarted] = useState(false);
+  const [done, setDone] = useState(0);            // number of steps whose snippet has finished
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || started) return;
+    const io = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) { setStarted(true); io.disconnect(); } }, { threshold: 0.3 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [started]);
+  const list = steps[variant];
+  const complete = done >= list.length;
+  return (
+    <div ref={ref} className={`${styles.col} ${complete ? styles.colDone : ''}`}>
+      <div className={styles.colHead}>
+        <img src={`/img/logos/${logo}.svg`} alt="" />
+        <div className={styles.colTitle}><Heading as="h3">{name}</Heading><span>{note}</span></div>
+        <div className={styles.toggle} role="tablist" aria-label={`${name} variant`}>
+          {variants.map(v => (
+            <button key={v.id} type="button" role="tab" aria-selected={variant === v.id} className={variant === v.id ? styles.toggleOn : ''} onClick={() => setVariant(v.id)}>{v.label}</button>
+          ))}
+        </div>
+      </div>
+      <ol className={styles.steps}>
+        <span className={styles.rail} aria-hidden="true"><span style={{ transform: `scaleY(${Math.min(done, list.length - 1) / (list.length - 1)})` }} /></span>
+        {list.map((st, i) => {
+          const active = started && done >= i;
+          const stepDone = done > i;
+          return (
+            <li key={`${variant}-${i}`} className={`${styles.step} ${active ? styles.stepOn : ''}`}>
+              <span className={`${styles.num} ${stepDone ? styles.numDone : ''}`}>{stepDone ? <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg> : i + 1}</span>
+              <div className={styles.stepBody}>
+                <div className={styles.stepTitle}>{st.title}</div>
+                <p>{st.text}</p>
+                <Snippet snip={st.snip} active={active} instant={reduced} onDone={() => setDone(d => Math.max(d, i + 1))} />
+                {st.result && stepDone && (
+                  <div className={styles.result}><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>Report written to <code>{st.result}</code></div>
+                )}
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+      <div className={styles.colFoot}>
+        <span className={styles.foot}>{complete ? 'That is the whole setup.' : ' '}</span>
+        <Link className="button button--primary" to={guide}>{label}</Link>
+      </div>
+    </div>
+  );
+}
+
+function Install() {
+  return (
+    <section className={styles.install} id="install">
+      <div className="container">
+        <Heading as="h2" className={styles.h2}>Up and running in three steps</Heading>
+        <p className={styles.lead}>No account, no server, no agent. Install the package, point your framework at it, run your tests as you always do.</p>
+        <div className={styles.installGrid}>
+          <InstallColumn logo="nodejs" name="Node.js" note="Playwright Test · JS or TS" variants={[{ id: 'ts', label: 'TypeScript' }, { id: 'js', label: 'JavaScript' }]} steps={NODE_STEPS} guide="/get-started/nodejs" label="Node.js guide" />
+          <InstallColumn logo="java" name="Java" note="TestNG or JUnit 5 · Maven or Gradle" variants={[{ id: 'testng', label: 'TestNG' }, { id: 'junit5', label: 'JUnit 5' }]} steps={JAVA_STEPS} guide="/get-started/java" label="Java guide" />
         </div>
       </div>
     </section>
@@ -210,6 +380,7 @@ export default function Home(): ReactNode {
       <Hero />
       <main>
         <ToolStrip />
+        <Install />
         <Features />
         <Posters />
         <Languages />
