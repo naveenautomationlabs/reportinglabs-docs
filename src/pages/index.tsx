@@ -112,18 +112,42 @@ const NODE_STEPS: Record<'ts' | 'js', Step[]> = {
   ],
 };
 
-const JAVA_STEPS: Record<'testng' | 'junit5', Step[]> = {
-  testng: [
-    { title: 'Add the dependency', text: 'One artifact from Maven Central. Selenium, REST Assured, Playwright and Cucumber add-ons are one more each.', snip: { file: 'pom.xml', lines: ['<dependency>', '  <groupId>dev.reportinglabs</groupId>', '  <artifactId>reporting-labs-testng</artifactId>', `  <version>${JAVA_VERSION}</version>`, '  <scope>test</scope>', '</dependency>'] } },
-    { title: 'Nothing to wire', text: 'TestNG finds the listener through ServiceLoader. A properties file is optional, for a title or auto-open.', snip: { file: 'src/test/resources/reporting-labs.properties', lines: ['# optional', 'reporting-labs.title=Checkout regression', 'reporting-labs.open=on-failure'] } },
-    { title: 'Run', text: 'Your usual command. The report is one HTML file in the build folder.', snip: { file: 'terminal', typed: true, lines: ['mvn test'] }, result: 'target/reporting-labs/index.html' },
-  ],
-  junit5: [
-    { title: 'Add the dependency', text: 'One artifact from Maven Central. Selenium, REST Assured, Playwright and Cucumber add-ons are one more each.', snip: { file: 'pom.xml', lines: ['<dependency>', '  <groupId>dev.reportinglabs</groupId>', '  <artifactId>reporting-labs-junit5</artifactId>', `  <version>${JAVA_VERSION}</version>`, '  <scope>test</scope>', '</dependency>'] } },
-    { title: 'Turn on auto-detection', text: 'One line in a properties file. No @ExtendWith on any class.', snip: { file: 'src/test/resources/junit-platform.properties', lines: ['junit.jupiter.extensions.autodetection.enabled=true'] } },
-    { title: 'Run', text: 'Your usual command. The report is one HTML file in the build folder.', snip: { file: 'terminal', typed: true, lines: ['mvn test'] }, result: 'target/reporting-labs/index.html' },
-  ],
-};
+const JAVA_TOOLS = [
+  { id: 'selenium', label: 'Selenium', artifact: 'reporting-labs-selenium', note: 'zero-code Selenium steps and screenshots' },
+  { id: 'playwright', label: 'Playwright', artifact: 'reporting-labs-playwright', note: 'finds your Page: steps, API calls, trace, screenshot' },
+  { id: 'rest-assured', label: 'REST Assured', artifact: 'reporting-labs-rest-assured', note: 'every request in the API tab' },
+  { id: 'cucumber', label: 'Cucumber', artifact: 'reporting-labs-cucumber', note: 'a row per scenario, Given/When/Then as steps' },
+];
+
+const dep = (artifact: string, comment: string) => [`<!-- ${comment} -->`, '<dependency>', '  <groupId>dev.reportinglabs</groupId>', `  <artifactId>${artifact}</artifactId>`, `  <version>${JAVA_VERSION}</version>`, '  <scope>test</scope>', '</dependency>'];
+
+function javaSteps(framework: string, tools: string[]): Step[] {
+  const junit = framework === 'junit5';
+  const addOns = JAVA_TOOLS.filter(t => tools.includes(t.id));
+  const cucumber = tools.includes('cucumber');
+  const pom = [...dep(junit ? 'reporting-labs-junit5' : 'reporting-labs-testng', junit ? 'the reporter for JUnit 5' : 'the reporter for TestNG'), ...addOns.flatMap(t => dep(t.artifact, t.note))];
+  const install: Step = {
+    title: 'Add the dependencies',
+    text: addOns.length ? 'The reporter for your framework, plus one add-on per tool. The add-ons are zero code: nothing changes in your tests.' : 'The reporter for your framework. Pick your tools above to add their zero-code add-ons.',
+    snip: { file: 'pom.xml', lines: pom },
+  };
+  let wire: Step;
+  if (cucumber) {
+    wire = {
+      title: 'Register the plugin',
+      text: junit ? 'Two lines in the JUnit Platform properties: the Cucumber plugin and extension auto-detection.' : 'One line in the file your runner already reads. Your runner class stays what it is.',
+      snip: junit
+        ? { file: 'src/test/resources/junit-platform.properties', lines: ['cucumber.plugin=dev.reportinglabs.cucumber.ReportingLabsPlugin', 'junit.jupiter.extensions.autodetection.enabled=true'] }
+        : { file: 'src/test/resources/cucumber.properties', lines: ['cucumber.plugin=dev.reportinglabs.cucumber.ReportingLabsPlugin'] },
+    };
+  } else if (junit) {
+    wire = { title: 'Turn on auto-detection', text: 'One line in a properties file. No @ExtendWith on any class.', snip: { file: 'src/test/resources/junit-platform.properties', lines: ['junit.jupiter.extensions.autodetection.enabled=true'] } };
+  } else {
+    wire = { title: 'Nothing to wire', text: 'TestNG finds the listener through ServiceLoader. A properties file is optional, for a title or auto-open.', snip: { file: 'src/test/resources/reporting-labs.properties', lines: ['# optional', 'reporting-labs.title=Checkout regression', 'reporting-labs.open=on-failure'] } };
+  }
+  const run: Step = { title: 'Run', text: 'Your usual command. The report is one HTML file in the build folder.', snip: { file: 'terminal', typed: true, lines: ['mvn test'] }, result: 'target/reporting-labs/index.html' };
+  return [install, wire, run];
+}
 
 function useReducedMotion() {
   const [reduced, setReduced] = useState(false);
@@ -192,12 +216,14 @@ function Snippet({ snip, active, instant, onDone }: { snip: Snip; active: boolea
   );
 }
 
-function InstallColumn({ logo, name, note, variants, steps, guide, label }: {
-  logo: string; name: string; note: string; variants: { id: string; label: string }[]; steps: Record<string, Step[]>; guide: string; label: string;
+function InstallColumn({ logo, name, note, variants, tools, steps, guide, label }: {
+  logo: string; name: string; note: string; variants: { id: string; label: string }[]; tools?: { id: string; label: string }[];
+  steps: (variant: string, tools: string[]) => Step[]; guide: string; label: string;
 }) {
   const reduced = useReducedMotion();
   const ref = useRef<HTMLDivElement>(null);
   const [variant, setVariant] = useState(variants[0].id);
+  const [picked, setPicked] = useState<string[]>(tools ? [tools[0].id] : []);
   const [started, setStarted] = useState(false);
   const [done, setDone] = useState(0);            // number of steps whose snippet has finished
   useEffect(() => {
@@ -207,8 +233,9 @@ function InstallColumn({ logo, name, note, variants, steps, guide, label }: {
     io.observe(el);
     return () => io.disconnect();
   }, [started]);
-  const list = steps[variant];
+  const list = steps(variant, picked);
   const complete = done >= list.length;
+  const key = `${variant}-${picked.join('+')}`;
   return (
     <div ref={ref} className={`${styles.col} ${complete ? styles.colDone : ''}`}>
       <div className={styles.colHead}>
@@ -220,13 +247,22 @@ function InstallColumn({ logo, name, note, variants, steps, guide, label }: {
           ))}
         </div>
       </div>
+      {tools && (
+        <div className={styles.tools}>
+          <span>Your tools</span>
+          {tools.map(t => {
+            const on = picked.includes(t.id);
+            return <button key={t.id} type="button" aria-pressed={on} className={`${styles.chip} ${on ? styles.chipOn : ''}`} onClick={() => setPicked(p => on ? p.filter(x => x !== t.id) : [...p, t.id])}>{t.label}</button>;
+          })}
+        </div>
+      )}
       <ol className={styles.steps}>
         <span className={styles.rail} aria-hidden="true"><span style={{ transform: `scaleY(${Math.min(done, list.length - 1) / (list.length - 1)})` }} /></span>
         {list.map((st, i) => {
           const active = started && done >= i;
           const stepDone = done > i;
           return (
-            <li key={`${variant}-${i}`} className={`${styles.step} ${active ? styles.stepOn : ''}`}>
+            <li key={`${key}-${i}`} className={`${styles.step} ${active ? styles.stepOn : ''}`}>
               <span className={`${styles.num} ${stepDone ? styles.numDone : ''}`}>{stepDone ? <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8.5l3 3 7-7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg> : i + 1}</span>
               <div className={styles.stepBody}>
                 <div className={styles.stepTitle}>{st.title}</div>
@@ -255,8 +291,8 @@ function Install() {
         <Heading as="h2" className={styles.h2}>Up and running in three steps</Heading>
         <p className={styles.lead}>No account, no server, no agent. Install the package, point your framework at it, run your tests as you always do.</p>
         <div className={styles.installGrid}>
-          <InstallColumn logo="nodejs" name="Node.js" note="Playwright Test · JS or TS" variants={[{ id: 'ts', label: 'TypeScript' }, { id: 'js', label: 'JavaScript' }]} steps={NODE_STEPS} guide="/get-started/nodejs" label="Node.js guide" />
-          <InstallColumn logo="java" name="Java" note="TestNG or JUnit 5 · Maven or Gradle" variants={[{ id: 'testng', label: 'TestNG' }, { id: 'junit5', label: 'JUnit 5' }]} steps={JAVA_STEPS} guide="/get-started/java" label="Java guide" />
+          <InstallColumn logo="nodejs" name="Node.js" note="Playwright Test · JS or TS" variants={[{ id: 'ts', label: 'TypeScript' }, { id: 'js', label: 'JavaScript' }]} steps={v => NODE_STEPS[v as 'ts' | 'js']} guide="/get-started/nodejs" label="Node.js guide" />
+          <InstallColumn logo="java" name="Java" note="TestNG or JUnit 5 · any tool" variants={[{ id: 'testng', label: 'TestNG' }, { id: 'junit5', label: 'JUnit 5' }]} tools={JAVA_TOOLS} steps={javaSteps} guide="/get-started/java" label="Java guide" />
         </div>
       </div>
     </section>
