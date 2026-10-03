@@ -27,3 +27,8 @@
 .footer__items { overflow-wrap: anywhere; }
 .footer__item { white-space: normal; }
 .footer .col { min-width: 0; }
+
+/* Light/dark screenshot pairs in docs: ![alt](a.png#light) + ![alt](b.png#dark) */
+img[src$="#dark"] { display: none; }
+[data-theme='dark'] img[src$="#dark"] { display: inline; }
+[data-theme='dark'] img[src$="#light"] { display: none; }

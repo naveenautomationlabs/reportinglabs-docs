@@ -63,7 +63,7 @@ const config: Config = {
           items: [
             { label: 'Node.js', to: '/get-started/nodejs' },
             { label: 'Java', to: '/get-started/java' },
-            { label: 'Python (coming)', to: '/get-started/python' },
+            { label: 'Python', to: '/get-started/python' },
           ],
         },
         {
