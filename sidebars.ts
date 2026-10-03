@@ -17,6 +17,7 @@ const commonAfterGetStarted = [
       'features/history-trend',
       'features/sharding',
       'features/graphs',
+      'features/pdf-export',
       'features/plain-language-errors',
     ],
   },
