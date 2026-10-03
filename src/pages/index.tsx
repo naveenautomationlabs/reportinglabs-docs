@@ -61,6 +61,7 @@ function Hero() {
           <div className={styles.installs}>
             <code>npm i -D reporting-labs@latest</code>
             <code>dev.reportinglabs · Maven Central</code>
+            <code>pip install reporting-labs</code>
           </div>
         </div>
         <div className={styles.heroShot}>
@@ -381,11 +382,12 @@ npx reporting-labs init`}</code></pre>
 <artifactId>reporting-labs-testng</artifactId>`}</code></pre>
             <Link className="button button--primary" to="/get-started/java">Java guide</Link>
           </div>
-          <div className={`${styles.lang} ${styles.langSoon}`}>
+          <div className={styles.lang}>
             <div className={styles.langHead}><img src="/img/logos/python.svg" alt="" /><Heading as="h3">Python</Heading></div>
-            <p>pytest and Playwright for Python are next. Same template, same report.</p>
-            <pre className={styles.code}><code>{`# coming`}</code></pre>
-            <Link className="button button--secondary" to="/get-started/python">Roadmap</Link>
+            <p>pytest plugin, on once installed, with zero-code Playwright and Selenium, plus a Robot Framework listener. Every requests and httpx call captured.</p>
+            <pre className={styles.code}><code>{`pip install reporting-labs
+pytest`}</code></pre>
+            <Link className="button button--primary" to="/get-started/python">Python guide</Link>
           </div>
         </div>
       </div>
@@ -403,6 +405,7 @@ function Closing() {
           <Link className="button button--primary button--lg" to="/features/report-tour">Take the report tour</Link>
           <a className="button button--secondary button--lg" href="https://github.com/naveenautomationlabs/reporting-labs">GitHub · Node.js</a>
           <a className="button button--secondary button--lg" href="https://github.com/naveenautomationlabs/reporting-labs-java">GitHub · Java</a>
+          <a className="button button--secondary button--lg" href="https://github.com/naveenautomationlabs/reporting-labs-python">GitHub · Python</a>
         </div>
       </div>
     </section>
