@@ -7,13 +7,13 @@ sidebar_position: 1
 
 reportingLabs turns a test run into **one HTML file** you can share. No server, no login, no expiry. Open it in a browser, attach it to a ticket, send it on Slack — it just works.
 
-Today it ships for three environments:
+Today it ships for three ecosystems:
 
-- **Node.js — JavaScript & TypeScript** — one Playwright reporter that works with both plain JS and TS projects, on npm as [`reporting-labs`](https://www.npmjs.com/package/reporting-labs). Same install, same reporter entry, same helpers whichever you use.
-- **Java / JUnit 5** — a JUnit 5 Extension, on Maven Central as `io.github.reportinglabs:reporting-labs-junit5` (coming with the first tagged release).
-- **Java / TestNG** — a TestNG listener, on Maven Central as `io.github.reportinglabs:reporting-labs-testng` (coming with the first tagged release).
+- **Node.js — JavaScript & TypeScript** — on npm as [`reporting-labs`](https://www.npmjs.com/package/reporting-labs). A **Playwright** reporter and a **WebdriverIO** reporter (`reporting-labs/wdio`), same install and the same helpers whichever you use.
+- **Java** — on Maven Central as [`dev.reportinglabs`](https://central.sonatype.com/namespace/dev.reportinglabs): reporters for **TestNG** and **JUnit 5**, with zero-code add-ons for **Selenium**, **REST Assured** and **Playwright for Java**, and a **Cucumber JVM** plugin.
+- **Python** — on PyPI as [`reporting-labs`](https://pypi.org/project/reporting-labs/): a **pytest** plugin that turns on the moment it is installed, with zero-code support for **Playwright** and **Selenium**, and a **Robot Framework** listener.
 
-Python (pytest) is on the roadmap. Every port renders from the same shared HTML template, so a Java team's report is byte-for-byte the report a JavaScript team opens.
+Every port renders from the same shared HTML template, so a Java team's report is byte-for-byte the report a JavaScript or Python team opens.
 
 ## Why does it exist?
 

@@ -20,6 +20,7 @@ const TOOLS = [
 
 const POSTERS = [
   { id: 'nodejs', title: 'Playwright · Node.js', text: 'The Playwright reporter for JavaScript and TypeScript. npm install, one line in the config.', guide: '/get-started/nodejs' },
+  { id: 'webdriverio', title: 'WebdriverIO', text: 'Zero-code steps from WebDriver commands, screenshots on failure. Same package, one onComplete line.', guide: '/get-started/webdriverio' },
   { id: 'java', title: 'Java, the whole stack', text: 'Seven Maven artifacts, one report. Pick your framework, add your tool.', guide: '/get-started/java' },
   { id: 'testng', title: 'TestNG', text: 'Listener found through ServiceLoader. Hooks, retries, DataProvider rows.', guide: '/get-started/java' },
   { id: 'junit5', title: 'JUnit 5', text: 'Extension auto-detected. Parameterized tests, assumptions, nested classes.', guide: '/get-started/java' },
