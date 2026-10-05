@@ -53,7 +53,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Get started',
       collapsed: false,
-      items: ['get-started/nodejs'],
+      items: ['get-started/nodejs', 'get-started/webdriverio'],
     },
     ...commonAfterGetStarted,
   ],
