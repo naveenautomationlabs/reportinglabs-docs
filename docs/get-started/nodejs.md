@@ -1,6 +1,6 @@
 ---
 title: Node.js — JavaScript & TypeScript
-sidebar_label: Node.js (JS & TS)
+sidebar_label: Playwright
 sidebar_position: 1
 ---
 
