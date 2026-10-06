@@ -157,6 +157,13 @@ reporting-labs.history.enabled=true
 reporting-labs.history.file=reporting-labs.history.json
 reporting-labs.history.keep=30
 
+# Meta from the Javadoc of a test method or class: /** @owner naveen @priority P0 */ (annotations win)
+# https://reportinglabs.dev/features/meta-comments
+reporting-labs.commentMeta=true
+
+# report.pdf next to index.html (needs Chrome, Edge or Chromium on the machine)
+reporting-labs.pdf=true
+
 # Data masking: extra case-insensitive substrings to mask in test data, API
 # headers and bodies, log lines, console output and error messages, on top of
 # the defaults (password, token, authorization, cookie, card, cvv, ...)
