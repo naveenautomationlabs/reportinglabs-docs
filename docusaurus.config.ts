@@ -45,11 +45,13 @@ const config: Config = {
         { type: 'docSidebar', sidebarId: 'nodejs', label: 'Node.js', position: 'left' },
         { type: 'docSidebar', sidebarId: 'java', label: 'Java', position: 'left' },
         { type: 'docSidebar', sidebarId: 'python', label: 'Python', position: 'left' },
+        { to: '/support', label: '♥ Support', position: 'right' },
         {
           label: 'GitHub', position: 'right',
           items: [
             { label: 'reporting-labs (Node.js)', href: 'https://github.com/naveenautomationlabs/reporting-labs' },
             { label: 'reporting-labs-java', href: 'https://github.com/naveenautomationlabs/reporting-labs-java' },
+            { label: 'reporting-labs-python', href: 'https://github.com/naveenautomationlabs/reporting-labs-python' },
             { label: 'reportinglabs-docs (this site)', href: 'https://github.com/naveenautomationlabs/reportinglabs-docs' },
           ],
         },
@@ -80,10 +82,14 @@ const config: Config = {
           items: [
             { label: 'GitHub: reporting-labs (Node.js)', href: 'https://github.com/naveenautomationlabs/reporting-labs' },
             { label: 'GitHub: reporting-labs-java', href: 'https://github.com/naveenautomationlabs/reporting-labs-java' },
+            { label: 'GitHub: reporting-labs-python', href: 'https://github.com/naveenautomationlabs/reporting-labs-python' },
             { label: 'npm: reporting-labs', href: 'https://www.npmjs.com/package/reporting-labs' },
+            { label: 'PyPI: reporting-labs', href: 'https://pypi.org/project/reporting-labs/' },
             { label: 'Maven Central: dev.reportinglabs', href: 'https://central.sonatype.com/namespace/dev.reportinglabs' },
             { label: 'Issues (Node.js)', href: 'https://github.com/naveenautomationlabs/reporting-labs/issues' },
             { label: 'Issues (Java)', href: 'https://github.com/naveenautomationlabs/reporting-labs-java/issues' },
+            { label: 'Issues (Python)', href: 'https://github.com/naveenautomationlabs/reporting-labs-python/issues' },
+            { label: '♥ Support reportingLabs', to: '/support' },
           ],
         },
       ],

@@ -8,6 +8,7 @@
 .tagline { font-size: 1.15rem; line-height: 1.55; color: var(--ifm-color-emphasis-800); margin: 0 0 26px; max-width: 560px; }
 .buttons { display: flex; gap: 12px; flex-wrap: wrap; }
 .cta { min-width: 200px; }
+.buttons :global(.button--lg) { padding-left: 1.25rem; padding-right: 1.25rem; }
 .installs { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 .installs code { font-size: .85rem; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--ifm-color-emphasis-300); background: var(--ifm-background-surface-color); color: var(--ifm-color-emphasis-800); }
 .heroShot { position: relative; }

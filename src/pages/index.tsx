@@ -48,16 +48,17 @@ function Hero() {
     <header className={styles.hero}>
       <div className={`container ${styles.heroInner}`}>
         <div className={styles.heroText}>
-          <div className={styles.eyebrow}>Open source · MIT · Node.js and Java</div>
+          <div className={styles.eyebrow}>Open source · MIT · Node.js, Java and Python</div>
           <Heading as="h1" className={styles.title}>One HTML report for your <span>whole test stack</span>.</Heading>
           <p className={styles.tagline}>
-            Playwright, Selenium, REST Assured, Cucumber, TestNG, JUnit 5. Same report from every one of them:
+            Playwright, WebdriverIO, Selenium, REST Assured, Cucumber, TestNG, JUnit 5, pytest, Robot Framework. Same report from every one of them:
             failures ranked and explained, every API call, screenshots, traces and videos, history across runs.
             Secrets masked. Nothing to host.
           </p>
           <div className={styles.buttons}>
             <Link className={`button button--primary button--lg ${styles.cta}`} to="/get-started/nodejs">Get started · Node.js</Link>
-            <Link className={`button button--secondary button--lg ${styles.cta}`} to="/get-started/java">Get started · Java</Link>
+            <Link className="button button--secondary button--lg" to="/get-started/java">Java</Link>
+            <Link className="button button--secondary button--lg" to="/get-started/python">Python</Link>
           </div>
           <div className={styles.installs}>
             <code>npm i -D reporting-labs@latest</code>
