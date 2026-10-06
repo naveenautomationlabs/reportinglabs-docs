@@ -150,7 +150,7 @@ test('places an order with a saved card', async ({ page }) => {
 });
 ```
 
-`@key value` pairs become meta and a bare `@word` becomes a tag (`@P0` and `@critical` still set priority and severity). If a test has both, `meta()` wins. Only a comment that touches the test line counts, so a file header separated by a blank line is ignored; JSDoc tags like `@param` are ignored too. Turn it off with `commentMeta: false`.
+`@key value` pairs become meta and a line of bare `@words` becomes tags (`@P0` and `@critical` still set priority and severity); a mention inside a sentence ("reported by @naveen") is ignored. If a test has both, `meta()` wins. Only a comment that touches the test line counts, so a file header separated by a blank line is ignored; JSDoc tags like `@param` are ignored too. Turn it off with `commentMeta: false`.
 
 **Type it once, not every time.** `npx reporting-labs init` (or `npx reporting-labs snippets` in an existing project) adds VS Code snippets to `.vscode/`:
 
