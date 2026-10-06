@@ -5,7 +5,7 @@ sidebar_position: 7
 
 # Plain-language errors
 
-Playwright's raw errors are accurate but noisy. reportingLabs classifies each failure into one of ~18 kinds and shows a one-line reason above the raw error:
+Playwright's raw errors are accurate but noisy. reportingLabs classifies each failure into one of 19 kinds and shows a one-line reason above the raw error:
 
 - **Locator not found** — the selector matched zero elements.
 - **Element not visible** — matched, but hidden/off-screen.

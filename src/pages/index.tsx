@@ -4,6 +4,7 @@ import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 import Heading from '@theme/Heading';
 import styles from './index.module.css';
+import COMPARE from '../data/compare.json';
 
 const TOOLS = [
   { name: 'Playwright', logo: 'playwright' },
@@ -321,6 +322,74 @@ function Features() {
   );
 }
 
+type Mark = 'yes' | 'partial' | 'no';
+const MARK_LABEL: Record<Mark, string> = { yes: 'Built in', partial: 'With extra setup', no: 'Not in the docs' };
+
+function MarkIcon({ m }: { m: Mark }) {
+  return (
+    <span className={`${styles.mark} ${styles[m]}`} role="img" aria-label={MARK_LABEL[m]} title={MARK_LABEL[m]}>
+      <svg viewBox="0 0 16 16" width="12" height="12" aria-hidden="true">
+        {m === 'yes' && <path d="M3.5 8.5l3 3 6-6.5" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />}
+        {m === 'partial' && <path d="M4 8h8" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />}
+        {m === 'no' && <path d="M5 5l6 6M11 5l-6 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />}
+      </svg>
+    </span>
+  );
+}
+
+/** `code` spans in a note. */
+function Note({ text }: { text: string }) {
+  if (!text) return null;
+  return <span className={styles.cmpNote}>{text.split('`').map((t, i) => (i % 2 ? <code key={i}>{t}</code> : t))}</span>;
+}
+
+function Compare() {
+  const tools = COMPARE.tools;
+  return (
+    <section className={styles.compare} id="compare">
+      <div className="container">
+        <Heading as="h2" className={styles.h2}>How it compares</Heading>
+        <p className={styles.lead}>reportingLabs next to the two reports most teams already know, feature by feature.</p>
+        <div className={styles.cmpWrap}>
+          <table className={styles.cmp}>
+            <colgroup><col className={styles.cmpFeatCol} /><col /><col /><col /></colgroup>
+            <thead>
+              <tr>
+                <th scope="col"><span className={styles.srOnly}>Feature</span></th>
+                {tools.map((t, i) => <th key={t} scope="col" className={i === tools.length - 1 ? styles.cmpUs : undefined}>{t === 'reportingLabs' ? <>reporting<wbr />Labs</> : t}</th>)}
+              </tr>
+            </thead>
+            {COMPARE.groups.map(g => (
+              <tbody key={g.name}>
+                <tr className={styles.cmpGroup}><th scope="colgroup" colSpan={4}>{g.name}</th></tr>
+                {g.rows.map(r => (
+                  <tr key={r.f}>
+                    <th scope="row">{r.f}</th>
+                    {r.c.map(([m, note], i) => (
+                      <td key={i} className={i === r.c.length - 1 ? styles.cmpUs : undefined}>
+                        <MarkIcon m={m as Mark} />
+                        <Note text={note} />
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            ))}
+          </table>
+        </div>
+        <div className={styles.cmpLegend}>
+          <span><MarkIcon m="yes" /> built in</span>
+          <span><MarkIcon m="partial" /> possible with extra setup</span>
+          <span><MarkIcon m="no" /> not in the official docs</span>
+        </div>
+        <p className={styles.cmpFoot}>
+          From each tool's official documentation, {COMPARE.asOf}. <Link to="/compare/allure-playwright">Sources and when to pick which →</Link>
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function Posters() {
   const [open, setOpen] = useState<null | typeof POSTERS[number]>(null);
   useEffect(() => {
@@ -423,6 +492,7 @@ export default function Home(): ReactNode {
         <ToolStrip />
         <Install />
         <Features />
+        <Compare />
         <Posters />
         <Languages />
         <Closing />

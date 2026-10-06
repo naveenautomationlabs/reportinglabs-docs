@@ -1,0 +1,41 @@
+{
+  "asOf": "September 2026",
+  "tools": ["Playwright HTML", "Allure", "reportingLabs"],
+  "groups": [
+    { "name": "Getting started", "rows": [
+      { "f": "Single HTML file, opens without a server", "c": [["no", "a folder, served by `show-report`"], ["partial", "single-file mode (2.24+, Allure 3)"], ["yes", ""]] },
+      { "f": "Nothing extra to install", "c": [["yes", ""], ["no", "Allure CLI; Allure 2 needs Java"], ["yes", "one package"]] },
+      { "f": "Setup", "c": [["yes", "built in"], ["partial", "reporter + generate step"], ["yes", "one line"]] },
+      { "f": "Frameworks", "c": [["no", "Playwright only"], ["yes", "many languages"], ["yes", "Playwright, WebdriverIO, pytest, Robot, JUnit 5, TestNG, Cucumber"]] }
+    ]},
+    { "name": "Each test", "rows": [
+      { "f": "Steps, screenshots, videos, traces", "c": [["yes", ""], ["yes", ""], ["yes", ""]] },
+      { "f": "Logs and test data", "c": [["partial", "as attachments"], ["partial", "attachments, parameters"], ["yes", "`log()`, `testData()`"]] },
+      { "f": "API calls with request and response", "c": [["no", ""], ["partial", "manual attachments"], ["yes", "automatic, Copy as cURL"]] },
+      { "f": "Environment info", "c": [["no", ""], ["partial", "`environment.properties`"], ["yes", "automatic"]] },
+      { "f": "Secrets masked", "c": [["no", ""], ["partial", "parameters only"], ["yes", "automatic"]] }
+    ]},
+    { "name": "Failures", "rows": [
+      { "f": "Ranked by priority and severity", "c": [["no", ""], ["no", ""], ["yes", "Needs attention"]] },
+      { "f": "Grouped by root cause", "c": [["no", ""], ["partial", "regex in `categories.json`"], ["yes", "automatic clusters"]] },
+      { "f": "Explained in plain words", "c": [["no", ""], ["no", ""], ["yes", "19 kinds"]] },
+      { "f": "New vs already failing", "c": [["no", ""], ["no", ""], ["yes", "\"failing since #1840\""]] },
+      { "f": "Grouped by owner", "c": [["no", ""], ["partial", "owner label, no rollup"], ["yes", ""]] },
+      { "f": "Bug report in one click", "c": [["no", ""], ["no", ""], ["yes", "Markdown, Jira, text"]] }
+    ]},
+    { "name": "Across runs", "rows": [
+      { "f": "History and trend chart", "c": [["no", ""], ["partial", "when history is carried over"], ["yes", "zero setup"]] },
+      { "f": "Flaky tests", "c": [["yes", "per run"], ["partial", "`@Flaky` (Java)"], ["yes", "plus flakiest over runs"]] },
+      { "f": "Got slower than last run", "c": [["no", ""], ["no", ""], ["yes", ""]] },
+      { "f": "Timeline by worker", "c": [["no", ""], ["yes", ""], ["yes", ""]] }
+    ]},
+    { "name": "Organise and share", "rows": [
+      { "f": "Priority, owner, feature, story", "c": [["partial", "custom annotations"], ["yes", "labels"], ["yes", "`meta()` or a comment"]] },
+      { "f": "Links to Jira or a TMS", "c": [["partial", "URL in an annotation"], ["yes", "`issue()`, `tms()`"], ["yes", "`links` templates"]] },
+      { "f": "Merge shards or several runs", "c": [["yes", "`merge-reports`"], ["yes", "launches"], ["yes", "`reporting-labs merge`"]] },
+      { "f": "PDF of the report", "c": [["no", ""], ["no", ""], ["yes", "`report.pdf`"]] },
+      { "f": "CSV / JSON export, Slack summary", "c": [["no", ""], ["partial", "Allure 3 plugins"], ["yes", ""]] },
+      { "f": "Free and open source", "c": [["yes", ""], ["yes", "TestOps is paid"], ["yes", "MIT"]] }
+    ]}
+  ]
+}
