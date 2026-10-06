@@ -52,7 +52,7 @@ The env chip resolves in this order, first match wins:
 | `outputFile` | `'index.html'` | Report file name |
 | `emitJson` | `true` | Also write `report.json` (used by `merge` for sharded runs) |
 | `jsonFile` | `'report.json'` | File name of the JSON blob |
-| `pdf` | `true` | Also write a print-ready [`report.pdf`](../features/pdf-export.md) (headless Chromium). `false` to skip, or `{ file }` to rename |
+| `pdf` | `true` | Also write a print-ready [`report.pdf`](../features/pdf-export.md), printed by Playwright's Chromium or an installed Chrome / Edge, whatever browser the tests ran on. `false` to skip, `{ file }` to rename, `{ chromePath }` to name the browser |
 | `embedAttachments` | `true` | Screenshots inside the HTML (single file) |
 | `embedLimit` | `2 * 1024 * 1024` | Bigger attachments are copied as files |
 | `embedVideos` | `false` | Videos inside the HTML too (bigger file, no folder issues) |

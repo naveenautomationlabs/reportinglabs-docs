@@ -25,13 +25,13 @@ The PDF is always in the **light theme** (clean on paper and in print), and vide
 
 ## Auto-generated report.pdf
 
-`report.pdf` is on by default. It is rendered by a headless **Chromium / Chrome**:
+`report.pdf` is on by default. It is printed by a headless **Chrome-family browser** (Chrome, Edge or Chromium). That is only the printer: it does not matter which browser your tests ran on, so suites on **Firefox, WebKit or Safari** get the PDF too. The first one found is used:
 
-- **Node.js** uses the Chromium that Playwright already ships — nothing extra to install.
-- **Python** uses Playwright's Chromium if it is installed (`playwright install chromium`), otherwise a Chrome / Chromium found on the machine.
-- **Java** uses a Chrome / Chromium found on the machine (set `reporting-labs.chromePath` to point at a specific one).
+1. **Playwright's Chromium**, when Playwright and its Chromium are installed (Node.js and Python).
+2. **An installed Google Chrome, Microsoft Edge or Chromium.** Edge comes with every Windows machine, and most Macs have Chrome, so a WebdriverIO, Selenium or Firefox-only suite needs nothing extra.
+3. **A browser you name**: `pdf: { chromePath }` (Node.js), `chromePath` (Python), `reporting-labs.chromePath` (Java), or the `CHROME_PATH` environment variable (Node.js and Python).
 
-Generating the PDF is **best-effort**: if no browser is available it is skipped with a short note, and the HTML report — with its **Export PDF** button — is always written regardless.
+Generating the PDF is **best-effort**: if no Chrome-family browser is on the machine, for example a Linux CI image with only Firefox installed, it is skipped with a one-line note. The HTML report is always written, and its **Export PDF** button works in any browser, Firefox included. To get the file in such a pipeline, install Chromium in that job (`apt-get install chromium`, or `npx playwright install chromium`).
 
 ### Turn it off or rename it
 
@@ -45,17 +45,21 @@ import TabItem from '@theme/TabItem';
 reporter: [['reporting-labs', {
   pdf: false,                 // skip report.pdf (the Export PDF button stays)
   // pdf: { file: 'summary.pdf' },   // or rename it
+  // pdf: { chromePath: '/usr/bin/chromium' },   // or name the browser that prints it
 }]],
 ```
 
 </TabItem>
 <TabItem value="python" label="Python">
 
-```ini title="pytest.ini / reporting-labs.toml"
-# reporting-labs.toml
-pdf = false          # skip report.pdf
-# pdfFile = "summary.pdf"
+```toml title="pyproject.toml"
+[tool.reporting-labs]
+pdf = false                          # skip report.pdf (the Export PDF button stays)
+# pdfFile = "summary.pdf"            # or rename it
+# chromePath = "/usr/bin/chromium"   # or name the browser that prints it
 ```
+
+The same keys work in `reporting-labs.config.json`.
 
 </TabItem>
 <TabItem value="java" label="Java">

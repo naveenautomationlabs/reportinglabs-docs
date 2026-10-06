@@ -39,7 +39,7 @@ export const config = {
 };
 ```
 
-That's it. Run your suite and open `reporting-labs/index.html`. A print-ready `report.pdf` is written next to it (see [PDF export](../features/pdf-export.md)).
+That's it. Run your suite and open `reporting-labs/index.html`. A print-ready `report.pdf` is written next to it, printed by an installed Chrome or Edge, so it works for Firefox suites too and needs no Playwright (see [PDF export](../features/pdf-export.md)).
 
 :::note
 Both the reporter and `onComplete` take the same `outputFolder` — keep them in sync. The reporter alone only writes the per-runner parts; `reportingLabsComplete` builds the HTML, JSON and PDF.
@@ -72,7 +72,7 @@ The reporter and `reportingLabsComplete` accept the usual reportingLabs options 
 | reporter | `screenshot` | `on-failure` (default) · `off` |
 | reporter | `maskKeys` / `maskValues` | Extra things to mask in command values |
 | onComplete | `title`, `metadata`, `logo`, … | Everything that shapes the report |
-| onComplete | `pdf` | `true` (default) · `false` · `{ file }` |
+| onComplete | `pdf` | `true` (default) · `false` · `{ file, chromePath }` |
 
 ## CI
 
