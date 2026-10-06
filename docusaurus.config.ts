@@ -72,6 +72,7 @@ const config: Config = {
             { label: 'All options', to: '/reference/options' },
             { label: 'CI recipes', to: '/ci/github-actions' },
             { label: 'Sharding & merge', to: '/features/sharding' },
+            { label: 'Security & privacy', to: '/security-privacy' },
           ],
         },
         {
