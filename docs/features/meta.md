@@ -7,6 +7,10 @@ sidebar_position: 2
 
 Three tiny helpers add the details the report ranks and groups by.
 
+:::tip No code change
+The same meta can also go in a comment above the test: `/** @priority P0 @owner naveen */`. See [Meta from comments](./meta-comments.md).
+:::
+
 ## `meta({...})`
 
 One line at the top of the test says who owns it, how important it is and which story it covers:

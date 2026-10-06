@@ -59,6 +59,8 @@ def test_login(username):
 
 ### Or write meta in the docstring
 
+Full rules, every framework and the editor snippets: [Meta from comments](../../features/meta-comments.md).
+
 The marker and `meta()` stay the main way. If your team prefers not to add them, put the same values in the
 test's docstring, or in `#` comments right above the `def` (and its decorators):
 

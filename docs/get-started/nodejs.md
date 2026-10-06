@@ -137,6 +137,8 @@ All three are optional. A test with no `meta()` still shows up — the report ju
 
 ### Or write meta as a comment
 
+Full rules, every framework and the editor snippets: [Meta from comments](../features/meta-comments.md).
+
 `meta()` stays the main way. If your team prefers not to add calls to the tests, put the same values in a comment right above the test (or above `test.describe`, for every test inside it):
 
 ```ts

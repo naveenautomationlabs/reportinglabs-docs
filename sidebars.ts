@@ -12,6 +12,7 @@ const commonAfterGetStarted = [
       'features/overview',
       'features/report-tour',
       'features/meta',
+      'features/meta-comments',
       'features/failure-clusters',
       'features/bug-report',
       'features/history-trend',

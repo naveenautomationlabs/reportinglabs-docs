@@ -12,6 +12,10 @@ same for Playwright, Selenium, REST Assured or plain Java.
 
 ## Annotations
 
+:::tip Or in the Javadoc
+The same meta can sit in the Javadoc of the test method or class: `/** @priority P0 @owner naveen */`. Annotations win when both are there. See [Meta from comments](../../features/meta-comments.md).
+:::
+
 All live in `dev.reportinglabs.core.annotations`. Put them on the class for a
 default, on the method to override.
 
