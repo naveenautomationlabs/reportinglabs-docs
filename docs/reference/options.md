@@ -25,6 +25,8 @@ Every option, defaults inline. Everything is optional.
 |---|---|---|
 | `metadata` | – | `Record<string, string>` shown as chips in the header; `build` labels the run in the history. The environment name is also read from the process environment and wins over `env` here: `ENV`, `TEST_ENV`, `APP_ENV`, `TARGET_ENV`, `CI_ENVIRONMENT_NAME` and friends, or any variable whose name ends in `_ENV` / `_ENVIRONMENT` (`OPENCART_ENV`, `app_env`). A config that says `local` still labels a pipeline's reports `dev`, `qa`, `stage` with no config change |
 | `envVar` | – | Name of the variable that holds the environment name, for a project whose name the detection cannot guess (`envVar: 'TARGET'`) |
+| `project` | – | `{ name, version, team, url, description }` block under the title |
+| `sections` | – | Extra `{ title, html }[]` sections rendered below the summary |
 
 ## Runtime overrides
 
@@ -41,8 +43,6 @@ The env chip resolves in this order, first match wins:
 2. The variable named by `envVar`
 3. `ENV`, `TEST_ENV`, `ENVIRONMENT`, `APP_ENV`, `TARGET_ENV`, `RUN_ENV`, `DEPLOY_ENV`, `ENV_NAME`, `TEST_ENVIRONMENT`, `TARGET_ENVIRONMENT`, `CI_ENVIRONMENT_NAME`, `DEPLOYMENT_ENVIRONMENT`, `STAGE`, then any variable whose name ends in `_ENV` or `_ENVIRONMENT`. `GITHUB_ENV`, `NODE_ENV`, `VIRTUAL_ENV` and other system variables are never used, and a value only counts when it looks like an environment name (a short token such as `dev`, `app_qa`, `stage-2`)
 4. `metadata.env` in the config
-| `project` | – | `{ name, version, team, url, description }` block under the title |
-| `sections` | – | Extra `{ title, html }[]` sections rendered below the summary |
 
 ## Output
 
