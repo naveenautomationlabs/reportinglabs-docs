@@ -204,6 +204,10 @@ reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 | `embedFonts` | `true` | Inline IBM Plex woff2 (~140 KB) |
 | `editorLinks` | `false` | "Open in IDE" link per test |
 | `bdd` | `false` | Gherkin-style Given/When/Then |
+| `commentMeta` | `true` | Also read meta from the Javadoc of a test method or class (`@priority P0 @owner naveen`). Annotations and `Rl.meta()` win when both are there. `false` reads no Javadoc |
+| `pdf` | `true` | Also write a print-ready `report.pdf` next to the HTML. `false` turns it off |
+| `pdfFile` | `report.pdf` | File name of the PDF |
+| `chromePath` | – | The Chrome / Edge / Chromium that prints the PDF, when it is not found on its own (or set `CHROME_PATH`) |
 | `selenium.screenshot` | `on-failure` | Selenium add-on: screenshot at the end of each test. `never` / `on-failure` / `always` / `only-on-pass` |
 | `playwright.steps` | `true` | Playwright add-on: every action as a timed step, read from the trace at the end of the test |
 | `playwright.screenshot` | `on-failure` | Playwright add-on: full-page screenshot at the end of each test |
