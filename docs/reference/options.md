@@ -36,6 +36,7 @@ Variables the reporter owns, read at run time and winning over the config, so a 
 |---|---|
 | `REPORTING_LABS_METADATA_<KEY>` | The header chip `<key>`: `REPORTING_LABS_METADATA_ENV=qa`, `REPORTING_LABS_METADATA_RELEASE=2.3` |
 | `REPORTING_LABS_TITLE`, `REPORTING_LABS_THEME`, `REPORTING_LABS_PALETTE`, `REPORTING_LABS_ACCENT`, `REPORTING_LABS_LOGO` | The option of the same name |
+| `REPORTING_LABS_OUTPUT_FOLDER` | `outputFolder`: one report folder per shard when several shards run at once in the same checkout (Node.js from 0.6.14, Python reads it too; in Java use `-Dreporting-labs.outputFolder=...`) |
 
 The env chip resolves in this order, first match wins:
 
