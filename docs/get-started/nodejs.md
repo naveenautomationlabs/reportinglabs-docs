@@ -152,6 +152,17 @@ test('places an order with a saved card', async ({ page }) => {
 
 `@key value` pairs become meta and a bare `@word` becomes a tag (`@P0` and `@critical` still set priority and severity). If a test has both, `meta()` wins. Only a comment that touches the test line counts, so a file header separated by a blank line is ignored; JSDoc tags like `@param` are ignored too. Turn it off with `commentMeta: false`.
 
+**Type it once, not every time.** `npx reporting-labs init` (or `npx reporting-labs snippets` in an existing project) adds VS Code snippets to `.vscode/`:
+
+| Type | Then Tab | You get |
+|---|---|---|
+| `rlmeta` | the comment | `/** @priority P0 @owner name @feature area @story SHOP-123 */`, priority as a dropdown |
+| `rltest` | comment + test | the comment and an empty `test('...', async ({ page }) => {})` |
+| `rlit` | comment + `it()` | the same for WebdriverIO / Mocha |
+| `rldescribe` | describe + comment | meta for every test inside |
+
+Tab moves from field to field. Commit `.vscode/reporting-labs.code-snippets` and the whole team gets them. In IntelliJ / WebStorm, add a Live Template (Settings → Editor → Live Templates) with the abbreviation `rlmeta` and the text `/** @priority $PRIORITY$  @owner $OWNER$  @feature $FEATURE$ */`.
+
 ## Step 5. Auto-capture API calls (already on)
 
 The config file that `init` created starts with this import, so API capture is already on.

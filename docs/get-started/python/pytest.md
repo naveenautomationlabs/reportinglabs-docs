@@ -76,6 +76,10 @@ A docstring on the test class or the module applies to every test inside it, and
 pairs become meta (known keys, plus keys in `dimensions` or `links`, so a stray `# TODO @naveen` is ignored); a bare
 `@word` becomes a tag. If a test also has the marker or `meta()`, those win. Turn it off with `"commentMeta": false`.
 
+**Type it once, not every time.** `python -m reporting_labs snippets` adds VS Code snippets to `.vscode/`: type `rlmeta`
+inside a test and press Tab for the docstring meta (priority as a dropdown), or `rltest` for a whole test with it. Commit
+the file and the whole team gets them. In PyCharm, add a Live Template with the abbreviation `rlmeta`.
+
 ## The helpers
 
 Import them from `reporting_labs`. All are no-ops outside a test, so they are safe in shared code.
