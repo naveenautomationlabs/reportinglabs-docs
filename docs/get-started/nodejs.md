@@ -135,6 +135,23 @@ test('places an order with a saved card', async ({ page }) => {
 
 All three are optional. A test with no `meta()` still shows up — the report just cannot rank it by priority.
 
+### Or write meta as a comment
+
+`meta()` stays the main way. If your team prefers not to add calls to the tests, put the same values in a comment right above the test (or above `test.describe`, for every test inside it):
+
+```ts
+/**
+ * Places an order with a saved card.
+ * @priority P0  @owner naveen  @feature checkout  @story SHOP-231
+ * @smoke
+ */
+test('places an order with a saved card', async ({ page }) => {
+  // no meta() call needed
+});
+```
+
+`@key value` pairs become meta and a bare `@word` becomes a tag (`@P0` and `@critical` still set priority and severity). If a test has both, `meta()` wins. Only a comment that touches the test line counts, so a file header separated by a blank line is ignored; JSDoc tags like `@param` are ignored too. Turn it off with `commentMeta: false`.
+
 ## Step 5. Auto-capture API calls (already on)
 
 The config file that `init` created starts with this import, so API capture is already on.

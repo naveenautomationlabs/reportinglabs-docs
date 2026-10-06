@@ -57,6 +57,25 @@ def test_login(username):
     meta(owner="asha", feature="login")
 ```
 
+### Or write meta in the docstring
+
+The marker and `meta()` stay the main way. If your team prefers not to add them, put the same values in the
+test's docstring, or in `#` comments right above the `def` (and its decorators):
+
+```python
+def test_places_order(page):
+    """Places an order with a saved card.
+
+    @priority P0  @owner asha  @feature checkout  @story SHOP-231
+    @smoke
+    """
+    ...
+```
+
+A docstring on the test class or the module applies to every test inside it, and the test's own wins. `@key value`
+pairs become meta (known keys, plus keys in `dimensions` or `links`, so a stray `# TODO @naveen` is ignored); a bare
+`@word` becomes a tag. If a test also has the marker or `meta()`, those win. Turn it off with `"commentMeta": false`.
+
 ## The helpers
 
 Import them from `reporting_labs`. All are no-ops outside a test, so they are safe in shared code.

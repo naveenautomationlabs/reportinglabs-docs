@@ -72,6 +72,7 @@ The env chip resolves in this order, first match wins:
 | `bdd` | auto | Style Given/When/Then steps as Gherkin |
 | `announce` | `true` | Print the report path to the console after the run |
 | `warnMissingMeta` | `true` | Console list of tests without `meta()` |
+| `commentMeta` | `true` | Read meta from a comment right above a test or describe (`/** @owner naveen @priority P0 */`; a docstring in Python). `meta()` wins over it |
 | `open` | `'on-failure'` | Open report in browser: `'on-failure' | 'always' | 'never'` |
 
 ## History

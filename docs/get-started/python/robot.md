@@ -54,6 +54,16 @@ robot --listener reporting_labs.RobotListener:title=Checkout:output=reports/rl:p
 - **Secrets masked**: arguments to keywords whose name looks like a password, and values after a password
   argument, are blanked in step titles.
 
+The same `@key value` meta can go in the test's documentation, as with a pytest docstring:
+
+```robot
+*** Test Cases ***
+Cart Total Is Correct
+    [Documentation]    Checks the cart total.    @owner naveen    @priority P0    @story SHOP-12
+    [Tags]    smoke
+    ...
+```
+
 ```robot
 *** Settings ***
 Library           SeleniumLibrary
