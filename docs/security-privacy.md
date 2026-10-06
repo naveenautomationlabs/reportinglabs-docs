@@ -11,7 +11,7 @@ reportingLabs is an **open-source library that runs inside your own test run**. 
 
 This page is written for security reviewers, QA leads and anyone who has to answer "where does our test data go?". Every statement below can be checked in the public source code.
 
-<small>Applies to: npm `reporting-labs` 0.6.x, PyPI `reporting-labs` 0.1.x, Maven Central `dev.reportinglabs` 0.1.x · Last reviewed: October 2026</small>
+<small>Applies to: the npm, PyPI and Maven Central packages · Last reviewed: October 2026</small>
 
 ## At a glance
 
@@ -40,7 +40,7 @@ During a run the reporter collects, in memory:
 
 ## What it writes
 
-Everything is written to a local folder — `reporting-labs/` by default, `target/reporting-labs/` in Maven projects:
+Everything is written to local files: the report folder (`reporting-labs/` by default, `target/reporting-labs/` in Maven projects), plus one history file next to your project:
 
 | File | Contents | Turn off / change |
 | --- | --- | --- |
@@ -48,7 +48,7 @@ Everything is written to a local folder — `reporting-labs/` by default, `targe
 | `report.json` | The same data, machine-readable (used by `merge` for shards) | `emitJson: false` |
 | `report.pdf` | A print-ready copy of the report | `pdf: false` |
 | `assets/` | Attachments too large to embed in the HTML | `embedAttachments`, `embedLimit` |
-| `reporting-labs.history.json` | For each recent run: totals, and each test's outcome and duration — used for the trend, flaky and "new vs known" views | `history: { enabled: false }` |
+| `reporting-labs.history.json` (next to your project, not in the report folder) | For each recent run: totals, and each test's outcome and duration — used for the trend, flaky and "new vs known" views | `history: { enabled: false }` |
 
 Nothing is written anywhere else, and nothing is uploaded. (Option names are the Node.js / Python ones; Java uses the same names as `reporting-labs.*` properties where supported — see the Java configuration page.)
 
