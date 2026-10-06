@@ -80,7 +80,7 @@ pairs become meta (known keys, plus keys in `dimensions` or `links`, so a stray 
 
 **Type it once, not every time.** `python -m reporting_labs snippets` adds VS Code snippets to `.vscode/`: type `rlmeta`
 inside a test and press Tab for the docstring meta (priority as a dropdown), or `rltest` for a whole test with it. Commit
-the file and the whole team gets them. In PyCharm, add a Live Template with the abbreviation `rlmeta`.
+the file and the whole team gets them. Step-by-step for VS Code and PyCharm: [Install the editor snippets](../../features/meta-comments.md#install-the-editor-snippets).
 
 ## The helpers
 

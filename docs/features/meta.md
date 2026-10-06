@@ -7,8 +7,8 @@ sidebar_position: 2
 
 Three tiny helpers add the details the report ranks and groups by.
 
-:::tip No code change
-The same meta can also go in a comment above the test: `/** @priority P0 @owner naveen */`. See [Meta from comments](./meta-comments.md).
+:::tip Don't want to call meta()? Use a comment
+This page shows **Way 1**, `meta()` in the test. **Way 2** gives the same report with no code: write a comment above the test, like `/** @priority P0 @owner naveen */`. Pick whichever you like. See [Meta from comments](./meta-comments.md).
 :::
 
 ## `meta({...})`

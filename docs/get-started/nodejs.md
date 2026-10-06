@@ -163,7 +163,7 @@ test('places an order with a saved card', async ({ page }) => {
 | `rlit` | comment + `it()` | the same for WebdriverIO / Mocha |
 | `rldescribe` | describe + comment | meta for every test inside |
 
-Tab moves from field to field. Commit `.vscode/reporting-labs.code-snippets` and the whole team gets them. In IntelliJ / WebStorm, add a Live Template (Settings → Editor → Live Templates) with the abbreviation `rlmeta` and the text `/** @priority $PRIORITY$  @owner $OWNER$  @feature $FEATURE$ */`.
+Tab moves from field to field. Commit `.vscode/reporting-labs.code-snippets` and the whole team gets them. Step-by-step for VS Code, IntelliJ / WebStorm and Eclipse, and what to check when a snippet doesn't show up: [Install the editor snippets](../features/meta-comments.md#install-the-editor-snippets).
 
 ## Step 5. Auto-capture API calls (already on)
 

@@ -51,7 +51,7 @@ Both the reporter and `onComplete` take the same `outputFolder` — keep them in
 - **Screenshots on failure** — captured automatically from the live session when a test fails.
 - **Plain-language failures** and **failure clusters** — thirty tests that broke the same way read as one problem.
 - **Metadata from tags** — put `@P1`, `@critical`, `@owner:asha` (or `@feature:checkout`) in a test or describe title and they become the priority / severity / owner / feature dimensions the dashboard filters and ranks by.
-- **Metadata from comments** — or put it in a comment right above `it()` / `describe()`: `/** @owner asha @priority P1 @feature checkout */`. Tags and comments both work; turn comments off with `commentMeta: false`. Type `rlit` + Tab in VS Code for a test with the comment (`npx reporting-labs snippets` adds the snippets).
+- **Metadata from comments** — or put it in a comment right above `it()` / `describe()`: `/** @owner asha @priority P1 @feature checkout */`. Tags and comments both work; turn comments off with `commentMeta: false`. Type `rlit` + Tab in VS Code for a test with the comment (`npx reporting-labs snippets` adds the snippets; [how to install them](../features/meta-comments.md#install-the-editor-snippets)).
 
 ```js title="login.e2e.js"
 describe('Checkout @feature:checkout', () => {
