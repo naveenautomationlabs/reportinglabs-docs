@@ -43,19 +43,22 @@ Each cluster shows the shared error, the tests inside it, and a **Copy bug repor
 
 Every request auto-captured across the run, with method, URL, status, request headers, response body and timing. Filter by status code or search by URL.
 
+A 4xx or 5xx response counts as **failed** only when the test that made the call failed. In a passing test it is the answer the test asked for — a 404 after a DELETE, a 401 for a bad token — so it is shown grey and marked **expected**, and counted separately.
+
 ![API tab](/img/screenshots/05-api-light.png)
 
 This tab only appears when `import 'reporting-labs/auto'` is set in your Playwright config. Without it, requests inside individual tests are still shown on the Test detail's **API** subtab.
 
 ## Graphs
 
-Five charts on one tab:
+Up to six charts on one tab:
 
 1. **Outcomes by priority** — stacked pass / fail / flaky / skipped for each priority tier.
-2. **Failure categories** — what kinds of failures are hurting the suite (assertions vs timeouts vs network vs browser closed).
-3. **Duration distribution** — how test durations are spread across the run.
-4. **Pass rate trend by priority** — how each priority tier trends over the last runs (needs history).
-5. **Owner leaderboard** — failures and flakes ranked by owner.
+2. **Outcomes by project** — the same per Playwright project (browser or device) with its pass rate; shown when the run has more than one project.
+3. **Failure categories** — what kinds of failures are hurting the suite (assertions vs timeouts vs network vs browser crashed).
+4. **Duration distribution** — how the durations of the tests that ran are spread.
+5. **Pass rate trend by priority** — how each priority tier trends over the last runs (needs history).
+6. **Owner leaderboard** — failures and flakes ranked by owner.
 
 ![Graphs tab](/img/screenshots/06-graphs-light.png)
 

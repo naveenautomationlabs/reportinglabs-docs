@@ -20,6 +20,7 @@ Playwright's raw errors are accurate but noisy. reportingLabs classifies each fa
 - **Navigation** — page navigation failed or timed out.
 - **Test / hook / action timeout** — with the applicable timeout value called out.
 - **Closed / detached** — the target page/context was already closed.
+- **Browser crashed** — the browser process died mid-test (`Target crashed`, `Page crashed`, Selenium's "session deleted because of page crash"). An infrastructure problem, usually memory or too many workers, not a bug in the app or the test.
 - **Script / File / Thrown** — for spec-level failures.
 
 The original Playwright error stays right below the plain-language reason. Nothing is hidden — just re-ranked.

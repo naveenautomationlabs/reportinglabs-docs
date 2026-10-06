@@ -209,9 +209,9 @@ Similar errors are clustered. Thirty red tests that share one selector read as o
 
 ### Graphs
 
-Five charts on one tab: outcomes by priority, failure categories, duration distribution, pass-rate trend, and the owner leaderboard.
+Up to six charts on one tab: outcomes by priority, outcomes by project (browser), failure categories, duration distribution, pass-rate trend, and the owner leaderboard.
 
-![Graphs tab with five charts](/img/screenshots/06-graphs-light.png)
+![Graphs tab](/img/screenshots/06-graphs-light.png)
 
 ### Timeline
 
