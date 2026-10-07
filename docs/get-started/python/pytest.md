@@ -112,6 +112,14 @@ Feature: Login
 
 Works with pytest-bdd 6 to 9.
 
+A failed scenario: the failing step is red with the Playwright action that failed under it, the step after it is *not run*, and the screenshot of the page is attached:
+
+![A pytest-bdd scenario in the report: Given / When / Then steps, the failing step in red, the next step not run, and the failure screenshot](/img/screenshots/py-bdd-detail-light.png)
+
+A step's data table becomes a table in the report:
+
+![A pytest-bdd scenario with a data table shown as a table under the steps](/img/screenshots/py-bdd-table-light.png)
+
 ## The helpers
 
 Import them from `reporting_labs`. All are no-ops outside a test, so they are safe in shared code.
