@@ -5,7 +5,19 @@ sidebar_position: 1
 
 # All options
 
-Every option, defaults inline. Everything is optional.
+Every option, defaults inline. Everything is optional. The options are the same in every language; only the place you write them differs.
+
+## Where to put the options
+
+| Language / tool | Where | Details |
+|---|---|---|
+| **Playwright (Node.js)** | `reporting-labs.config.ts` next to `playwright.config.ts` (`npx reporting-labs init` writes one with every option commented), or inline: `reporter: [['reporting-labs', { title: '…' }]]` | [Node.js](../get-started/nodejs.md) |
+| **WebdriverIO** | the reporter options in `wdio.conf.ts`, and the same object in `reportingLabsComplete()` | [WebdriverIO](../get-started/webdriverio.md) |
+| **Java** (JUnit 5, TestNG, Cucumber, Selenium, REST Assured, Playwright) | `src/test/resources/reporting-labs.properties`, `-Dreporting-labs.<option>=…`, or `REPORTING_LABS_<OPTION>` | [Java configuration](../get-started/java/configuration.md) |
+| **Python** (pytest, pytest-bdd) | `reporting-labs.config.json` or `[tool.reporting-labs]` in `pyproject.toml`; `--rl-*` flags and `pytest.ini` keys | [Python configuration](../get-started/python/configuration.md) |
+| **Robot Framework** | `reporting-labs.config.json`, or `--listener reporting_labs.RobotListener:title=…:output=…` | [Python configuration](../get-started/python/configuration.md#robot-framework-listener-options) |
+
+In every language, `REPORTING_LABS_TITLE`, `REPORTING_LABS_METADATA_<KEY>` and the other [runtime overrides](#runtime-overrides) win over the files, so CI can label a run without editing them.
 
 ## Look
 

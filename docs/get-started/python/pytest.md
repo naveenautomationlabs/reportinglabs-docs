@@ -163,7 +163,7 @@ Workers hand their results to the main process, which writes one merged report. 
 ## Configuration
 
 Drop a `reporting-labs.config.json` next to where you run, or a `[tool.reporting-labs]` table in
-`pyproject.toml`. See [Configuration](/reference/options) for every key. A quick one:
+`pyproject.toml`. Every key, the `--rl-*` flags and the `pytest.ini` options: [Python configuration](/get-started/python/configuration). A quick one:
 
 ```json
 {

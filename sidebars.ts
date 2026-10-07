@@ -97,6 +97,12 @@ const sidebars: SidebarsConfig = {
         'get-started/python/robot',
       ],
     },
+    {
+      type: 'category',
+      label: 'Python guides',
+      collapsed: false,
+      items: ['get-started/python/configuration'],
+    },
     ...commonAfterGetStarted,
   ],
 };

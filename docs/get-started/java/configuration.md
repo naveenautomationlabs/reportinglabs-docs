@@ -9,11 +9,11 @@ import TabItem from '@theme/TabItem';
 # Configuration
 
 Everything is optional — the report works with zero config. When you want to
-tune it, set values in any of **three** places; the highest wins:
+tune it, set values in any of **three** places. When the same key is set in more than one, this order wins:
 
 1. **System property** on the command line — `-Dreporting-labs.title="Nightly"`
-2. **`src/test/resources/reporting-labs.properties`** — the file most teams use
-3. **Environment variable** — `REPORTING_LABS_TITLE=Nightly` (dots → underscores, uppercased)
+2. **Environment variable** — `REPORTING_LABS_TITLE=Nightly` (the key uppercased, dots → underscores: `REPORTING_LABS_OUTPUTFOLDER`, `REPORTING_LABS_METADATA_ENV`)
+3. **`src/test/resources/reporting-labs.properties`** — the file most teams use
 
 ## Where the report lands
 

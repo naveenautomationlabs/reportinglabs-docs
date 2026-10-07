@@ -39,6 +39,8 @@ robot --listener reporting_labs.RobotListener:title=Checkout:output=reports/rl:p
 | `project` | project name shown in the header and the heatmap |
 | `config` | path to a `reporting-labs.config.json` |
 
+Every other option (and which setting wins) is on the [Python configuration](/get-started/python/configuration) page.
+
 ## What lands in the report
 
 - **A row per test case**, with the suite tree as its path.
