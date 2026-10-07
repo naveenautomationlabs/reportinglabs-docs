@@ -6,7 +6,7 @@
       { "f": "Single HTML file, opens without a server", "c": [["no", "a folder, served by `show-report`"], ["partial", "single-file mode (2.24+, Allure 3)"], ["yes", ""]] },
       { "f": "Nothing extra to install", "c": [["yes", ""], ["no", "Allure CLI; Allure 2 needs Java"], ["yes", "one package"]] },
       { "f": "Setup", "c": [["yes", "built in"], ["partial", "reporter + generate step"], ["yes", "one line"]] },
-      { "f": "Frameworks", "c": [["no", "Playwright only"], ["yes", "many languages"], ["yes", "Playwright, WebdriverIO, pytest, Robot, JUnit 5, TestNG, Cucumber"]] }
+      { "f": "Frameworks", "c": [["no", "Playwright only"], ["yes", "many languages"], ["yes", "Playwright, WebdriverIO, pytest, pytest-bdd, Robot, JUnit 5, TestNG, Cucumber"]] }
     ]},
     { "name": "Each test", "rows": [
       { "f": "Steps, screenshots, videos, traces", "c": [["yes", ""], ["yes", ""], ["yes", ""]] },

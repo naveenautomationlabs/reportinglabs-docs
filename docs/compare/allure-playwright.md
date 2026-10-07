@@ -13,7 +13,7 @@ sidebar_position: 1
 | Single HTML file, opens without a server | ❌<br/><sub>a folder, served by `show-report`</sub> | 🟡<br/><sub>single-file mode (2.24+, Allure 3)</sub> | ✅ |
 | Nothing extra to install | ✅ | ❌<br/><sub>Allure CLI; Allure 2 needs Java</sub> | ✅<br/><sub>one package</sub> |
 | Setup | ✅<br/><sub>built in</sub> | 🟡<br/><sub>reporter + generate step</sub> | ✅<br/><sub>one line</sub> |
-| Frameworks | ❌<br/><sub>Playwright only</sub> | ✅<br/><sub>many languages</sub> | ✅<br/><sub>Playwright, WebdriverIO, pytest, Robot, JUnit 5, TestNG, Cucumber</sub> |
+| Frameworks | ❌<br/><sub>Playwright only</sub> | ✅<br/><sub>many languages</sub> | ✅<br/><sub>Playwright, WebdriverIO, pytest, pytest-bdd, Robot, JUnit 5, TestNG, Cucumber</sub> |
 | **Each test** | | | |
 | Steps, screenshots, videos, traces | ✅ | ✅ | ✅ |
 | Logs and test data | 🟡<br/><sub>as attachments</sub> | 🟡<br/><sub>attachments, parameters</sub> | ✅<br/><sub>`log()`, `testData()`</sub> |
@@ -48,4 +48,4 @@ Based on each tool's official documentation as of September 2026. ❌ means the 
 
 **Allure** — you need a language reportingLabs does not cover yet (Kotlin, Ruby, .NET, PHP) and you have someone to maintain the Allure generate step in CI.
 
-**reportingLabs** — you want a single HTML file for triage: priority-ranked failures, owner filters, failure clusters, bug-report button, no server, works from an email. The same report for Playwright, WebdriverIO, pytest, Robot Framework, JUnit 5, TestNG and Cucumber.
+**reportingLabs** — you want a single HTML file for triage: priority-ranked failures, owner filters, failure clusters, bug-report button, no server, works from an email. The same report for Playwright, WebdriverIO, pytest, pytest-bdd, Robot Framework, JUnit 5, TestNG and Cucumber.

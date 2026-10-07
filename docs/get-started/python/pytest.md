@@ -84,7 +84,7 @@ the file and the whole team gets them. Step-by-step for VS Code and PyCharm: [In
 
 ## pytest-bdd (Gherkin)
 
-When pytest-bdd is installed, every scenario reads like a Cucumber report, with nothing to set up:
+When pytest-bdd is installed, every scenario reads like a Cucumber report, with nothing to set up (reporting-labs **0.1.7+**, `pip install -U reporting-labs`):
 
 ```gherkin title="features/login.feature"
 @smoke @owner:asha
