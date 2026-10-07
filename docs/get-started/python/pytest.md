@@ -82,6 +82,36 @@ pairs become meta (known keys, plus keys in `dimensions` or `links`, so a stray 
 inside a test and press Tab for the docstring meta (priority as a dropdown), or `rltest` for a whole test with it. Commit
 the file and the whole team gets them. Step-by-step for VS Code and PyCharm: [Install the editor snippets](../../features/meta-comments.md#install-the-editor-snippets).
 
+## pytest-bdd (Gherkin)
+
+When pytest-bdd is installed, every scenario reads like a Cucumber report, with nothing to set up:
+
+```gherkin title="features/login.feature"
+@smoke @owner:asha
+Feature: Login
+
+  Background:
+    Given the login page is open
+
+  @P1 @critical
+  Scenario: Successful login
+    When I log in as "admin" with "secret"
+    Then I see the dashboard
+```
+
+| In the report | From |
+|---|---|
+| The row **Successful login** at `features/login.feature:8`, grouped under **login** | the scenario's name, file and line |
+| Steps **Given the login page is open**, **When I log in as …**, **Then I see the dashboard** | every Gherkin step, Background included; Playwright actions nest under their step |
+| The failing step in red, the steps after it as *not run* | the step that raised; `pytest.skip()` in a step skips the scenario the same way |
+| An undefined step fails at its `.feature` line, with the step definition to write | pytest-bdd's "step definition not found" |
+| **Login with users (admin, secret)** and an **Examples** data block | a Scenario Outline example |
+| Data blocks named after the step | a step's data table or doc string (pytest-bdd 8+) |
+| priority **P1**, severity **critical**, owner **asha**; tag **smoke** | `@P1`, `@critical`, `@owner:asha`, `@smoke`. `meta()` in a step wins over a tag |
+| Project **chromium** | the browser the steps used (pytest-playwright) |
+
+Works with pytest-bdd 6 to 9.
+
 ## The helpers
 
 Import them from `reporting_labs`. All are no-ops outside a test, so they are safe in shared code.

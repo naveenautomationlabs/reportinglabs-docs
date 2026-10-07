@@ -18,6 +18,7 @@ Pick the guide for your stack; each one is complete on its own, from `pip instal
 | Playwright + pytest | [Playwright + Python](/get-started/python/playwright): add `pytest-playwright`, nothing else. Every action a step, screenshots, trace and video. |
 | Selenium + pytest | [Selenium + Python](/get-started/python/selenium): add `selenium`, nothing else. Every command a step, a screenshot on failure. |
 | Robot Framework | [Robot Framework](/get-started/python/robot): one `--listener` flag. A row per test, keywords as steps, tags as filters. |
+| pytest-bdd (Gherkin) | [pytest → pytest-bdd](/get-started/python/pytest#pytest-bdd-gherkin): nothing to set up. A row per scenario at its `.feature` line, Given / When / Then as steps, like a Cucumber report. |
 
 Every language port renders the same HTML template, so a Python report looks exactly like a Node.js or
 Java one and a whole company triages the same way.
