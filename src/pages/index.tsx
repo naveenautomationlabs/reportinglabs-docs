@@ -8,6 +8,7 @@ import COMPARE from '../data/compare.json';
 
 const TOOLS = [
   { name: 'Playwright', logo: 'playwright' },
+  { name: 'Cypress', logo: 'cypress' },
   { name: 'TypeScript', logo: 'typescript' },
   { name: 'Node.js', logo: 'nodejs' },
   { name: 'TestNG', logo: 'testng' },
