@@ -12,6 +12,7 @@ Every option, defaults inline. Everything is optional. The options are the same 
 | Language / tool | Where | Details |
 |---|---|---|
 | **Playwright (Node.js)** | `reporting-labs.config.ts` next to `playwright.config.ts` (`npx reporting-labs init` writes one with every option commented), or inline: `reporter: [['reporting-labs', { title: '…' }]]` | [Node.js](../get-started/nodejs.md) |
+| **Cypress** | the third argument of `reportingLabs(on, config, { … })` in `cypress.config.js` / `.ts` | [Cypress](../get-started/cypress.md) |
 | **WebdriverIO** | the reporter options in `wdio.conf.ts`, and the same object in `reportingLabsComplete()` | [WebdriverIO](../get-started/webdriverio.md) |
 | **Java** (JUnit 5, TestNG, Cucumber, Selenium, REST Assured, Playwright) | `src/test/resources/reporting-labs.properties`, `-Dreporting-labs.<option>=…`, or `REPORTING_LABS_<OPTION>` | [Java configuration](../get-started/java/configuration.md) |
 | **Python** (pytest, pytest-bdd) | `reporting-labs.config.json` or `[tool.reporting-labs]` in `pyproject.toml`; `--rl-*` flags and `pytest.ini` keys | [Python configuration](../get-started/python/configuration.md) |

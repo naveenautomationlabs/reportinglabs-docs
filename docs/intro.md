@@ -9,7 +9,7 @@ reportingLabs turns a test run into **one HTML file** you can share. No server, 
 
 Today it ships for three ecosystems:
 
-- **Node.js — JavaScript & TypeScript** — on npm as [`reporting-labs`](https://www.npmjs.com/package/reporting-labs). A **Playwright** reporter and a **WebdriverIO** reporter (`reporting-labs/wdio`), same install and the same helpers whichever you use.
+- **Node.js — JavaScript & TypeScript** — on npm as [`reporting-labs`](https://www.npmjs.com/package/reporting-labs). A **Playwright** reporter, a **Cypress** plugin (`reporting-labs/cypress`) and a **WebdriverIO** reporter (`reporting-labs/wdio`), same install whichever you use.
 - **Java** — on Maven Central as [`dev.reportinglabs`](https://central.sonatype.com/namespace/dev.reportinglabs): reporters for **TestNG** and **JUnit 5**, with zero-code add-ons for **Selenium**, **REST Assured** and **Playwright for Java**, and a **Cucumber JVM** plugin.
 - **Python** — on PyPI as [`reporting-labs`](https://pypi.org/project/reporting-labs/): a **pytest** plugin that turns on the moment it is installed, with zero-code support for **Playwright** and **Selenium**, and a **Robot Framework** listener.
 

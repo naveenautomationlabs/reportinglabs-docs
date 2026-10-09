@@ -52,7 +52,7 @@ function Hero() {
           <div className={styles.eyebrow}>Open source · MIT · Node.js, Java and Python</div>
           <Heading as="h1" className={styles.title}>One HTML report for your <span>whole test stack</span>.</Heading>
           <p className={styles.tagline}>
-            Playwright, WebdriverIO, Selenium, REST Assured, Cucumber, TestNG, JUnit 5, pytest, Robot Framework. Same report from every one of them:
+            Playwright, Cypress, WebdriverIO, Selenium, REST Assured, Cucumber, TestNG, JUnit 5, pytest, Robot Framework. Same report from every one of them:
             failures ranked and explained, every API call, screenshots, traces and videos, history across runs.
             Secrets masked. Nothing to host.
           </p>
@@ -441,7 +441,7 @@ function Languages() {
         <div className={styles.langGrid}>
           <div className={styles.lang}>
             <div className={styles.langHead}><img src="/img/logos/nodejs.svg" alt="" /><Heading as="h3">Node.js</Heading></div>
-            <p>Playwright Test reporter for JavaScript and TypeScript. Automatic API capture, trace and video attachments, sharding and merge.</p>
+            <p>Playwright Test reporter for JavaScript and TypeScript, plus Cypress and WebdriverIO. Automatic API capture, trace and video attachments, sharding and merge.</p>
             <pre className={styles.code}><code>{`npm i -D reporting-labs@latest
 npx reporting-labs init`}</code></pre>
             <Link className="button button--primary" to="/get-started/nodejs">Node.js guide</Link>

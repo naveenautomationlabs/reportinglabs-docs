@@ -54,7 +54,7 @@ const sidebars: SidebarsConfig = {
       type: 'category',
       label: 'Get started',
       collapsed: false,
-      items: ['get-started/nodejs', 'get-started/webdriverio'],
+      items: ['get-started/nodejs', 'get-started/webdriverio', 'get-started/cypress'],
     },
     ...commonAfterGetStarted,
   ],
