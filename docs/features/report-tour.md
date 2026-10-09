@@ -26,7 +26,7 @@ Click any row and the report pushes it into a modal with its full story:
 - **Logs** — every `log()` call in order.
 - **Data** — pinned JSON blocks from `testData()`, sensitive keys masked.
 - **API** — every request the test made, auto-captured when `import 'reporting-labs/auto'` is on.
-- **Steps** — the Playwright step tree with timing per step.
+- **Steps** — the Playwright step tree with timing per step. A step with sub-steps starts collapsed; click it to open it, or use **Expand all / Collapse all** above the steps. On a failed test the steps that lead to the failure start open (set [`expandFailedSteps: false`](../reference/options.md) to keep them collapsed too).
 - **Attachments** — screenshots, videos and traces, inline where possible.
 
 ![Test detail](/img/screenshots/03-test-detail-light.png)

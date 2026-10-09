@@ -86,6 +86,8 @@ reporting-labs.palette=lab
 reporting-labs.embedFonts=true
 # "Open in IDE" link per test
 reporting-labs.editorLinks=false
+# open the steps that lead to a failure; false = every step with sub-steps starts collapsed
+# reporting-labs.expandFailedSteps=true
 # open the report in the browser after the run: never | on-failure | always
 reporting-labs.open=never
 # copy System.out / System.err lines into each test's Console output
@@ -203,6 +205,7 @@ reporting-labs.dimensionOrder.priority=P0,P1,P2,P3,P4
 | `customCss` | – | Extra CSS appended to the report |
 | `embedFonts` | `true` | Inline IBM Plex woff2 (~140 KB) |
 | `editorLinks` | `false` | "Open in IDE" link per test |
+| `expandFailedSteps` | `true` | When a failed test is opened, the steps that lead to the failure are open. `false`: every step with sub-steps starts collapsed, also on failures. **Expand all / Collapse all** above the steps works either way. Needs npm 0.6.15+, Maven 0.1.29+ or PyPI 0.1.8+ |
 | `bdd` | `false` | Gherkin-style Given/When/Then |
 | `commentMeta` | `true` | Also read meta from the Javadoc of a test method or class (`@priority P0 @owner naveen`). Annotations and `Rl.meta()` win when both are there. `false` reads no Javadoc |
 | `pdf` | `true` | Also write a print-ready `report.pdf` next to the HTML. `false` turns it off |

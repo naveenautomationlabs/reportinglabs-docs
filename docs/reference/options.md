@@ -82,6 +82,7 @@ The env chip resolves in this order, first match wins:
 | `maskFromEnv` | `true` | Learn the values of environment variables whose names look sensitive (`PASSWORD`, `API_TOKEN`, `OAUTH_CLIENT_SECRET`) and blank them everywhere. The masker also remembers every value it masks, so a secret seen once as `password=x` is blanked later in `Logging in as admin / x` |
 | `env` | – | Extra rows on the Environment card |
 | `editorLinks` | on locally, off in CI | "Open in VS Code" links |
+| `expandFailedSteps` | `true` | When a failed test is opened, the steps that lead to the failure are open. `false`: every step with sub-steps starts collapsed, also on failures. **Expand all / Collapse all** above the steps works either way. Needs npm 0.6.15+, Maven 0.1.29+ or PyPI 0.1.8+ |
 | `bdd` | auto | Style Given/When/Then steps as Gherkin |
 | `announce` | `true` | Print the report path to the console after the run |
 | `warnMissingMeta` | `true` | Console list of tests without `meta()` |

@@ -124,6 +124,7 @@ robot --listener reporting_labs.RobotListener:title=Checkout:output=reports/rl:p
 | `bdd` | auto | Style Given / When / Then steps as Gherkin. On by itself for pytest-bdd |
 | `widgets` | all on | Hide cards: `{ "timeline": false, "tags": false }` |
 | `editorLinks` | on locally, off in CI | "Open in VS Code" links |
+| `expandFailedSteps` | `true` | When a failed test is opened, the steps that lead to the failure are open. `false`: every step with sub-steps starts collapsed, also on failures. **Expand all / Collapse all** above the steps works either way. Needs npm 0.6.15+, Maven 0.1.29+ or PyPI 0.1.8+ |
 | **Output** | | |
 | `outputFolder` | `"reporting-labs"` | Where the report goes |
 | `outputFile` | `"index.html"` | Report file name |
