@@ -35,14 +35,14 @@ plugin (it names the row and fills it in).
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-testng</artifactId>
-    <version>0.1.29</version>
+    <version>0.1.30</version>
     <scope>test</scope>
 </dependency>
 <!-- the Cucumber plugin -->
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-cucumber</artifactId>
-    <version>0.1.29</version>
+    <version>0.1.30</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -67,7 +67,7 @@ plugin opens and closes each row itself.
 <dependency>
     <groupId>dev.reportinglabs</groupId>
     <artifactId>reporting-labs-cucumber</artifactId>
-    <version>0.1.29</version>
+    <version>0.1.30</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -82,7 +82,7 @@ public class RunCucumberTest { }
 </TabItem>
 </Tabs>
 
-Gradle: `testImplementation("dev.reportinglabs:reporting-labs-cucumber:0.1.29")`
+Gradle: `testImplementation("dev.reportinglabs:reporting-labs-cucumber:0.1.30")`
 (plus `reporting-labs-testng` with the TestNG runner).
 
 ## Step 2. Register the plugin
