@@ -98,7 +98,7 @@ function ToolStrip() {
 }
 
 /* ---------- install in three steps ---------- */
-const JAVA_VERSION = '0.1.28';
+const JAVA_VERSION = '0.1.29';
 
 type Snip = { file: string; lines: string[]; typed?: boolean };
 type Step = { title: string; text: string; snip: Snip; result?: string };
