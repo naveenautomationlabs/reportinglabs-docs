@@ -191,6 +191,47 @@ Every `request.get / post / put / delete / ...` call your tests make is recorded
 
 ![API tab with captured requests](/img/screenshots/05-api-light.png)
 
+## Playwright BDD (Cucumber feature files) {#playwright-bdd}
+
+[playwright-bdd](https://github.com/vitalets/playwright-bdd) runs `.feature` files on the Playwright test runner, so your
+`playwright.config.ts`, fixtures, projects, retries and sharding all stay. Add the reporter as in Step 2; nothing else to
+set up. Needs npm `reporting-labs` 0.6.20+.
+
+```ts title="playwright.config.ts"
+import 'reporting-labs/auto';
+import { defineConfig } from '@playwright/test';
+import { defineBddConfig } from 'playwright-bdd';
+
+const testDir = defineBddConfig({ features: 'features/**/*.feature', steps: 'steps/**/*.ts' });
+
+export default defineConfig({
+  testDir,
+  reporter: [['list'], ['reporting-labs', { title: 'Checkout regression' }]],
+});
+```
+
+```bash
+npx bddgen && npx playwright test
+```
+
+Each scenario is a report row:
+
+- **Where it is:** at its line in the `.feature` file (not the generated `.features-gen` spec), under its Feature and Rule, with a Scenario badge. Editor links and history follow the feature file.
+- **Steps:** Given / When / Then with the Playwright calls each one made. Background steps sit next to the scenario's own, and the steps a failure left unrun are greyed out ("not run").
+- **Scenario Outline:** each row named after its values, e.g. `Sign in as meera (meera, ****, Hello meera)`, with the row as an **Examples** table. Data tables and doc strings show as test data. A password column is masked.
+- **Tags:** `@P0` to `@P4` set the priority, `@blocker` / `@critical` / `@major` / `@minor` / `@trivial` the severity, `@owner:asha`, `@story:SHOP-12`, `@feature:checkout` (any meta key) the meta. Any other tag is a tag you can filter on. Feature and Rule tags count for every scenario under them.
+- **Errors:** the line in your step definition, or the step in the feature file. A step with no definition (`Missing step`) is explained as "Step not defined", one matched twice as "Step defined twice".
+
+![A failed playwright-bdd scenario: Gherkin steps, the failing step and the error in plain words](/img/screenshots/pw-bdd-light.png)
+
+![A Scenario Outline row with its Examples table, the password masked](/img/screenshots/pw-bdd-outline-light.png)
+
+playwright-bdd 8 and 9 give all of the above. With playwright-bdd 7, the scenario's location, Feature / Rule and Outline
+rows are right; data tables, doc strings and the steps left unrun need 8+.
+
+A runnable example (two feature files, a Background, an Outline, Rules, a data table, a doc string, a step with no
+definition): [`examples-playwright-bdd/`](https://github.com/naveenautomationlabs/reporting-labs/tree/main/examples-playwright-bdd).
+
 ## JavaScript vs TypeScript — anything different?
 
 Nothing that changes what you write against the reporter.
