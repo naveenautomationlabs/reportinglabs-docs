@@ -75,7 +75,7 @@ Before anything is written, sensitive values are replaced with `****` in request
 - **Known values:** anything you list in `maskValues`, secret-looking environment variables (on by default; `maskFromEnv: false` to disable), and any value once it has been seen in a sensitive field — so a password masked in a request body is also masked where it reappears in a log.
 - Values typed into password fields are shown as `****` in step titles by the Selenium add-ons (Java and Python), the Python Playwright integration, the WebdriverIO reporter and the Cypress support file. With Playwright on Node.js or Java, a value passed to `fill()` appears in the step title unless it is a known secret — read test passwords from environment variables (masked by default) or list them in `maskValues`.
 
-**What is not treated as a secret** (npm 0.6.19+), so code and paths stay readable:
+**What is not treated as a secret** (npm 0.6.19+, PyPI 0.1.10+), so code and paths stay readable:
 
 - **Code in an error's snippet:** a sensitive key followed by code, not a value: `const token = await login()`, `password: user.password`, `apiKey = process.env.API_KEY`, `` authorization: `Bearer ${token}` ``. Type names and Cucumber parameters count as code too: `password: string`, `password {string}`. The value itself is still masked wherever it shows up: `password=S3cret!` becomes `password=****`.
 - **The current folder:** `PWD` and `OLDPWD` hold the shell's working directory. They are not learned as passwords (even though `pwd` is a sensitive key), so the project path stays readable in stack traces and editor links. `DB_PWD` and the like are still masked.
