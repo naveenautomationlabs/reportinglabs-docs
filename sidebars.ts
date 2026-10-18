@@ -31,7 +31,7 @@ const commonAfterGetStarted = [
   {
     type: 'category' as const,
     label: 'CI recipes',
-    items: ['ci/github-actions', 'ci/jenkins', 'ci/gitlab'],
+    items: ['ci/github-actions', 'ci/jenkins', 'ci/gitlab', 'ci/azure-pipelines'],
   },
   {
     type: 'category' as const,
