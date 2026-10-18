@@ -23,10 +23,14 @@ Every test in the report shows the command that runs just that test again, with 
 | WebdriverIO | `npx wdio run wdio.conf.js --spec test/specs/login.e2e.js` | one `--spec` per spec file |
 | pytest (also Playwright, Selenium, pytest-bdd) | `pytest "tests/test_login.py::test_login[guest]"` | `pytest tests/test_login.py::test_locked "tests/test_login.py::test_login[guest]"` |
 | Robot Framework | `robot --test "Locked Account Shows Message" tests/login.robot` | one `--test` per test, then their files |
+| JUnit 5, TestNG (Maven) | `mvn test -Dtest="com.shop.LoginTest#locksAccount"` | `mvn test -Dtest="com.shop.LoginTest#locksAccount,com.shop.CartTest#total"` |
+| JUnit 5, TestNG (Gradle) | `./gradlew test --tests com.shop.LoginTest.locksAccount` | one `--tests` per test |
+| Cucumber JVM (Maven) | `mvn test -Dcucumber.features="src/test/resources/features/login.feature:13"` | the scenarios comma-separated |
 
 - **Playwright** picks the test by file and line. `--project` is added when the config has more than one project, and `-c` when your config is not the one Playwright finds on its own.
 - **playwright-bdd** runs the generated spec, after `npx bddgen` rebuilds it from the feature files. The report itself shows the scenario at its line in the `.feature` file.
 - **Cypress** and **WebdriverIO** run a spec file, not one test of it, so the command re-runs the whole spec. Cypress adds `--browser` when the run was not on the default Electron, and `--config-file` when the config is not the default one.
+- **Java** uses `./mvnw` or `./gradlew` when the project has one. In a module of a multi-module Maven build it adds `-Dsurefire.failIfNoSpecifiedTests=false`, so the modules without the test do not fail the run. Cucumber scenarios are picked by feature file and line (Maven only: Gradle does not pass `-D` on to the tests).
 - **pytest** gets the test's node id, quoted when it has spaces or brackets, with the path relative to the folder pytest was started from.
 
-Nothing to set up. Needs npm `reporting-labs` 0.6.21+ or PyPI `reporting-labs` 0.1.11+.
+Nothing to set up. Needs npm `reporting-labs` 0.6.21+, PyPI `reporting-labs` 0.1.11+ or Maven `dev.reportinglabs` 0.1.32+.

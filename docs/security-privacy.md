@@ -78,7 +78,7 @@ Before anything is written, sensitive values are replaced with `****` in request
 **What is not treated as a secret** (npm 0.6.19+, PyPI 0.1.10+, Maven 0.1.31+), so code and paths stay readable:
 
 - **Code in an error's snippet:** a sensitive key followed by code, not a value: `const token = await login()`, `password: user.password`, `apiKey = process.env.API_KEY`, `` authorization: `Bearer ${token}` ``. Type names and Cucumber parameters count as code too: `password: string`, `password {string}`. The value itself is still masked wherever it shows up: `password=S3cret!` becomes `password=****`.
-- **Format placeholders** (npm 0.6.21+, PyPI 0.1.11+): `{password}` or `{token}` in a message template is a placeholder, not a value, so it is not turned into `****}`. A value in braces that is not a lowercase name, like `{S3cret!}`, is still masked.
+- **Format placeholders** (npm 0.6.21+, PyPI 0.1.11+, Maven 0.1.32+): `{password}` or `{token}` in a message template is a placeholder, not a value, so it is not turned into `****}`. A value in braces that is not a lowercase name, like `{S3cret!}`, is still masked.
 - **The current folder:** `PWD` and `OLDPWD` hold the shell's working directory. They are not learned as passwords (even though `pwd` is a sensitive key), so the project path stays readable in stack traces and editor links. `DB_PWD` and the like are still masked.
 
 :::caution Screenshots, videos and traces are not masked

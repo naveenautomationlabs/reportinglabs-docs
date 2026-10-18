@@ -25,7 +25,7 @@ Click a number to see those tests, and click a test to open it:
 
 **Copy re-run command** on the right copies one command that runs every failed test again. See [Run again](./run-again.md).
 
-The line compares with the last run of a similar size, like the trend (a full run is not compared with a one-spec debug run). On the first run, with nothing to compare, it shows the number of failed tests and the re-run command. Turn it off with `widgets: { changes: false }`. Needs npm `reporting-labs` 0.6.21+ or PyPI `reporting-labs` 0.1.11+.
+The line compares with the last run of a similar size, like the trend (a full run is not compared with a one-spec debug run). On the first run, with nothing to compare, it shows the number of failed tests and the re-run command. Turn it off with `widgets: { changes: false }`. Needs npm `reporting-labs` 0.6.21+, PyPI `reporting-labs` 0.1.11+ or Maven `dev.reportinglabs` 0.1.32+.
 
 ### Small debug runs don't skew the trend
 
