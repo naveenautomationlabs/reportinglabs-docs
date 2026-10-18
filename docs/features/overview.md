@@ -10,7 +10,7 @@ Every card and tab is switched on by default. What you actually see in the repor
 | Feature | Enabled by |
 |---|---|
 | Priority ranking, owner and feature filters | Adding `meta({ priority, owner, feature, story })` to your tests |
-| Trend chart, "new vs known" failures, flaky dots | Running the suite twice (a small history file next to the config) |
+| Trend chart, "new vs known" failures, flaky dots, the Since last run line | Running the suite twice (a small history file next to the config) |
 | Screenshots, videos and traces in the report | Turning them on in `playwright.config.ts` |
 | Feature × project heatmap | Having more than one Playwright project |
 | Auto-captured API calls | `import 'reporting-labs/auto'` once |

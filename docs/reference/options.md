@@ -112,3 +112,4 @@ The env chip resolves in this order, first match wins:
 | `widgets.flaky` | `true` | Flakiest tests over history |
 | `widgets.environment` | `true` | Environment card |
 | `widgets.skipped` | `true` | Skipped tests with reasons |
+| `widgets.changes` | `true` | The Since last run line under the tiles, with Copy re-run command |
