@@ -6,11 +6,11 @@ title: Release notes
 
 What changed in recent releases. The report is the same across the three packages: a release of the npm package that changes the report is followed by PyPI and Maven releases with the same template. Every version, with its full notes: [Node.js](https://github.com/naveenautomationlabs/reporting-labs/releases) · [Java](https://github.com/naveenautomationlabs/reporting-labs-java/releases) · [Python](https://github.com/naveenautomationlabs/reporting-labs-python/releases).
 
-## October 23, 2026 · npm 0.6.22 · PyPI 0.1.12
+## October 2026 · npm 0.6.22 · PyPI 0.1.12 · Maven 0.1.33
 
 - **Reports read well on a phone.** A long URL, path or token with no spaces (an OAuth redirect in a step error, a long spec path, an annotation value, a console line) now wraps inside the test detail. Before, one such line made the whole page several times wider than the screen, so a phone showed the report zoomed out to a fraction of its width.
 - **Star on GitHub** link in the report footer.
-- After a local run, at most once a week and never in CI, one line asking for a GitHub star. `REPORTING_LABS_NO_STAR=1` turns it off. See [options](./reference/options.md).
+- After a local run, at most once a week and never in CI, one line asking for a GitHub star. `REPORTING_LABS_NO_STAR=1` turns it off. See [options](./reference/options.md). In Java it prints when the JUnit 5, TestNG or Cucumber run finishes.
 
 ## October 17–18, 2026 · npm 0.6.21 · PyPI 0.1.11 · Maven 0.1.32
 

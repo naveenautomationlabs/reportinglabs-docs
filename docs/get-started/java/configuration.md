@@ -290,6 +290,10 @@ every run and read at the start of the next one — that's what draws the
 a workspace path) so the trend survives fresh checkouts. Recipes:
 [GitHub Actions](/ci/github-actions), [Jenkins](/ci/jenkins), [GitLab](/ci/gitlab).
 
+## Star line
+
+From 0.1.33, on a developer's machine (never in CI) the JUnit 5, TestNG and Cucumber run ends with one line asking for a GitHub star, at most once a week. `REPORTING_LABS_NO_STAR=1` turns it off.
+
 ## Source and issues
 
 The Java port lives in its own repository, separate from the Node.js reporter:
