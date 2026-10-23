@@ -85,7 +85,7 @@ The env chip resolves in this order, first match wins:
 | `editorLinks` | on locally, off in CI | "Open in VS Code" links |
 | `expandFailedSteps` | `true` | When a failed test is opened, the steps that lead to the failure are open. `false`: every step with sub-steps starts collapsed, also on failures. **Expand all / Collapse all** above the steps works either way. Needs npm 0.6.15+, Maven 0.1.29+ or PyPI 0.1.8+ |
 | `bdd` | auto | Style Given/When/Then steps as Gherkin |
-| `announce` | `true` | Print the report path to the console after the run |
+| `announce` | `true` | Print the report path to the console after the run. From 0.6.22, on a developer's machine (never in CI) it also asks for a GitHub star, at most once a week; `REPORTING_LABS_NO_STAR=1` turns only that line off |
 | `warnMissingMeta` | `true` | Console list of tests without `meta()` |
 | `commentMeta` | `true` | Read meta from a comment right above a test or describe (`/** @owner naveen @priority P0 */`; a docstring in Python). `meta()` wins over it |
 | `open` | `'on-failure'` | Open report in browser: `'on-failure' | 'always' | 'never'` |

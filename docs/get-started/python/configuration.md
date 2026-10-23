@@ -137,7 +137,7 @@ robot --listener reporting_labs.RobotListener:title=Checkout:output=reports/rl:p
 | `pdfFile` | `"report.pdf"` | Its file name |
 | `chromePath` | – | The Chrome / Edge / Chromium that prints the PDF, when it is not found on its own (or `CHROME_PATH`) |
 | `history` | `{ "enabled": true, "keep": 30 }` | Run history for the trend and flaky detection; `file` sets the path (default `reporting-labs.history.json`) |
-| `announce` | `true` | Print the report path after the run |
+| `announce` | `true` | Print the report path after the run. From 0.1.12, on a developer's machine (never in CI) it also asks for a GitHub star, at most once a week; `REPORTING_LABS_NO_STAR=1` turns only that line off |
 | `open` | `"on-failure"` | Open the report after the run: `"on-failure"`, `"always"`, `"never"`. Never in CI |
 
 ## With pytest-bdd
