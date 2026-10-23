@@ -25,7 +25,7 @@ npx reporting-labs init
 Works with Playwright 1.40 and later, tested up to 1.64. On Playwright 1.63 and later, Playwright keeps a step's target
 apart from its title; the report puts it back next to the action, as before: `Click getByRole('button', { name: 'Sign in' })`,
 `Navigate /login`, `POST /api/login`. A `test.step()` with `subtitle` and `params` shows them too:
-`Open product · SKU 42 (id: 42, currency: USD)`. This needs npm `reporting-labs` 0.6.19+.
+`Open product · SKU 42 (id: 42, currency: USD)`. This needs npm `reporting-labs` 0.6.20+.
 
 ## Step 2. Add the reporter to your Playwright config
 

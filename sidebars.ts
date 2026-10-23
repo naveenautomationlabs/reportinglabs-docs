@@ -41,7 +41,7 @@ const commonAfterGetStarted = [
   {
     type: 'category' as const,
     label: 'About',
-    items: ['intro', 'security-privacy'],
+    items: ['intro', 'release-notes', 'security-privacy'],
   },
 ];
 

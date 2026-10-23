@@ -70,3 +70,9 @@ Every chart has a **Download PNG** button.
 A Gantt-style view of what every worker was doing when. Bars are colored by outcome. Useful for spotting slow tests, idle workers, or a bottleneck that keeps only one worker busy.
 
 ![Timeline of workers](/img/screenshots/07-timeline-light.png)
+
+## On a phone
+
+The report is a single HTML file, so it opens on a phone straight from a CI artifact, a Slack link or an email attachment. On a narrow screen the tiles, cards and tests stack in one column, and long URLs and paths in errors wrap to the screen width.
+
+<img src="/img/screenshots/phone-overview-light.png" alt="The report's Overview on a phone" width="320" />
