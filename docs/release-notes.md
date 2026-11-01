@@ -6,6 +6,11 @@ title: Release notes
 
 What changed in recent releases. The report is the same across the three packages: a release of the npm package that changes the report is followed by PyPI and Maven releases with the same template. Every version, with its full notes: [Node.js](https://github.com/naveenautomationlabs/reporting-labs/releases) · [Java](https://github.com/naveenautomationlabs/reporting-labs-java/releases) · [Python](https://github.com/naveenautomationlabs/reporting-labs-python/releases).
 
+## November 1, 2026 · npm 0.6.23 · PyPI 0.1.13 · Maven 0.1.34
+
+- **[What the browser saw](./features/browser-and-video.md#what-the-browser-saw):** on a failed Playwright test, the uncaught JavaScript errors, `console.error` messages and failed or 4xx/5xx requests from the browser, each timed against the failure ("HTTP 500 · POST /api/cart/coupon · 3.0s before the failure").
+- **[Video in step with the test](./features/browser-and-video.md#video-in-step-with-the-test):** the video sits above the steps. ▶ on a step plays that moment, **Watch the failure** plays the 5 seconds before it, and the step playing lights up.
+
 ## October 2026 · npm 0.6.22 · PyPI 0.1.12 · Maven 0.1.33
 
 - **Reports read well on a phone.** A long URL, path or token with no spaces (an OAuth redirect in a step error, a long spec path, an annotation value, a console line) now wraps inside the test detail. Before, one such line made the whole page several times wider than the screen, so a phone showed the report zoomed out to a fraction of its width.

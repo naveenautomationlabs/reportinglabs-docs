@@ -17,6 +17,7 @@ const commonAfterGetStarted = [
       'features/bug-report',
       'features/history-trend',
       'features/run-again',
+      'features/browser-and-video',
       'features/sharding',
       'features/graphs',
       'features/pdf-export',
