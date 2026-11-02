@@ -6,7 +6,7 @@ title: Release notes
 
 What changed in recent releases. The report is the same across the three packages: a release of the npm package that changes the report is followed by PyPI and Maven releases with the same template. Every version, with its full notes: [Node.js](https://github.com/naveenautomationlabs/reporting-labs/releases) · [Java](https://github.com/naveenautomationlabs/reporting-labs-java/releases) · [Python](https://github.com/naveenautomationlabs/reporting-labs-python/releases).
 
-## November 2026 · npm 0.6.24 · PyPI 0.1.14 · Maven 0.1.35
+## November 2, 2026 · npm 0.6.24 · PyPI 0.1.14 · Maven 0.1.35
 
 - **[Popups and second tabs in step](./features/browser-and-video.md#popups-and-second-tabs):** each page's video follows the steps. ▶ on a step done in a popup plays the popup's recording from that moment; a player whose page was not open yet waits and joins when it opens.
 - Java: attaching a page also attaches the pages it opens (popup, new tab), so each gets its own video, screenshot and browser events.
