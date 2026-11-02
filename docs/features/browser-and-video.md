@@ -41,6 +41,16 @@ With video on, a test's video sits above its steps:
 
 A ▶ shows only on steps the video covers. Browser launch and set-up before the page opened get none.
 
+### Popups and second tabs
+
+Playwright records each page separately, so a test that opens a popup or a second tab has one video per page, labelled **page 1**, **page 2** with the time it opened. Every player follows the steps:
+
+- ▶ on a step plays each recording from that moment, so a step done in the popup shows in the popup's video.
+- A player whose page was not open at that moment waits, dimmed, and starts by itself when its page opens.
+- **Watch the failure** works the same way.
+
+From npm 0.6.24, PyPI 0.1.14 and Maven 0.1.35. In Java, attaching a page now also attaches the pages it opens.
+
 ## Turning it on
 
 | | What the browser saw | Video |
